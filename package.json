@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "server/app.js",
   "dependencies": {
+    "apicache": "0.0.14",
     "babel-polyfill": "^6.7.2",
     "babel-runtime": "^6.6.1",
     "bluebird": "^3.3.3",
@@ -43,7 +44,6 @@
     "chai-things": "^0.2.0",
     "connect-livereload": "^0.5.3",
     "del": "^2.0.2",
-    "dotenv": "^2.0.0",
     "grunt": "^1.0.1",
     "grunt-build-control": "^0.7.0",
     "gulp": "^3.9.1",
