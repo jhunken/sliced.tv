@@ -63,13 +63,13 @@ function handleMovieRequest(res, id) {
       return request(config.guidebox.baseURL + config.guidebox.apiKey + '/movies/' + id,
         function (error, response, body) {
           if (!error && response.statusCode === 200 && body !== {}) {
-            console.log(body);
             var movie = JSON.parse(body);
             if (movie && movie.id) {
               res.json(movie).end();
-              saveMovie(movie).then(function (savedMovie) {
-                return savedMovie;
-              })
+              return saveMovie(movie)
+                .then(function (savedMovie) {
+                  return savedMovie;
+                })
                 .catch(function (err) {
                   console.error(err);
                   return null;
@@ -147,6 +147,7 @@ function saveMovie(movie) {
       })
       .catch(function (err) {
         console.error(err);
+        reject(err);
       });
 
   });
