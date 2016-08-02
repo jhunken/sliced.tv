@@ -118,7 +118,7 @@
   },
   "scripts": {
     "test": "gulp test",
-    "postinstall": "typings install && gulp build",
+    "postinstall": "typings install && bower install && gulp build",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "node server"
   },
