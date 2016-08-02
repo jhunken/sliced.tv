@@ -1,7 +1,7 @@
 {
   "name": "easier-tv",
   "version": "0.0.0",
-  "main": "server/app.js",
+  "main": "dist/server/app.js",
   "dependencies": {
     "apicache": "0.0.14",
     "babel-polyfill": "^6.7.2",
@@ -121,7 +121,7 @@
   "scripts": {
     "test": "gulp test",
     "preinstall" : "npm i typings -g",
-    "postinstall": "typings install",
+    "postinstall": "typings install && gulp build",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "node server"
   },
