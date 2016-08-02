@@ -120,7 +120,7 @@
   },
   "scripts": {
     "test": "gulp test",
-    "preinstall" : "npm i typings -g",
+    "preinstall" : "npm i typings gulp -g",
     "postinstall": "typings install && gulp build",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "node server"
