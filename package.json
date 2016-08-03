@@ -122,7 +122,7 @@
     "test": "gulp test",
     "postinstall": "typings install && bower install && gulp build",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
-    "start": "./node_modules/.bin/babel-node server"
+    "start": "./node_modules/.bin/babel-node dist/server"
   },
   "private": true
 }
