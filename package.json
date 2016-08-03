@@ -5,6 +5,7 @@
   "dependencies": {
     "apicache": "0.0.14",
     "autoprefixer": "^6.0.0",
+    "babel-cli": "^6.11.4",
     "babel-core": "^6.6.5",
     "babel-plugin-transform-class-properties": "^6.6.0",
     "babel-plugin-transform-runtime": "^6.6.0",
@@ -121,7 +122,7 @@
     "test": "gulp test",
     "postinstall": "typings install && bower install && gulp build",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
-    "start": "node server"
+    "start": "./node_modules/.bin/babel-node server"
   },
   "private": true
 }
