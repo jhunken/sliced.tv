@@ -1,7 +1,7 @@
 {
   "name": "easier-tv",
   "version": "0.0.0",
-  "main": "dist/server/app.js",
+  "main": "server/app.js",
   "dependencies": {
     "apicache": "0.0.14",
     "autoprefixer": "^6.0.0",

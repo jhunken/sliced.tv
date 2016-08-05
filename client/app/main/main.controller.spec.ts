@@ -21,7 +21,7 @@ describe('Component: mainComponent', function() {
     $state,
     socket) {
       $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('/api/things')
+      $httpBackend.expectGET('/api/movies')
         .respond(['HTML5 Boilerplate', 'AngularJS', 'Karma', 'Express']);
 
       scope = $rootScope.$new();
