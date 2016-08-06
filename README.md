@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/jhunken/easier.tv.svg?style=svg&circle-token=b8f3d32891a3cd47d8e77921057a7e3399ac2255)](https://circleci.com/gh/jhunken/easier.tv)
+
 # easier-tv
 
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 3.7.5.
