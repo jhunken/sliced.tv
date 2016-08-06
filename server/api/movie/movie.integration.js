@@ -1,140 +1,165 @@
 'use strict';
 
-var app = require('../..');
+import app from '../..';
+import Movie from './movie.model';
+import User from '../user/user.model';
 import request from 'supertest';
 
-var newMovie;
+describe('Movie API:', function () {
+  var user;
 
-describe('Movie API:', function() {
+  // Cleanup movies and users before testing
+  before(function () {
+    return Movie.remove().then(function () {
+      return User.remove().then(function () {
+        user = new User({
+          name     : 'Fake User',
+          email    : 'test@example.com',
+          password : 'password'
+        });
 
-  describe('GET /api/movies', function() {
-    var movies;
+        return user.save();
+      });
 
-    beforeEach(function(done) {
+    })
+  });
+
+  // Clears movies and users after testing
+  after(function () {
+    return Movie.remove().then(function () {
+      return User.remove();
+    });
+  });
+
+  describe('GET /api/movies', function () {
+    var token;
+
+    before(function (done) {
+      // Get authenticated user token
+      request(app)
+        .post('/auth/local')
+        .send({
+          email    : 'test@example.com',
+          password : 'password'
+        })
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          token = res.body.token;
+          done();
+        });
+    });
+
+
+    it('should respond with an array of movies when authenticated', function (done) {
+      var movies;
       request(app)
         .get('/api/movies')
+        .set('authorization', 'Bearer ' + token)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) {
-            return done(err);
+            done(err);
           }
           movies = res.body;
+          expect(movies).to.be.instanceOf(Array);
           done();
         });
     });
 
-    it('should respond with JSON array', function() {
-      expect(movies).to.be.instanceOf(Array);
+    it('should respond with a 401 when not authenticated', function (done) {
+      request(app)
+        .get('/api/movies')
+        .expect(401)
+        .end(done);
     });
 
   });
 
-  describe('POST /api/movies', function() {
-    beforeEach(function(done) {
+  describe('POST /api/movies', function () {
+    var token;
+
+    before(function (done) {
+      // Get authenticated user token
       request(app)
-        .post('/api/movies')
+        .post('/auth/local')
         .send({
-          name: 'New Movie',
-          info: 'This is the brand new movie!!!'
+          email    : 'test@example.com',
+          password : 'password'
         })
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
-          newMovie = res.body;
-          done();
-        });
-    });
-
-    it('should respond with the newly created movie', function() {
-      expect(newMovie.name).to.equal('New Movie');
-      expect(newMovie.info).to.equal('This is the brand new movie!!!');
-    });
-
-  });
-
-  describe('GET /api/movies/:id', function() {
-    var movie;
-
-    beforeEach(function(done) {
-      request(app)
-        .get('/api/movies/' + newMovie._id)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) {
-            return done(err);
+            done(err);
+          }
+          token = res.body.token;
+          done();
+        });
+    });
+  });
+
+  describe('GET /api/movies/:id', function () {
+    var token, movie, newMovie;
+
+    before(function (done) {
+      // Get authenticated user token
+      request(app)
+        .post('/auth/local')
+        .send({
+          email    : 'test@example.com',
+          password : 'password'
+        })
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) {
+            console.error(err);
+          }
+          token = res.body.token;
+
+          user.save().then(function () {
+            // Create newMovie
+            movie = new Movie({
+              title       : 'Fake Movie',
+              guidebox_id : '123456789'
+            });
+            movie.save().then(function (savedMovie) {
+              newMovie = savedMovie;
+              done();
+            });
+          });
+
+        });
+    });
+
+    it('should respond with the requested movie', function (done) {
+      request(app)
+        .get('/api/movies/' + newMovie.guidebox_id)
+        .set('authorization', 'Bearer ' + token)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) {
+            done(err);
           }
           movie = res.body;
+          expect(movie.title).to.equal('Fake Movie');
+          expect(movie.guidebox_id).to.equal(newMovie.guidebox_id);
           done();
         });
     });
 
-    afterEach(function() {
-      movie = {};
-    });
-
-    it('should respond with the requested movie', function() {
-      expect(movie.name).to.equal('New Movie');
-      expect(movie.info).to.equal('This is the brand new movie!!!');
-    });
-
-  });
-
-  describe('PUT /api/movies/:id', function() {
-    var updatedMovie;
-
-    beforeEach(function(done) {
+    it('should respond with an error if movie is not found', function (done) {
       request(app)
-        .put('/api/movies/' + newMovie._id)
-        .send({
-          name: 'Updated Movie',
-          info: 'This is the updated movie!!!'
-        })
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err);
-          }
-          updatedMovie = res.body;
-          done();
-        });
-    });
-
-    afterEach(function() {
-      updatedMovie = {};
-    });
-
-    it('should respond with the updated movie', function() {
-      expect(updatedMovie.name).to.equal('Updated Movie');
-      expect(updatedMovie.info).to.equal('This is the updated movie!!!');
-    });
-
-  });
-
-  describe('DELETE /api/movies/:id', function() {
-
-    it('should respond with 204 on successful removal', function(done) {
-      request(app)
-        .delete('/api/movies/' + newMovie._id)
-        .expect(204)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
-          done();
-        });
-    });
-
-    it('should respond with 404 when movie does not exist', function(done) {
-      request(app)
-        .delete('/api/movies/' + newMovie._id)
+        .get('/api/movies/' + '000000000')
+        .set('authorization', 'Bearer ' + token)
         .expect(404)
-        .end((err, res) => {
+        .end((err) => {
           if (err) {
             return done(err);
           }

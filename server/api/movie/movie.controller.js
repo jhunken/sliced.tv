@@ -9,51 +9,10 @@
 
 'use strict';
 
-import _ from 'lodash';
 import request from 'request';
 import Movie from './movie.model';
 import config from '../../config/environment';
 import Promise from 'bluebird';
-
-function respondWithResult(res, statusCode) {
-  statusCode = statusCode || 200;
-  return function (entity) {
-    if (entity) {
-      res.status(statusCode).json(entity);
-    }
-  };
-}
-
-function saveUpdates(updates) {
-  return function (entity) {
-    var updated = _.merge(entity, updates);
-    return updated.save()
-      .then(updated => {
-        return updated;
-      });
-  };
-}
-
-function removeEntity(res) {
-  return function (entity) {
-    if (entity) {
-      return entity.remove()
-        .then(() => {
-          res.status(204).end();
-        });
-    }
-  };
-}
-
-function handleEntityNotFound(res) {
-  return function (entity) {
-    if (!entity) {
-      res.status(404).end();
-      return null;
-    }
-    return entity;
-  };
-}
 
 function handleMovieRequest(res, id) {
 
@@ -133,7 +92,7 @@ function saveMovie(movie) {
 
           });
 
-          return newMovie.save(function (err, savedMovie, numAffected) {
+          return newMovie.save(function (err, savedMovie) {
             if (err) {
               reject(err);
             } else {
@@ -166,8 +125,6 @@ export function index(req, res) {
   return request(config.guidebox.baseURL + config.guidebox.apiKey + '/movies/all/0/25/all/all',
     function (error, response, body) {
       if (!error && response.statusCode === 200 && body !== {}) {
-        console.log(body);
-
         var movies = JSON.parse(body).results;
 
         if (movies && movies.length) {
@@ -178,6 +135,7 @@ export function index(req, res) {
           return null;
         }
       } else {
+        console.error('statusCode:', response.statusCode, ', error: ', error);
         res.status(response.statusCode).send(error).end();
         return null;
       }
@@ -188,32 +146,5 @@ export function index(req, res) {
 export function show(req, res) {
   return Movie.findOne({guidebox_id : req.params.id}).exec()
     .then(handleMovieRequest(res, req.params.id))
-    .catch(handleError(res));
-}
-
-// Creates a new Movie in the DB
-export function create(req, res) {
-  return Movie.create(req.body)
-    .then(respondWithResult(res, 201))
-    .catch(handleError(res));
-}
-
-// Updates an existing Movie in the DB
-export function update(req, res) {
-  if (req.body._id) {
-    delete req.body._id;
-  }
-  return Movie.findById(req.params.id).exec()
-    .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
-    .then(respondWithResult(res))
-    .catch(handleError(res));
-}
-
-// Deletes a Movie from the DB
-export function destroy(req, res) {
-  return Movie.findById(req.params.id).exec()
-    .then(handleEntityNotFound(res))
-    .then(removeEntity(res))
     .catch(handleError(res));
 }

@@ -20,11 +20,7 @@ var authServiceStub = {
 };
 
 var routerStub = {
-  get    : sinon.spy(),
-  put    : sinon.spy(),
-  patch  : sinon.spy(),
-  post   : sinon.spy(),
-  delete : sinon.spy()
+  get    : sinon.spy()
 };
 
 // require the index with our stubbed out modules
@@ -59,46 +55,6 @@ describe('Movie API Router:', function () {
     it('should be authenticated and route to movie.controller.show', function () {
       expect(routerStub.get
         .withArgs('/:id', 'authService.isAuthenticated', 'movieCtrl.show')
-      ).to.have.been.calledOnce;
-    });
-
-  });
-
-  describe('POST /api/movies', function () {
-
-    it('should route to movie.controller.create', function () {
-      expect(routerStub.post
-        .withArgs('/', 'movieCtrl.create')
-      ).to.have.been.calledOnce;
-    });
-
-  });
-
-  describe('PUT /api/movies/:id', function () {
-
-    it('should route to movie.controller.update', function () {
-      expect(routerStub.put
-        .withArgs('/:id', 'movieCtrl.update')
-      ).to.have.been.calledOnce;
-    });
-
-  });
-
-  describe('PATCH /api/movies/:id', function () {
-
-    it('should route to movie.controller.update', function () {
-      expect(routerStub.patch
-        .withArgs('/:id', 'movieCtrl.update')
-      ).to.have.been.calledOnce;
-    });
-
-  });
-
-  describe('DELETE /api/movies/:id', function () {
-
-    it('should route to movie.controller.destroy', function () {
-      expect(routerStub.delete
-        .withArgs('/:id', 'movieCtrl.destroy')
       ).to.have.been.calledOnce;
     });
 
