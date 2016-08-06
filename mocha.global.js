@@ -1,7 +1,11 @@
 import app from './';
 import mongoose from 'mongoose';
 
-after(function(done) {
+if(process.env.NODE_ENV === 'test') {
+  require('./nock.global');
+}
+
+after(function (done) {
   app.angularFullstack.on('close', () => done());
   mongoose.connection.close();
   app.angularFullstack.close();

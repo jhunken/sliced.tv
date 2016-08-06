@@ -7,6 +7,7 @@
 import errors from './components/errors';
 import path from 'path';
 import config from './config/environment';
+import * as auth from './auth/auth.service';
 
 var apicache = require('apicache').options({
   debug           : config.apiCache.debug,
@@ -16,7 +17,7 @@ var apicache = require('apicache').options({
 
 export default function (app) {
   // Insert routes below
-  app.use('/api/movies', apicache(), require('./api/movie'));
+  app.use('/api/movies', auth.isAuthenticated(), apicache(), require('./api/movie'));
   app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
 

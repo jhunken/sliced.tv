@@ -21,8 +21,8 @@ describe('Component: mainComponent', function() {
     $state,
     socket) {
       $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('/api/things')
-        .respond(['HTML5 Boilerplate', 'AngularJS', 'Karma', 'Express']);
+      $httpBackend.expectGET('/api/movies')
+        .respond([]);
 
       scope = $rootScope.$new();
       state = $state;
@@ -33,9 +33,9 @@ describe('Component: mainComponent', function() {
       });
   }));
 
-  it('should attach a list of things to the controller', function() {
+  it('should attach an array of movies to the controller', function() {
     mainComponent.$onInit();
     $httpBackend.flush();
-    expect(mainComponent.awesomeThings.length).to.equal(4);
+    expect(mainComponent.movies.length).to.equal(0);
   });
 });

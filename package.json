@@ -1,7 +1,7 @@
 {
   "name": "easier-tv",
   "version": "0.0.0",
-  "main": "dist/server/app.js",
+  "main": "server/app.js",
   "dependencies": {
     "apicache": "0.0.14",
     "autoprefixer": "^6.0.0",
@@ -115,14 +115,17 @@
     "wiredep": "^2.2.2"
   },
   "engines": {
-    "node": "^4.4.0",
+    "node": "^4.2.6",
     "npm": "^2.14.20"
   },
   "scripts": {
     "test": "gulp test",
-    "postinstall": "typings install && bower install && gulp build",
+    "postinstall": "./node_modules/.bin/typings install",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "./node_modules/.bin/babel-node dist/server"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "nock": "^8.0.0"
+  }
 }
