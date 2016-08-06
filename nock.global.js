@@ -5,7 +5,7 @@ import fs from 'fs';
 // Mock external http requests
 nock('https://api-public.guidebox.com:443', {"encodedQueryParams" : true})
   .get('/v1.43/US/' + config.guidebox.apiKey + '/movies/all/0/25/all/all')
-  .reply(200, JSON.parse(fs.readFileSync(__dirname + '/server/api/movie/movies.mock.json')), {
+  .reply(200, JSON.parse(fs.readFileSync(__dirname + '/movies.mock.json')), {
     'cache-control'         : 'no-cache',
     'content-type'          : 'application/json',
     date                    : 'Sat, 06 Aug 2016 20:04:40 GMT',
