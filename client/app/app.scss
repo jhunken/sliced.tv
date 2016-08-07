@@ -26,3 +26,7 @@ $fa-font-path: '/assets/fonts/font-awesome/';
 @import '../components/modal/modal';
 @import '../components/oauth-buttons/oauth-buttons';
 /* endinject */
+
+body {
+  padding-top: 70px;
+}
