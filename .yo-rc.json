@@ -1,6 +1,6 @@
 {
   "generator-angular-fullstack": {
-    "generatorVersion": "3.7.5",
+    "generatorVersion": "4.0.0-rc.0",
     "endpointDirectory": "server/api/",
     "insertRoutes": true,
     "registerRoutesFile": "server/routes.js",
@@ -15,7 +15,7 @@
     "modelsNeedle": "// Insert models below",
     "filters": {
       "js": true,
-      "ts": true,
+      "babel": true,
       "flow": false,
       "html": true,
       "sass": true,
@@ -29,7 +29,6 @@
       "mongoose": true,
       "oauth": true,
       "googleAuth": true,
-      "gulp": true,
       "mocha": true,
       "jasmine": false,
       "should": false,
@@ -53,7 +52,7 @@
       "es6"
     ],
     "extensions": [
-      "ts",
+      "babel",
       "js",
       "html",
       "scss"
