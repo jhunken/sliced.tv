@@ -1,6 +1,7 @@
 'use strict';
 
 import angular from 'angular';
+import ngInfiniteScroll from 'ng-infinite-scroll';
 // import ngAnimate from 'angular-animate';
 import ngCookies from 'angular-cookies';
 import ngResource from 'angular-resource';
@@ -27,16 +28,16 @@ import movie from './movie/movie.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
-
+import movieService from './movieService/movieService.service';
 import './app.scss';
 
 angular.module('easierTvApp', [
   // ngAnimate,
-  ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap,
+  ngInfiniteScroll, ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap,
   // ngMessages,
 
   // ngValidationMatch,
-  _Auth, account, admin, navbar, footer, main, movie, constants, socket, util
+  _Auth, account, admin, navbar, footer, main, movie, movieService, constants, socket, util
 ])
   .config(routeConfig)
   .run(function ($rootScope, $location, Auth) {

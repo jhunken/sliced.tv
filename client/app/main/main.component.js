@@ -5,20 +5,35 @@ import routing from './main.routes';
 export class MainController {
 
   /*@ngInject*/
-  constructor($http, $scope, socket) {
-    this.$http = $http;
-    this.socket = socket;
+  constructor($http, $scope, socket, movieService) {
+    this.$http        = $http;
+    this.socket       = socket;
+    this.movieService = movieService;
+    this.movies       = [];
+    this.start        = 0;
+    this.limit        = 25;
+    this.source       = 'all';
+    this.platform     = 'all';
+    this.busy         = false;
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function () {
       socket.unsyncUpdates('movie');
     });
   }
 
-  $onInit() {
-    this.$http.get('/api/movies')
+  loadMoreMovies() {
+    if (this.busy) return;
+    this.busy  = true;
+    this.start = this.start + this.limit;
+    this.movieService.movies(this.start, this.limit, this.source, this.platform)
       .then(response => {
-        this.movies = response.data;
+        this.movies = this.movies.concat(response.data);
         this.socket.syncUpdates('movie', this.movies);
+        this.busy = false;
+      })
+      .catch(err => {
+        console.error(err);
+        this.busy = false;
       });
   }
 }
@@ -26,7 +41,7 @@ export class MainController {
 export default angular.module('easierTvApp.main', [uiRouter])
   .config(routing)
   .component('main', {
-    template: require('./main.html'),
-    controller: MainController
+    template   : require('./main.html'),
+    controller : MainController
   })
   .name;

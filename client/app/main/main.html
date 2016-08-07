@@ -1,12 +1,15 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
-      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="movie in $ctrl.movies">
-        <a ui-sref="movie({id: movie.id})" uib-tooltip="{{movie.title}}" href>{{movie.title}}
-          <li>
-            <img ng-src="{{movie.poster_120x171}}"></li>
-        </a>
-      </ul>
+      <div infinite-scroll="$ctrl.loadMoreMovies()" infinite-scroll-disabled='$ctrl.busy' infinite-scroll-distance='1'>
+        <ul class="nav nav-tabs nav-stacked col-md-6 col-lg-4 col-sm-1" ng-repeat="movie in $ctrl.movies">
+          <a ui-sref="movie({id: movie.id})" uib-tooltip="{{movie.title}}" href>
+            <li class="text-center">
+              <img ng-src="{{movie.poster_400x570}}"></li>
+          </a>
+        </ul>
+        <div style='clear: both;'></div>
+      </div>
     </div>
   </div>
 
