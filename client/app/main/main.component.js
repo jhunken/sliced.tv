@@ -20,7 +20,7 @@ export class MainController {
       socket.unsyncUpdates('movie');
     });
   }
-  
+
   loadMoreMovies() {
     if (this.busy) return;
     this.busy  = true;

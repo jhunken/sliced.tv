@@ -1,9 +1,11 @@
 'use strict';
 
+import movieServiceModule from './movieService.service';
+
 describe('Service: movieService', function () {
 
   // load the service's module
-  beforeEach(module('easierTvApp'));
+  beforeEach(angular.mock.module(movieServiceModule));
 
   // instantiate service
   var movieService;
