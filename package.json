@@ -120,7 +120,7 @@
   },
   "scripts": {
     "test": "gulp test",
-    "postinstall": "./node_modules/.bin/typings install && bower install",
+    "postinstall": "./node_modules/.bin/typings install && bower install && gulp build",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "./node_modules/.bin/babel-node dist/server"
   },
