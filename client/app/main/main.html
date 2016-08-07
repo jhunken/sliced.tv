@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg-12">
       <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="movie in $ctrl.movies">
-        <a ui-sref="movie({id: movie.id})" uib-tooltip="{{movie.title}}">{{movie.title}}
+        <a ui-sref="movie({id: movie.id})" uib-tooltip="{{movie.title}}" href>{{movie.title}}
           <li>
             <img ng-src="{{movie.poster_120x171}}"></li>
         </a>

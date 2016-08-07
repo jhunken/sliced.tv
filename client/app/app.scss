@@ -1,8 +1,10 @@
-$icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
-@import '../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
-@import '../bower_components/bootstrap-social/bootstrap-social.scss';
-$fa-font-path: "../bower_components/font-awesome/fonts";
-@import '../bower_components/font-awesome/scss/font-awesome';
+$icon-font-path: '/assets/fonts/bootstrap/';
+@import '~bootstrap-sass/vendor/assets/stylesheets/bootstrap';
+@import '~bootstrap-social/bootstrap-social.scss';
+$fa-font-path: '/assets/fonts/font-awesome/';
+@import '~font-awesome/scss/font-awesome';
+
+// @import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,900|Roboto:300,500,700,900);
 
 /**
  * App-wide Styles
@@ -15,7 +17,7 @@ $fa-font-path: "../bower_components/font-awesome/fonts";
   padding: 0.2em 0;
 }
 
-// Component styles are injected through grunt
+// Component styles are injected through gulp
 /* inject:scss */
 @import 'admin/admin';
 @import 'main/main';

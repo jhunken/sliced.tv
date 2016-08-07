@@ -8,7 +8,7 @@ import compose from 'composable-middleware';
 import User from '../api/user/user.model';
 
 var validateJwt = expressJwt({
-  secret: config.secrets.session
+  secret : config.secrets.session
 });
 
 /**
@@ -17,8 +17,8 @@ var validateJwt = expressJwt({
  */
 export function isAuthenticated() {
   return compose()
-    // Validate jwt
-    .use(function(req, res, next) {
+  // Validate jwt
+    .use(function (req, res, next) {
       // allow access_token to be passed through query parameter as well
       if (req.query && req.query.hasOwnProperty('access_token')) {
         req.headers.authorization = 'Bearer ' + req.query.access_token;
@@ -26,7 +26,7 @@ export function isAuthenticated() {
       validateJwt(req, res, next);
     })
     // Attach user to request
-    .use(function(req, res, next) {
+    .use(function (req, res, next) {
       User.findById(req.user._id).exec()
         .then(user => {
           if (!user) {
@@ -51,10 +51,10 @@ export function hasRole(roleRequired) {
     .use(isAuthenticated())
     .use(function meetsRequirements(req, res, next) {
       if (config.userRoles.indexOf(req.user.role) >=
-          config.userRoles.indexOf(roleRequired)) {
+        config.userRoles.indexOf(roleRequired)) {
         next();
       } else {
-        res.status(403).send('Forbidden');
+        return res.status(403).send('Forbidden');
       }
     });
 }
@@ -63,8 +63,8 @@ export function hasRole(roleRequired) {
  * Returns a jwt token signed by the app secret
  */
 export function signToken(id, role) {
-  return jwt.sign({ _id: id, role: role }, config.secrets.session, {
-    expiresIn: 60 * 60 * 5
+  return jwt.sign({_id : id, role : role}, config.secrets.session, {
+    expiresIn : 60 * 60 * 5
   });
 }
 

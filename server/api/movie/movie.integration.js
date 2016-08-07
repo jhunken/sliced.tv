@@ -77,7 +77,6 @@ describe('Movie API:', function () {
         .expect(401)
         .end(done);
     });
-
   });
 
   describe('POST /api/movies', function () {
