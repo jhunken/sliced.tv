@@ -9,24 +9,31 @@ export class MainController {
     this.$http        = $http;
     this.socket       = socket;
     this.movieService = movieService;
+    this.movies       = [];
     this.start        = 0;
     this.limit        = 25;
     this.source       = 'all';
     this.platform     = 'all';
+    this.busy         = false;
 
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('movie');
     });
   }
-
-  $onInit() {
+  
+  loadMoreMovies() {
+    if (this.busy) return;
+    this.busy  = true;
+    this.start = this.start + this.limit;
     this.movieService.movies(this.start, this.limit, this.source, this.platform)
       .then(response => {
-        this.movies = response.data;
+        this.movies = this.movies.concat(response.data);
         this.socket.syncUpdates('movie', this.movies);
+        this.busy = false;
       })
       .catch(err => {
         console.error(err);
+        this.busy = false;
       });
   }
 }
