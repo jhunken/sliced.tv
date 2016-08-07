@@ -122,7 +122,11 @@ function handleError(res, statusCode) {
 
 // Gets a list of Movies
 export function index(req, res) {
-  return request(config.guidebox.baseURL + config.guidebox.apiKey + '/movies/all/0/25/all/all',
+  var start    = (req.params && req.params.start && Number.parseInt(req.params.start, 10)) ? req.params.start : '0';
+  var limit    = (req.params && req.params.limit && Number.parseInt(req.params.limit, 10)) ? req.params.limit : '25';
+  var sources  = (req.params && req.params.sources) ? req.params.sources : 'all';
+  var platform = (req.params && req.params.platform) ? req.params.platform : 'all';
+  return request(config.guidebox.baseURL + config.guidebox.apiKey + '/movies/all/' + start + '/' + limit + '/' + sources + '/' + platform,
     function (error, response, body) {
       if (!error && response.statusCode === 200 && body !== {}) {
         var movies = JSON.parse(body).results;
@@ -135,7 +139,7 @@ export function index(req, res) {
           return null;
         }
       } else {
-        console.error('statusCode:', response.statusCode, ', error: ', error);
+        console.error('statusCode:', response.statusCode, ', error: ', error + ', body: ', body);
         res.status(response.statusCode).send(error).end();
         return null;
       }
