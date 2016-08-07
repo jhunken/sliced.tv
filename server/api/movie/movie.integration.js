@@ -71,6 +71,40 @@ describe('Movie API:', function () {
         });
     });
 
+    it('should respond with an array of movies using params', function (done) {
+      var movies;
+      request(app)
+        .get('/api/movies/all/50/10/all/all')
+        .set('authorization', 'Bearer ' + token)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          movies = res.body;
+          expect(movies).to.be.instanceOf(Array);
+          expect(movies.length).to.equal(10);
+          done();
+        });
+    });
+
+    it('should respond with an error 400 when "start" param is incorrect', function (done) {
+      request(app)
+        .get('/api/movies/all/999999999/10/all/all')
+        .set('authorization', 'Bearer ' + token)
+        .expect(400)
+        .end(done);
+    });
+
+    it('should respond with an error when using invalid params', function (done) {
+      request(app)
+        .get('/api/movies/all/invalid/invalid/invalid/invalid')
+        .set('authorization', 'Bearer ' + token)
+        .expect(500)
+        .end(done);
+    });
+
     it('should respond with a 401 when not authenticated', function (done) {
       request(app)
         .get('/api/movies')

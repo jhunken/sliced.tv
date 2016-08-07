@@ -27,6 +27,7 @@ import movie from './movie/movie.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
+import movieService from './movieService/movieService.service';
 
 import './app.scss';
 
@@ -36,7 +37,7 @@ angular.module('easierTvApp', [
   // ngMessages,
 
   // ngValidationMatch,
-  _Auth, account, admin, navbar, footer, main, movie, constants, socket, util
+  _Auth, account, admin, navbar, footer, main, movie, movieService, constants, socket, util
 ])
   .config(routeConfig)
   .run(function ($rootScope, $location, Auth) {

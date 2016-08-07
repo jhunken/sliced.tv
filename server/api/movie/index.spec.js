@@ -49,7 +49,15 @@ describe('Movie API Router:', function () {
     });
 
   });
+  describe('GET /api/movies/all/:start/:limit/:sources/:platform', function () {
 
+    it('should be authenticated and route to movie.controller.index', function () {
+      expect(routerStub.get
+        .withArgs('/all/:start/:limit/:sources/:platform', 'authService.isAuthenticated', 'movieCtrl.index')
+      ).to.have.been.calledOnce;
+    });
+
+  });
   describe('GET /api/movies/:id', function () {
 
     it('should be authenticated and route to movie.controller.show', function () {

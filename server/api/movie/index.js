@@ -6,6 +6,7 @@ var controller = require('./movie.controller');
 var router = express.Router();
 
 router.get('/', auth.isAuthenticated(), controller.index);
+router.get('/all/:start/:limit/:sources/:platform', auth.isAuthenticated(), controller.index);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 
 module.exports = router;
