@@ -153,7 +153,8 @@
   "scripts": {
     "test": "gulp test",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
-    "start": "node server"
+    "postinstall": "bower install && gulp build",
+    "start": "./node_modules/.bin/babel-node dist/server"
   },
   "private": true,
   "devDependencies": {
