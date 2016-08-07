@@ -168,7 +168,6 @@ gulp.task('env:all', () => {
   } catch (e) {
     localConfig = {};
   }
-  localConfig.DOMAIN = 'http://localhost:3000';
   plugins.env({
     vars : localConfig
   });
