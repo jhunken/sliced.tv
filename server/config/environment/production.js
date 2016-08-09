@@ -15,14 +15,14 @@ module.exports = {
   8080,
 
   // MongoDB connection options
-  mongo    : {
+  mongo        : {
     uri : process.env.MONGODB_URI ||
     process.env.MONGOHQ_URL ||
     process.env.OPENSHIFT_MONGODB_DB_URL +
     process.env.OPENSHIFT_APP_NAME ||
     'mongodb://localhost/easiertv'
   },
-  apiCache : {
+  apiCache     : {
     debug           : false,
     defaultDuration : 600000
   }
