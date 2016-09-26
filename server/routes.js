@@ -17,9 +17,8 @@ var apicache = require('apicache').options({
 
 export default function (app) {
   // Insert routes below
-  app.use('/api/updates', require('./api/update'));
+  app.use('/api/updates', auth.isAuthenticated(), apicache(), require('./api/update'));
   app.use('/api/movies', auth.isAuthenticated(), apicache(), require('./api/movie'));
-  app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
 
   app.use('/auth', require('./auth').default);

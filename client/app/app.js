@@ -25,6 +25,7 @@ import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
 import main from './main/main.component';
 import movie from './movie/movie.component';
+import newComp from './new/new.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
@@ -37,7 +38,7 @@ angular.module('easierTvApp', [
   // ngMessages,
 
   // ngValidationMatch,
-  _Auth, account, admin, navbar, footer, main, movie, movieService, constants, socket, util
+  _Auth, account, admin, navbar, footer, main, movie, newComp, movieService, constants, socket, util
 ])
   .config(routeConfig)
   .run(function ($rootScope, $location, Auth) {
