@@ -265,16 +265,68 @@ nock('https://api-public.guidebox.com:443', {"encodedQueryParams" : true})
     connection              : 'Close'
   });
 
-nock('https://api-public.guidebox.com:443', {"encodedQueryParams":true})
+nock('https://api-public.guidebox.com:443', {"encodedQueryParams" : true})
   .get('/v1.43/US/' + config.guidebox.apiKey + '/movies/all/999999999/10/all/all')
-  .reply(200, {"total_results":68951,"total_returned":0,"results":[]}, { 'cache-control': 'no-cache',
-    'content-type': 'application/json',
-    date: 'Sun, 07 Aug 2016 20:58:53 GMT',
-    responsetime: '3.416916847229',
-    server: 'nginx/1.4.6 (Ubuntu)',
-    'x-ratelimit-limit': '240',
-    'x-ratelimit-remaining': '237',
-    'content-length': '55',
-    connection: 'Close' });
+  .reply(200, {"total_results" : 68951, "total_returned" : 0, "results" : []}, {
+    'cache-control'         : 'no-cache',
+    'content-type'          : 'application/json',
+    date                    : 'Sun, 07 Aug 2016 20:58:53 GMT',
+    responsetime            : '3.416916847229',
+    server                  : 'nginx/1.4.6 (Ubuntu)',
+    'x-ratelimit-limit'     : '240',
+    'x-ratelimit-remaining' : '237',
+    'content-length'        : '55',
+    connection              : 'Close'
+  });
+
+nock('https://api-public.guidebox.com:443', {"encodedQueryParams" : true})
+  .get('/v1.43/US/' + config.guidebox.apiKey + '/updates/movies/new/1474749294')
+  .query({"limit" : "100", "page" : "1"})
+  .reply(200, {
+    "total_results"  : 27,
+    "total_returned" : 27,
+    "page"           : 1,
+    "total_pages"    : 1,
+    "results"        : [
+      {"id" : 109037, "time" : 1474787729}, {
+        "id"   : 114451,
+        "time" : 1474787853
+      }, {"id" : 137012, "time" : 1474790462}, {"id" : 1250, "time" : 1474790663}, {
+        "id"   : 3087,
+        "time" : 1474790664
+      }, {"id" : 119840, "time" : 1474795143}, {"id" : 56814, "time" : 1474795143}, {
+        "id"   : 113343,
+        "time" : 1474795144
+      }, {"id" : 134123, "time" : 1474795240}, {"id" : 94804, "time" : 1474796615}, {
+        "id"   : 97390,
+        "time" : 1474798223
+      }, {"id" : 94016, "time" : 1474798225}, {"id" : 96014, "time" : 1474798227}, {
+        "id"   : 75752,
+        "time" : 1474809519
+      }, {"id" : 142012, "time" : 1474826437}, {"id" : 142013, "time" : 1474826454}, {
+        "id"   : 142016,
+        "time" : 1474826544
+      }, {"id" : 142022, "time" : 1474826558}, {"id" : 142024, "time" : 1474826572}, {
+        "id"   : 142025,
+        "time" : 1474826694
+      }, {"id" : 141257, "time" : 1474827464}, {"id" : 142017, "time" : 1474830851}, {
+        "id"   : 142018,
+        "time" : 1474830852
+      }, {"id" : 142020, "time" : 1474830853}, {"id" : 142023, "time" : 1474830854}, {
+        "id"   : 9741,
+        "time" : 1474830982
+      }, {"id" : 26565, "time" : 1474832496}
+    ]
+  }, {
+    'cache-control'         : 'no-cache',
+    'content-type'          : 'application/json',
+    date                    : 'Mon, 26 Sep 2016 01:13:03 GMT',
+    responsetime            : '0.076862096786499',
+    server                  : 'nginx/1.4.6 (Ubuntu)',
+    'x-ratelimit-limit'     : '240',
+    'x-ratelimit-remaining' : '235',
+    'content-length'        : '928',
+    connection              : 'Close'
+  });
 // Used for recording network requests
 //nock.recorder.rec();

@@ -24,7 +24,6 @@ export class MainController {
   loadMoreMovies() {
     if (this.busy) return;
     this.busy  = true;
-    this.start = this.start + this.limit;
     this.movieService.movies(this.start, this.limit, this.source, this.platform)
       .then(response => {
         this.movies = this.movies.concat(response.data);
@@ -35,6 +34,7 @@ export class MainController {
         console.error(err);
         this.busy = false;
       });
+    this.start = this.start + this.limit;
   }
 }
 

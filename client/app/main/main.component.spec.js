@@ -105,7 +105,7 @@ describe('Component: MainComponent', function () {
   beforeEach(inject(function (_$httpBackend_, $http, $componentController, $rootScope, $state,
                               socket, movieService) {
     $httpBackend = _$httpBackend_;
-    $httpBackend.expectGET('/api/movies/all/25/25/all/all')
+    $httpBackend.expectGET('/api/movies/all/0/25/all/all')
       .respond(mockMovies);
 
     scope         = $rootScope.$new();
@@ -121,7 +121,6 @@ describe('Component: MainComponent', function () {
   it('should attach a list of movies to the controller', function () {
     mainComponent.loadMoreMovies();
     $httpBackend.flush();
-    console.log(mainComponent.movies);
     expect(mainComponent.movies).to.have.lengthOf(3);
   });
 });
