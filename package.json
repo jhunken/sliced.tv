@@ -17,6 +17,7 @@
     "apicache": "0.0.14",
     "autoprefixer": "^6.0.0",
     "awesome-typescript-loader": "0.17.0",
+    "babel-cli": "^6.14.0",
     "babel-core": "^6.6.5",
     "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
