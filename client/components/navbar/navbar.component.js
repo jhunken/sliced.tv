@@ -3,8 +3,7 @@
 export class NavbarComponent {
   menu = [
     {title : 'Popular', state : 'main'},
-    {title : 'New', state : 'new'},
-    {title : 'Cinema', state : 'cinema'}
+    {title : 'New', state : 'new'}
   ];
 
   constructor(Auth) {
