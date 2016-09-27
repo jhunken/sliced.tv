@@ -30,7 +30,7 @@ export class NewComponent {
 export default angular.module('easierTvApp.new', [uiRouter])
   .config(routes)
   .component('new', {
-    templateUrl  : 'app/new/new.html',
+    template  : require('./new.html'),
     controller   : NewComponent,
     controllerAs : 'newCtrl'
   })
