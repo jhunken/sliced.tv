@@ -11,7 +11,7 @@
     "angular-resource": "~1.5.5",
     "angular-sanitize": "~1.5.5",
     "angular-socket-io": "~0.7.0",
-    "angular-ui-bootstrap": "~2.1.4",
+    "angular-ui-bootstrap": "~2.2.0",
     "angular-ui-router": "~0.3.1",
     "angular-validation-match": "~1.9.0",
     "apicache": "0.2.3",
