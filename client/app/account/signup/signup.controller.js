@@ -1,6 +1,16 @@
 'use strict';
 
+import angular from 'angular';
+
 export default class SignupController {
+  user = {
+    name: '',
+    email: '',
+    password: ''
+  };
+  errors = {};
+  submitted = false;
+
 
   /*@ngInject*/
   constructor(Auth, $state) {
@@ -11,12 +21,12 @@ export default class SignupController {
   register(form) {
     this.submitted = true;
 
-    if (form.$valid) {
+    if(form.$valid) {
       return this.Auth.createUser({
-          name: this.user.name,
-          email: this.user.email,
-          password: this.user.password
-        })
+        name: this.user.name,
+        email: this.user.email,
+        password: this.user.password
+      })
         .then(() => {
           // Account created, redirect to home
           this.$state.go('main');

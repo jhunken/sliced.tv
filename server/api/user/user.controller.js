@@ -1,21 +1,20 @@
 'use strict';
 
 import User from './user.model';
-import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
-    res.status(statusCode).json(err);
-  }
+    return res.status(statusCode).json(err);
+  };
 }
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
-    res.status(statusCode).send(err);
+    return res.status(statusCode).send(err);
   };
 }
 
@@ -34,7 +33,7 @@ export function index(req, res) {
 /**
  * Creates a new user
  */
-export function create(req, res, next) {
+export function create(req, res) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
@@ -56,7 +55,7 @@ export function show(req, res, next) {
 
   return User.findById(userId).exec()
     .then(user => {
-      if (!user) {
+      if(!user) {
         return res.status(404).end();
       }
       res.json(user.profile);
@@ -79,14 +78,14 @@ export function destroy(req, res) {
 /**
  * Change a users password
  */
-export function changePassword(req, res, next) {
+export function changePassword(req, res) {
   var userId = req.user._id;
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
 
   return User.findById(userId).exec()
     .then(user => {
-      if (user.authenticate(oldPass)) {
+      if(user.authenticate(oldPass)) {
         user.password = newPass;
         return user.save()
           .then(() => {
@@ -107,7 +106,7 @@ export function me(req, res, next) {
 
   return User.findOne({ _id: userId }, '-salt -password').exec()
     .then(user => { // don't ever give out the password or salt
-      if (!user) {
+      if(!user) {
         return res.status(401).end();
       }
       res.json(user);
@@ -118,6 +117,6 @@ export function me(req, res, next) {
 /**
  * Authentication callback
  */
-export function authCallback(req, res, next) {
+export function authCallback(req, res) {
   res.redirect('/');
 }

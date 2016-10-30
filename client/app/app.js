@@ -1,7 +1,7 @@
 'use strict';
 
 import angular from 'angular';
-import ngInfiniteScroll from 'ng-infinite-scroll';
+import dcEndlessScroll from 'angular-endless-scroll/dist/angular-endless-scroll';
 // import ngAnimate from 'angular-animate';
 import ngCookies from 'angular-cookies';
 import ngResource from 'angular-resource';
@@ -11,7 +11,7 @@ import 'angular-socket-io';
 import uiRouter from 'angular-ui-router';
 import uiBootstrap from 'angular-ui-bootstrap';
 // import ngMessages from 'angular-messages';
-//import ngValidationMatch from 'angular-validation-match';
+// import ngValidationMatch from 'angular-validation-match';
 
 
 import {
@@ -30,15 +30,12 @@ import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
 import movieService from './movieService/movieService.service';
+import movieLoader from './movieLoader/movieLoader.service';
+
 import './app.scss';
 
 angular.module('easierTvApp', [
-  // ngAnimate,
-  ngInfiniteScroll, ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap,
-  // ngMessages,
-
-  // ngValidationMatch,
-  _Auth, account, admin, navbar, footer, main, movie, newComp, movieService, constants, socket, util
+  ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, 'dc.endlessScroll', uiBootstrap, _Auth, account, admin, navbar, footer, main, movieService, movieLoader, movie, newComp, constants, socket, util
 ])
   .config(routeConfig)
   .run(function ($rootScope, $location, Auth) {

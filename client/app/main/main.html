@@ -1,16 +1,28 @@
 <div class="container">
   <div class="row">
-    <div class="col-lg-12">
-      <div infinite-scroll="$ctrl.loadMoreMovies()" infinite-scroll-disabled='$ctrl.busy' infinite-scroll-distance='1'>
-        <ul class="nav nav-tabs nav-stacked col-md-6 col-lg-4 col-sm-12" ng-repeat="movie in $ctrl.movies">
-          <a ui-sref="movie({id: movie.id})" uib-tooltip="{{movie.title}}" href>
-            <li class="text-center">
-              <img ng-src="{{movie.poster_400x570}}"></li>
-          </a>
-        </ul>
-        <div style='clear: both;'></div>
-      </div>
+    <div endless-scroll="movie in $ctrl.movies" class="col-md-3">
+      <a ui-sref="movie({id: movie.id})" class="thumbnail" href>
+        <div ng-style="{'background-image': 'url(' + movie.poster_400x570 + ')'}" class="image"></div>
+        <div class="caption text-center">
+            <span ng-show="movie.title">
+              {{ movie.title }}
+            </span>
+          <span ng-hide="movie.title">
+              N/A
+            </span>
+        </div>
+      </a>
     </div>
+    <p ng-show="$ctrl.loading" class="text-center">
+      Loading...
+    </p>
+    <!--<ul class="nav nav-tabs nav-stacked ">-->
+      <!--<a endless-scroll="movie in $ctrl.movies" ui-sref="movie({id: movie.id})" uib-tooltip="{{movie.title}}" href-->
+         <!--class="col-md-12 col-lg-12 col-sm-12">-->
+        <!--<li class="text-center" id='{{movie.id}}'>-->
+          <!--<img ng-src="{{movie.poster_400x570}}">-->
+        <!--</li>-->
+      <!--</a>-->
+    <!--</ul>-->
   </div>
-
 </div>

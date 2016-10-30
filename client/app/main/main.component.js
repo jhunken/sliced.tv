@@ -4,38 +4,53 @@ import routing from './main.routes';
 
 export class MainController {
 
+
   /*@ngInject*/
-  constructor($http, $scope, socket, movieService) {
+  constructor($http, $scope, movieLoader, $stateParams, $state) {
     this.$http        = $http;
-    this.socket       = socket;
-    this.movieService = movieService;
-    this.movies       = [];
-    this.start        = 0;
-    this.limit        = 25;
-    this.source       = 'all';
-    this.platform     = 'all';
-    this.busy         = false;
+    this.$stateParams = $stateParams;
+    this.$state       = $state;
+    this._movieLoader = movieLoader;
 
     $scope.$on('$destroy', function () {
-      socket.unsyncUpdates('movie');
+      // socket.unsyncUpdates('thing');
     });
+
+    $scope.$on('endlessScroll:next', () => this.nextPage());
+    $scope.$on('endlessScroll:previous', () => this.previousPage());
+
   }
 
-  loadMoreMovies() {
-    if (this.busy) return;
-    this.busy  = true;
-    this.movieService.movies(this.start, this.limit, this.source, this.platform)
-      .then(response => {
-        this.movies = this.movies.concat(response.data);
-        this.socket.syncUpdates('movie', this.movies);
-        this.busy = false;
-      })
-      .catch(err => {
-        console.error(err);
-        this.busy = false;
-      });
-    this.start = this.start + this.limit;
+  $onInit() {
+    //var params = {page : this.$location.search().page};
+    var params = {page : this.$stateParams.page};
+    this._movieLoader.init(params).then(() => this.onPageLoad());
   }
+
+  onPageLoadError(page) {
+    this.loading = false;
+  }
+
+  onPageLoad() {
+    this.movies     = this._movieLoader.movies;
+    this.pagination = this._movieLoader.pagination;
+
+    this.loading = false;
+  }
+
+  nextPage() {
+    this.loading = true;
+    this.$state.go('main', {page : this.pagination.lastPageLoaded}, {notify : false});
+    this._movieLoader.next().then(()=>this.onPageLoad(), ()=>this.onPageLoadError());
+  }
+
+  previousPage() {
+    this.loading = true;
+    this.$state.go('main', {page : this.pagination.lastPageLoaded}, {notify : false});
+    this._movieLoader.previous().then(()=>this.onPageLoad(), ()=> this.onPageLoadError());
+  }
+
+
 }
 
 export default angular.module('easierTvApp.main', [uiRouter])
