@@ -1,10 +1,9 @@
 'use strict';
 
-import angular from 'angular';
-
 /**
  * The Util service is for thin, globally reusable, utility functions
  */
+
 export function UtilService($window) {
   'ngInject';
 
@@ -30,7 +29,7 @@ export function UtilService($window) {
       a.href = url;
 
       // Special treatment for IE, see http://stackoverflow.com/a/13405933 for details
-      if(a.host === '') {
+      if (a.host === '') {
         a.href = a.href;
       }
 

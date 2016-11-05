@@ -7,7 +7,7 @@
 import express from 'express';
 import favicon from 'serve-favicon';
 import morgan from 'morgan';
-import shrinkRay from 'shrink-ray';
+import compression from 'compression';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
@@ -20,15 +20,18 @@ import session from 'express-session';
 import connectMongo from 'connect-mongo';
 import mongoose from 'mongoose';
 var MongoStore = connectMongo(session);
+import stripAnsi from 'strip-ansi';
+
+var browserSync = require('browser-sync').create();
 
 export default function(app) {
   var env = app.get('env');
 
-  if(env === 'development' || env === 'test') {
+  if (env === 'development' || env === 'test') {
     app.use(express.static(path.join(config.root, '.tmp')));
   }
 
-  if(env === 'production') {
+  if (env === 'production') {
     app.use(favicon(path.join(config.root, 'client', 'favicon.ico')));
   }
 
@@ -36,10 +39,10 @@ export default function(app) {
   app.use(express.static(app.get('appPath')));
   app.use(morgan('dev'));
 
-  app.set('views', `${config.root}/server/views`);
+  app.set('views', config.root + '/server/views');
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
-  app.use(shrinkRay());
+  app.use(compression());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(methodOverride());
@@ -56,7 +59,7 @@ export default function(app) {
     resave: false,
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
-      db: 'easier-tv'
+      db: 'angular-fullstack-playground'
     })
   }));
 
@@ -64,7 +67,7 @@ export default function(app) {
    * Lusca - express server security
    * https://github.com/krakenjs/lusca
    */
-  if(env !== 'test' && !process.env.SAUCE_USERNAME) {
+  if (env !== 'test' && !process.env.SAUCE_USERNAME) {
     app.use(lusca({
       csrf: {
         angular: true
@@ -79,14 +82,12 @@ export default function(app) {
     }));
   }
 
-  if(env === 'development') {
+  if ('development' === env) {
     const webpackDevMiddleware = require('webpack-dev-middleware');
-    const stripAnsi = require('strip-ansi');
     const webpack = require('webpack');
     const makeWebpackConfig = require('../../webpack.make');
     const webpackConfig = makeWebpackConfig({ DEV: true });
     const compiler = webpack(webpackConfig);
-    const browserSync = require('browser-sync').create();
 
     /**
      * Run Browsersync and use middleware for Hot Module Replacement
@@ -94,7 +95,7 @@ export default function(app) {
     browserSync.init({
       open: false,
       logFileChanges: false,
-      proxy: `localhost:${config.port}`,
+      proxy: 'localhost:' + config.port,
       ws: true,
       middleware: [
         webpackDevMiddleware(compiler, {
@@ -114,12 +115,12 @@ export default function(app) {
      * Reload all devices when bundle is complete
      * or send a fullscreen error message to the browser instead
      */
-    compiler.plugin('done', function(stats) {
+    compiler.plugin('done', function (stats) {
       console.log('webpack done hook');
-      if(stats.hasErrors() || stats.hasWarnings()) {
+      if (stats.hasErrors() || stats.hasWarnings()) {
         return browserSync.sockets.emit('fullscreen:message', {
-          title: 'Webpack Error:',
-          body: stripAnsi(stats.toString()),
+          title: "Webpack Error:",
+          body:  stripAnsi(stats.toString()),
           timeout: 100000
         });
       }
@@ -127,7 +128,7 @@ export default function(app) {
     });
   }
 
-  if(env === 'development' || env === 'test') {
+  if ('development' === env || 'test' === env) {
     app.use(errorHandler()); // Error handler - has to be last
   }
 }

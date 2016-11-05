@@ -11,15 +11,5 @@ module.exports = {
   apiCache  : {
     debug           : true,
     defaultDuration : 60000 // 1 min
-  },
-  sequelize : {
-    uri     : 'sqlite://',
-    options : {
-      logging : false,
-      storage : 'test.sqlite',
-      define  : {
-        timestamps : false
-      }
-    }
   }
 };

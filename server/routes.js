@@ -14,6 +14,7 @@ var apicache = require('apicache').options({
   defaultDuration : config.apiCache.defaultDuration
 }).middleware;
 
+
 export default function (app) {
   // Insert routes below
   app.use('/api/updates', auth.isAuthenticated(), apicache(), require('./api/update'));
@@ -29,6 +30,6 @@ export default function (app) {
   // All other routes should redirect to the index.html
   app.route('/*')
     .get((req, res) => {
-      res.sendFile(path.resolve(`${app.get('appPath')}/index.html`));
+      res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
     });
 }
