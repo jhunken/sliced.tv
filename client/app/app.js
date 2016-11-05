@@ -30,12 +30,11 @@ import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
 import movieService from './movieService/movieService.service';
-import movieLoader from './movieLoader/movieLoader.service';
 
 import './app.scss';
 
 angular.module('easierTvApp', [
-  ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar, footer, main, movieService, movieLoader, movie, newComp, constants, socket, util, 'angularUtils.directives.dirPagination'
+  ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar, footer, main, movieService, movie, newComp, constants, socket, util, 'angularUtils.directives.dirPagination'
 ])
   .config(routeConfig)
   .run(function ($rootScope, $location, Auth) {
