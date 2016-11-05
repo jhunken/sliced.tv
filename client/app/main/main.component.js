@@ -16,15 +16,14 @@ export class MainController {
       // socket.unsyncUpdates('thing');
     });
 
-    $scope.$on('endlessScroll:next', () => this.nextPage());
-    $scope.$on('endlessScroll:previous', () => this.previousPage());
+
 
   }
 
   $onInit() {
     //var params = {page : this.$location.search().page};
-    var params = {page : this.$stateParams.page};
-    this._movieLoader.init(params).then(() => this.onPageLoad());
+    // var params = {page : this.$stateParams.page};
+    // this._movieLoader.init(params).then(() => this.onPageLoad());
   }
 
   onPageLoadError(page) {
