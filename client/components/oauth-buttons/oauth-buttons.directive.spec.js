@@ -4,7 +4,6 @@ const $ = require('sprint-js');
 import OauthButtons from './index';
 
 describe('Directive: oauthButtons', function() {
-
   // load the directive's module and view
   beforeEach(angular.mock.module(OauthButtons));
   // beforeEach(angular.mock.module('components/oauth-buttons/oauth-buttons.html'));

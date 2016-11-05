@@ -4,38 +4,56 @@ import routing from './main.routes';
 
 export class MainController {
 
+
   /*@ngInject*/
-  constructor($http, $scope, socket, movieService) {
-    this.$http        = $http;
-    this.socket       = socket;
-    this.movieService = movieService;
-    this.movies       = [];
-    this.start        = 0;
-    this.limit        = 25;
-    this.source       = 'all';
-    this.platform     = 'all';
-    this.busy         = false;
+  constructor($http, $scope, movieService, $stateParams, $state, $window) {
+    this.$http         = $http;
+    this.$stateParams  = $stateParams;
+    this.$state        = $state;
+    this.movieService  = movieService;
+    this.$window       = $window;
+    this.movies        = [];
+    this.totalMovies   = 0;
+    this.moviesPerPage = 20;
+
 
     $scope.$on('$destroy', function () {
-      socket.unsyncUpdates('movie');
+      // socket.unsyncUpdates('thing');
     });
+
+
   }
 
-  loadMoreMovies() {
-    if (this.busy) return;
-    this.busy  = true;
-    this.movieService.movies(this.start, this.limit, this.source, this.platform)
+  $onInit() {
+    var page = parseInt(this.$stateParams.page, 10);
+    this.loadMovies(page);
+    this.pagination = {
+      current : page
+    };
+
+  }
+
+  loadMovies(page) {
+    page = page || 1;
+    this.movieService.movies((page === 1 ? 0 : (page * this.moviesPerPage)), this.moviesPerPage)
       .then(response => {
-        this.movies = this.movies.concat(response.data);
-        this.socket.syncUpdates('movie', this.movies);
-        this.busy = false;
+        this.movies      = response.data.results;
+        this.totalMovies = response.data.total_results;
+        this.$state.go('main', {page : page}, {notify : false});
+
+        // Scroll to top on page change
+        this.$window.scrollTo(0, 0);
       })
       .catch(err => {
         console.error(err);
-        this.busy = false;
       });
-    this.start = this.start + this.limit;
   }
+
+  // Called from pagination directive on page change click
+  pageChanged(newPage) {
+    this.loadMovies(newPage);
+  }
+
 }
 
 export default angular.module('easierTvApp.main', [uiRouter])

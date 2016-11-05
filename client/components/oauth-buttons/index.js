@@ -1,8 +1,12 @@
 'use strict';
 
+import angular from 'angular';
+
 export function OauthButtonsController($window) {
+  'ngInject';
+
   this.loginOauth = function(provider) {
-    $window.location.href = '/auth/' + provider;
+    $window.location.href = `/auth/${provider}`;
   };
 }
 
