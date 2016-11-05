@@ -1,7 +1,7 @@
 'use strict';
 
 import angular from 'angular';
-import dcEndlessScroll from 'angular-endless-scroll/dist/angular-endless-scroll';
+import dirPagination from 'angular-utils-pagination';
 // import ngAnimate from 'angular-animate';
 import ngCookies from 'angular-cookies';
 import ngResource from 'angular-resource';
@@ -35,7 +35,7 @@ import movieLoader from './movieLoader/movieLoader.service';
 import './app.scss';
 
 angular.module('easierTvApp', [
-  ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, 'dc.endlessScroll', uiBootstrap, _Auth, account, admin, navbar, footer, main, movieService, movieLoader, movie, newComp, constants, socket, util
+  ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar, footer, main, movieService, movieLoader, movie, newComp, constants, socket, util, 'angularUtils.directives.dirPagination'
 ])
   .config(routeConfig)
   .run(function ($rootScope, $location, Auth) {

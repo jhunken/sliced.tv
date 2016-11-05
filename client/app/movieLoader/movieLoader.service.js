@@ -32,6 +32,7 @@ export function movieLoaderService($q, movieService) {
           if (!this.pagination.firstPage || page < this.pagination.firstPage) {
             this.pagination.firstPage = page;
           }
+          this.pagination.totalResults = response.data.total_results;
           this.pagination.totalPages = Math.ceil(response.data.total_results / this.pagination.perPage);
           if (this.pagination.maxPages) {
             this.pagination.totalPages = Math.min(this.pagination.totalPages, this.pagination.maxPages);

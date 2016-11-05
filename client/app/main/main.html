@@ -1,6 +1,8 @@
 <div class="container">
+
   <div class="row">
-    <div endless-scroll="movie in $ctrl.movies" class="col-md-3">
+    <div dir-paginate="movie in $ctrl.movies | itemsPerPage: $ctrl.moviesPerPage" total-items="$ctrl.totalMovies"
+         current-page="$ctrl.pagination.current" class="col-md-3">
       <a ui-sref="movie({id: movie.id})" class="thumbnail" href>
         <div ng-style="{'background-image': 'url(' + movie.poster_400x570 + ')'}" class="image"></div>
         <div class="caption text-center">
@@ -13,16 +15,10 @@
         </div>
       </a>
     </div>
-    <p ng-show="$ctrl.loading" class="text-center">
-      Loading...
-    </p>
-    <!--<ul class="nav nav-tabs nav-stacked ">-->
-      <!--<a endless-scroll="movie in $ctrl.movies" ui-sref="movie({id: movie.id})" uib-tooltip="{{movie.title}}" href-->
-         <!--class="col-md-12 col-lg-12 col-sm-12">-->
-        <!--<li class="text-center" id='{{movie.id}}'>-->
-          <!--<img ng-src="{{movie.poster_400x570}}">-->
-        <!--</li>-->
-      <!--</a>-->
-    <!--</ul>-->
+
+
+  </div>
+  <div class="text-center">
+    <dir-pagination-controls on-page-change="$ctrl.pageChanged(newPageNumber)"></dir-pagination-controls>
   </div>
 </div>

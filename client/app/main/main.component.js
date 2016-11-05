@@ -6,49 +6,53 @@ export class MainController {
 
 
   /*@ngInject*/
-  constructor($http, $scope, movieLoader, $stateParams, $state) {
-    this.$http        = $http;
-    this.$stateParams = $stateParams;
-    this.$state       = $state;
-    this._movieLoader = movieLoader;
+  constructor($http, $scope, movieService, $stateParams, $state, $window) {
+    this.$http         = $http;
+    this.$stateParams  = $stateParams;
+    this.$state        = $state;
+    this.movieService  = movieService;
+    this.$window       = $window;
+    this.movies        = [];
+    this.totalMovies   = 0;
+    this.moviesPerPage = 20;
+
 
     $scope.$on('$destroy', function () {
       // socket.unsyncUpdates('thing');
     });
 
 
-
   }
 
   $onInit() {
-    //var params = {page : this.$location.search().page};
-    // var params = {page : this.$stateParams.page};
-    // this._movieLoader.init(params).then(() => this.onPageLoad());
+    var page = parseInt(this.$stateParams.page, 10);
+    this.loadMovies(page);
+    this.pagination = {
+      current : page
+    };
+
   }
 
-  onPageLoadError(page) {
-    this.loading = false;
+  loadMovies(page) {
+    page = page || 1;
+    this.movieService.movies((page === 1 ? 1 : (page * this.moviesPerPage)), this.moviesPerPage)
+      .then(response => {
+        this.movies      = response.data.results;
+        this.totalMovies = response.data.total_results;
+        this.$state.go('main', {page : page}, {notify : false});
+
+        // Scroll to top on page change
+        this.$window.scrollTo(0, 0);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
-  onPageLoad() {
-    this.movies     = this._movieLoader.movies;
-    this.pagination = this._movieLoader.pagination;
-
-    this.loading = false;
+  // Called from pagination directive on page change click
+  pageChanged(newPage) {
+    this.loadMovies(newPage);
   }
-
-  nextPage() {
-    this.loading = true;
-    this.$state.go('main', {page : this.pagination.lastPageLoaded}, {notify : false});
-    this._movieLoader.next().then(()=>this.onPageLoad(), ()=>this.onPageLoadError());
-  }
-
-  previousPage() {
-    this.loading = true;
-    this.$state.go('main', {page : this.pagination.lastPageLoaded}, {notify : false});
-    this._movieLoader.previous().then(()=>this.onPageLoad(), ()=> this.onPageLoadError());
-  }
-
 
 }
 
