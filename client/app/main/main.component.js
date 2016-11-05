@@ -35,7 +35,7 @@ export class MainController {
 
   loadMovies(page) {
     page = page || 1;
-    this.movieService.movies((page === 1 ? 1 : (page * this.moviesPerPage)), this.moviesPerPage)
+    this.movieService.movies((page === 1 ? 0 : (page * this.moviesPerPage)), this.moviesPerPage)
       .then(response => {
         this.movies      = response.data.results;
         this.totalMovies = response.data.total_results;
