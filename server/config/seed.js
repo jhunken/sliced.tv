@@ -18,8 +18,8 @@ User.find({}).remove()
       provider : 'local',
       role     : 'admin',
       name     : 'Admin',
-      email    : 'admin@example.com',
-      password : 'admin'
+      email    : 'a@a.com',
+      password : 'a'
     })
       .then(() => {
         console.log('finished populating users');
