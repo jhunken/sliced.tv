@@ -139,4 +139,5 @@ describe('User Model', function() {
       });
     });
   });
+
 });

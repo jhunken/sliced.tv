@@ -1,16 +1,6 @@
 'use strict';
 
 export default class LoginController {
-  user = {
-    name: '',
-    email: '',
-    password: ''
-  };
-  errors = {
-    login: undefined
-  };
-  submitted = false;
-
 
   /*@ngInject*/
   constructor(Auth, $state) {
@@ -21,11 +11,11 @@ export default class LoginController {
   login(form) {
     this.submitted = true;
 
-    if(form.$valid) {
+    if (form.$valid) {
       this.Auth.login({
-        email: this.user.email,
-        password: this.user.password
-      })
+          email: this.user.email,
+          password: this.user.password
+        })
         .then(() => {
           // Logged in, redirect to home
           this.$state.go('main');

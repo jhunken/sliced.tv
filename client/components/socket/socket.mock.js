@@ -6,13 +6,13 @@ angular.module('socketMock', [])
   .factory('socket', function() {
     return {
       socket: {
-        connect() {},
-        on() {},
-        emit() {},
-        receive() {}
+        connect: function() {},
+        on: function() {},
+        emit: function() {},
+        receive: function() {}
       },
 
-      syncUpdates() {},
-      unsyncUpdates() {}
+      syncUpdates: function() {},
+      unsyncUpdates: function() {}
     };
   });

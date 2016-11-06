@@ -1,7 +1,5 @@
 'use strict';
 
-import angular from 'angular';
-
 export function Modal($rootScope, $uibModal) {
   /**
    * Opens a modal
@@ -39,25 +37,25 @@ export function Modal($rootScope, $uibModal) {
          * @param  {All}           - any additional args are passed straight to del callback
          */
         return function() {
-          var args = Array.prototype.slice.call(arguments);
-          var name = args.shift();
-          var deleteModal;
+          var args = Array.prototype.slice.call(arguments),
+            name = args.shift(),
+            deleteModal;
 
           deleteModal = openModal({
             modal: {
               dismissable: true,
               title: 'Confirm Delete',
-              html: `<p>Are you sure you want to delete <strong>${name}</strong> ?</p>`,
+              html: '<p>Are you sure you want to delete <strong>' + name + '</strong> ?</p>',
               buttons: [{
                 classes: 'btn-danger',
                 text: 'Delete',
-                click(e) {
+                click: function(e) {
                   deleteModal.close(e);
                 }
               }, {
                 classes: 'btn-default',
                 text: 'Cancel',
-                click(e) {
+                click: function(e) {
                   deleteModal.dismiss(e);
                 }
               }]
@@ -73,6 +71,6 @@ export function Modal($rootScope, $uibModal) {
   };
 }
 
-export default angular.module('easierTvApp.Modal', [])
+export default angular.module('easierTvApp')
   .factory('Modal', Modal)
   .name;

@@ -65,7 +65,7 @@ describe('Movie API:', function () {
           if (err) {
             done(err);
           }
-          movies = res.body.results;
+          movies = res.body;
           expect(movies).to.be.instanceOf(Array);
           done();
         });
@@ -82,7 +82,7 @@ describe('Movie API:', function () {
           if (err) {
             done(err);
           }
-          movies = res.body.results;
+          movies = res.body;
           expect(movies).to.be.instanceOf(Array);
           expect(movies.length).to.equal(10);
           done();
