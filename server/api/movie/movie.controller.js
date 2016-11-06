@@ -132,7 +132,7 @@ export function index(req, res) {
         var movies = JSON.parse(body).results;
 
         if (movies && movies.length) {
-          res.json(movies).end();
+          res.json(JSON.parse(body)).end();
           return movies;
         } else {
           res.status(400).send().end();

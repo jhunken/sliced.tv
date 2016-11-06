@@ -1,5 +1,5 @@
-<a name="0.0.12"></a>
-## [0.0.12](https://github.com/jhunken/easier.tv/compare/0.0.10...v0.0.12) (2016-11-06)
+<a name="0.0.13"></a>
+## [0.0.13](https://github.com/jhunken/easier.tv/compare/0.0.10...v0.0.13) (2016-11-06)
 
 
 ### Features

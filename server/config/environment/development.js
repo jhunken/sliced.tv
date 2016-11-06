@@ -1,20 +1,19 @@
 'use strict';
+/*eslint no-process-env:0*/
 
 // Development specific configuration
 // ==================================
 module.exports = {
 
   // MongoDB connection options
-  mongo : {
+  mongo    : {
     uri : 'mongodb://localhost/easiertv-dev'
   },
-
-  // Seed database on startup
-  seedDB : true,
-
   apiCache : {
     debug           : true,
     defaultDuration : 60000 // 1 min
-  }
+  },
+  // Seed database on startup
+  seedDB   : true
 
 };
