@@ -5,7 +5,6 @@ import {
 } from './index';
 
 describe('Controller: OauthButtonsController', function() {
-
   var controller, $window;
 
   beforeEach(() => {
@@ -22,7 +21,7 @@ describe('Controller: OauthButtonsController', function() {
     };
 
     controller = $controller('OauthButtonsController', {
-      $window: $window
+      $window
     });
   }));
 
