@@ -126,6 +126,7 @@ describe('Component: MainComponent', function () {
     state.expectTransitionTo('main');
     mainComponent.loadMovies(1);
     $httpBackend.flush();
+    state.expectTransitionTo('main/1');
     expect(mainComponent.movies).to.have.lengthOf(3);
   });
 });

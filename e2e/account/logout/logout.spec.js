@@ -33,17 +33,17 @@ describe('Logout View', function() {
 
   describe('with local auth', function() {
 
-    it('should logout a user and redirecting to "/"', function() {
+    it('should logout a user and redirecting to "/login"', function() {
       var navbar = require('../../components/navbar/navbar.po');
 
-      expect(browser.getCurrentUrl()).to.eventually.equal(config.baseUrl + '/');
+      expect(browser.getCurrentUrl()).to.eventually.equal(config.baseUrl + '/1');
       expect(navbar.navbarAccountGreeting.getText()).to.eventually.equal('Hello ' + testUser.name);
 
       browser.get(config.baseUrl + '/logout');
 
       navbar = require('../../components/navbar/navbar.po');
 
-      expect(browser.getCurrentUrl()).to.eventually.equal(config.baseUrl + '/');
+      expect(browser.getCurrentUrl()).to.eventually.equal(config.baseUrl + '/login');
       expect(navbar.navbarAccountGreeting.isDisplayed()).to.eventually.equal(false);
     });
 
