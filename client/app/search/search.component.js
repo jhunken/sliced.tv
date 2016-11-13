@@ -13,24 +13,31 @@ export class SearchComponent {
     this.results        = [];
     this.totalResults   = 0;
     this.resultsPerPage = 50;
+    this.loading = true;
   }
 
   $onInit() {
-    this.results = this._movieService.search(this._$stateParams.query, 'movies')
-      .then(response => {
-        this.results      = response.data.results;
-        this.totalResults = response.data.total_results;
-      })
-      .catch(err => {
-        console.info(err);
-      })
+    if (this._$stateParams.query) {
+      this.results = this._movieService.search(this._$stateParams.query, 'movies')
+        .then(response => {
+          this.results      = response.data.results;
+          this.totalResults = response.data.total_results;
+          this.loading      = false;
+        })
+        .catch(err => {
+          console.info(err);
+          this.loading = false;
+        })
+    } else {
+      this.loading = false;
+    }
   }
 }
 
 export default angular.module('easierTvApp.search', [uiRouter])
   .config(routes)
   .component('search', {
-    templateUrl  : 'app/search/search.html',
+    templateUrl     : require('./search.html'),
     controller   : SearchComponent,
     controllerAs : 'searchCtrl'
   })

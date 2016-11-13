@@ -14,5 +14,7 @@
         </div>
       </a>
     </div>
+    <p ng-if="searchCtrl.loading">Loading...</p>
+    <p ng-if="!searchCtrl.results.length && !searchCtrl.loading">No results...</p>
   </div>
 </div>
