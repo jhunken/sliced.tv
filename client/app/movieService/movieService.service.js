@@ -1,6 +1,6 @@
 'use strict';
 
-function movieService($http) {
+function movieService($http, $q) {
 
   this.movies = function (start, limit, sources, platform) {
     return $http.get('/api/movies/all/'
@@ -10,6 +10,16 @@ function movieService($http) {
       .then(response => {
         return response;
       });
+  };
+
+  this.search = function (query, type) {
+    if (type === 'movies' || type === 'shows') {
+      return $http.get(`/api/search/${type}/${query}`)
+    } else {
+      return $q(function (resolve, reject) {
+        reject('invalid search type')
+      })
+    }
   }
 }
 

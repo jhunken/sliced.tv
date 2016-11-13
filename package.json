@@ -1,6 +1,6 @@
 {
   "name": "easier-tv",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "main": "server/index.js",
   "dependencies": {
     "angular": "~1.5.5",
@@ -46,7 +46,7 @@
     "del": "^2.0.2",
     "ejs": "^2.3.3",
     "errorhandler": "^1.4.2",
-    "eslint": "^2.12.0",
+    "eslint": "^3.10.0",
     "express": "^4.13.3",
     "express-jwt": "^3.0.0",
     "express-session": "^1.11.3",
@@ -112,7 +112,7 @@
     "passport-google-oauth20": "^1.0.0",
     "passport-local": "^1.0.0",
     "phantomjs-prebuilt": "^2.1.4",
-    "postcss-loader": "^0.11.1",
+    "postcss-loader": "^1.1.1",
     "proxyquire": "^1.0.1",
     "raw-loader": "^0.5.1",
     "request": "^2.78.0",
