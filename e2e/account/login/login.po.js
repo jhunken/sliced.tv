@@ -20,7 +20,10 @@ var LoginPage = function() {
       }
     }
 
-    return form.submit.click();
+    return form.submit.click()
+      .then(()=> {
+        browser.sleep(2000);
+      });
   };
 };
 
