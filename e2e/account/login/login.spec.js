@@ -56,7 +56,7 @@ describe('Login View', function() {
           5000,
           `Didn't find .hero-unit after 5s`
         ).then(() => {
-          expect(browser.getCurrentUrl()).to.eventually.equal(config.baseUrl + '/');
+          expect(browser.getCurrentUrl()).to.eventually.equal(config.baseUrl + '/1');
           expect(navbar.navbarAccountGreeting.getText()).to.eventually.equal('Hello ' + testUser.name);
         });
       });
