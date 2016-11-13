@@ -37,7 +37,7 @@ export class SearchComponent {
 export default angular.module('easierTvApp.search', [uiRouter])
   .config(routes)
   .component('search', {
-    templateUrl     : require('./search.html'),
+    template     : require('./search.html'),
     controller   : SearchComponent,
     controllerAs : 'searchCtrl'
   })
