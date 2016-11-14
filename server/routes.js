@@ -10,11 +10,11 @@ import config from './config/environment';
 import * as auth from './auth/auth.service';
 
 var apicache = require('apicache').options({
-  debug           : config.apiCache.debug,
-  defaultDuration : config.apiCache.defaultDuration
+  debug: config.apiCache.debug,
+  defaultDuration: config.apiCache.defaultDuration
 }).middleware;
 
-export default function (app) {
+export default function(app) {
   // Insert routes below
   app.use('/api/search', auth.isAuthenticated(), apicache(), require('./api/search'));
   app.use('/api/updates', auth.isAuthenticated(), apicache(), require('./api/update'));

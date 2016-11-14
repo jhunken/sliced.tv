@@ -1,5 +1,4 @@
 'use strict';
-
 class _User {
   _id = '';
   name = '';

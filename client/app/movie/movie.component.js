@@ -6,12 +6,12 @@ export class MovieController {
 
   /*@ngInject*/
   constructor($http, $stateParams) {
-    this.$http        = $http;
+    this.$http = $http;
     this.$stateParams = $stateParams;
   }
 
   $onInit() {
-    this.$http.get('/api/movies/' + this.$stateParams.id).then(response => {
+    this.$http.get(`/api/movies/${this.$stateParams.id}`).then(response => {
       this.movie = response.data;
     });
   }
@@ -20,7 +20,7 @@ export class MovieController {
 export default angular.module('easierTvApp.movie', [uiRouter])
   .config(routing)
   .component('movie', {
-    template   : require('./movie.html'),
-    controller : MovieController
+    template: require('./movie.html'),
+    controller: MovieController
   })
   .name;
