@@ -3,40 +3,53 @@
 import mongoose from 'mongoose';
 
 var MovieSchema = new mongoose.Schema({
-  cast      : [{id : Number, name : String, character_name : String, imdb : String}],
-  directors : [{id : Number, name : String, imdb : String}],
-  duration  : Number,
-  genres    : [{id : Number, title : String}],
-  overview : String,
-  guidebox_id      : Number,
-  title            : String,
-  themoviedb       : Number,
-  original_title   : String,
-  alternate_titles : [
+  cast: [{id: Number, name: String, character_name: String, imdb: String}],
+  directors: [{id: Number, name: String, imdb: String}],
+  duration: Number,
+  genres: [{id: Number, title: String}],
+  overview: String,
+  guidebox_id: Number,
+  title: String,
+  themoviedb: Number,
+  original_title: String,
+  alternate_titles: [
     String
   ],
-  imdb             : String,
-  pre_order        : Boolean,
-  in_theaters      : Boolean,
-  release_date     : Date,
-  release_year     : Number,
-  rating           : String,
-  rottentomatoes   : Number,
-  social           : {
-    facebook : {facebook_id : String, link : String}
+  imdb: String,
+  imdb_rating: String,
+  imdb_votes: String,
+  pre_order: Boolean,
+  in_theaters: Boolean,
+  release_date: Date,
+  release_year: Number,
+  rating: String,
+  rottentomatoes: Number,
+  social: {
+    facebook: {facebook_id: String, link: String}
   },
-  freebase           : String,
-  wikipedia_id       : Number,
-  metacritic         : String,
-  common_sense_media : String,
-  poster_120x171     : String,
-  poster_240x342     : String,
-  poster_400x570     : String,
-  tags               : [
-    {id : Number, tag : String}
+  tomato_meter: String,
+  tomato_image: String,
+  tomato_rating: String,
+  tomato_reviews: String,
+  tomato_fresh: String,
+  tomato_rotten: String,
+  tomato_consensus: String,
+  tomato_user_meter: String,
+  tomato_user_rating: String,
+  tomato_user_reviews: String,
+  tomato_url: String,
+  freebase: String,
+  wikipedia_id: Number,
+  metacritic: String,
+  common_sense_media: String,
+  poster_120x171: String,
+  poster_240x342: String,
+  poster_400x570: String,
+  tags: [
+    {id: Number, tag: String}
   ],
 
-  writers : [{id : Number, name : String, imdb : String}]
+  writers: [{id: Number, name: String, imdb: String}]
 
   // TODO add missing attributes
   // purchase_android_sources : [

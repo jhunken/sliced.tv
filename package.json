@@ -116,6 +116,7 @@
     "proxyquire": "^1.0.1",
     "raw-loader": "^0.5.1",
     "request": "^2.78.0",
+    "request-promise": "^4.1.1",
     "run-sequence": "^1.1.0",
     "sass-loader": "^4.0.1",
     "serve-favicon": "^2.3.0",
@@ -146,6 +147,7 @@
   },
   "private": true,
   "devDependencies": {
+    "mocha-junit-reporter": "^1.12.1",
     "nock": "^9.0.2"
   }
 }
