@@ -14,45 +14,48 @@ import _ from 'lodash';
 // All configurations will extend these options
 // ============================================
 var all = {
-  env : process.env.NODE_ENV,
+  env: process.env.NODE_ENV,
 
   // Root path of server
-  root : path.normalize(`${__dirname}/../../..`),
+  root: path.normalize(`${__dirname}/../../..`),
 
   // Browser-sync port
-  browserSyncPort : process.env.BROWSER_SYNC_PORT || 3000,
+  browserSyncPort: process.env.BROWSER_SYNC_PORT || 3000,
 
   // Server port
-  port : process.env.PORT || 9000,
+  port: process.env.PORT || 9000,
 
   // Server IP
-  ip : process.env.IP || '0.0.0.0',
+  ip: process.env.IP || '0.0.0.0',
 
   // Should we populate the DB with sample data?
-  seedDB : false,
+  seedDB: false,
 
   // Secret for session, you will want to change this and make it an environment variable
-  secrets : {
-    session : 'easier-tv-secret'
+  secrets: {
+    session: 'easier-tv-secret'
   },
 
   // MongoDB connection options
-  mongo : {
-    options : {
-      db : {
-        safe : true
+  mongo: {
+    options: {
+      db: {
+        safe: true
       }
     }
   },
 
-  google   : {
-    clientID     : process.env.GOOGLE_ID || 'id',
-    clientSecret : process.env.GOOGLE_SECRET || 'secret',
-    callbackURL  : `${process.env.DOMAIN || ''}/auth/google/callback`
+  google: {
+    clientID: process.env.GOOGLE_ID || 'id',
+    clientSecret: process.env.GOOGLE_SECRET || 'secret',
+    callbackURL: `${process.env.DOMAIN || ''}/auth/google/callback`
   },
-  guidebox : {
-    apiKey  : process.env.GUIDEBOX_API_KEY,
-    baseURL : 'https://api-public.guidebox.com/v1.43/US/'
+  guidebox: {
+    apiKey: process.env.GUIDEBOX_API_KEY,
+    baseURL: 'https://api-public.guidebox.com/v1.43/US/'
+  },
+  omdbapi: {
+    baseURL: 'https://www.omdbapi.com/?'
   }
 };
 

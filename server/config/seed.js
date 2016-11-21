@@ -10,16 +10,16 @@ import Movie from '../api/movie/movie.model';
 User.find({}).remove()
   .then(() => {
     User.create({
-      provider : 'local',
-      name     : 'Test User',
-      email    : 'test@example.com',
-      password : 'test'
+      provider: 'local',
+      name: 'Test User',
+      email: 'test@example.com',
+      password: 'test'
     }, {
-      provider : 'local',
-      role     : 'admin',
-      name     : 'Admin',
-      email    : 'a@a.com',
-      password : 'a'
+      provider: 'local',
+      role: 'admin',
+      name: 'Admin',
+      email: 'a@a.com',
+      password: 'a'
     })
       .then(() => {
         console.log('finished populating users');

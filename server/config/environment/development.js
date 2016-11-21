@@ -6,14 +6,14 @@
 module.exports = {
 
   // MongoDB connection options
-  mongo    : {
-    uri : 'mongodb://localhost/easiertv-dev'
+  mongo: {
+    uri: 'mongodb://localhost/easiertv-dev'
   },
-  apiCache : {
-    debug           : true,
-    defaultDuration : 60000 // 1 min
+  apiCache: {
+    debug: true,
+    defaultDuration: 30000
   },
   // Seed database on startup
-  seedDB   : true
+  seedDB: true
 
 };
