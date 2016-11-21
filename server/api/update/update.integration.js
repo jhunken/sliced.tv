@@ -5,60 +5,58 @@ import request from 'supertest';
 import User from '../user/user.model';
 
 
-describe('Update API:', function () {
-
+describe('Update API:', function() {
   var user;
 
-  before(function () {
-    return User.remove().then(function () {
+  before(function() {
+    return User.remove().then(function() {
       user = new User({
-        name     : 'Fake User',
-        email    : 'asdf@example.com',
-        password : 'password'
+        name: 'Fake User',
+        email: 'asdf@example.com',
+        password: 'password'
       });
 
       return user.save();
     });
   });
 
-  after(function () {
+  after(function() {
     return User.remove();
   });
 
-  describe('GET /api/updates/movies/new', function () {
+  describe('GET /api/updates/movies/new', function() {
     var token;
 
-    before(function (done) {
+    before(function(done) {
       // Get authenticated user token
       request(app)
         .post('/auth/local')
         .send({
-          email    : 'asdf@example.com',
-          password : 'password'
+          email: 'asdf@example.com',
+          password: 'password'
         })
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
-          if (err) {
+          if(err) {
             console.error(err);
             done(err);
           } else {
             token = res.body.token;
             done();
           }
-
         });
     });
 
-    it('should respond with JSON array', function (done) {
+    it('should respond with JSON array', function(done) {
       var updates;
       request(app)
         .get('/api/updates/movies/new/1474749294?limit=100&page=1')
-        .set('authorization', 'Bearer ' + token)
+        .set('authorization', `Bearer ${token}`)
         .expect(200)
         //.expect('Content-Type', /json/)
         .end((err, res) => {
-          if (err) {
+          if(err) {
             console.error(err);
             done(err);
           } else {
@@ -69,5 +67,4 @@ describe('Update API:', function () {
         });
     });
   });
-
 });

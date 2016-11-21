@@ -1,7 +1,7 @@
 'use strict';
 
 import angular from 'angular';
-import dirPagination from 'angular-utils-pagination';
+import 'angular-utils-pagination';
 // import ngAnimate from 'angular-animate';
 import ngCookies from 'angular-cookies';
 import ngResource from 'angular-resource';
@@ -35,16 +35,17 @@ import movieService from './movieService/movieService.service';
 import './app.scss';
 
 angular.module('easierTvApp', [
-  ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar, footer, main, search, movieService, movie, newComp, constants, socket, util, 'angularUtils.directives.dirPagination'
+  ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar,
+  footer, main, search, movieService, movie, newComp, constants, socket, util, 'angularUtils.directives.dirPagination'
 ])
   .config(routeConfig)
-  .run(function ($rootScope, $location, Auth) {
+  .run(function($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in
 
-    $rootScope.$on('$stateChangeStart', function (event, next) {
-      Auth.isLoggedIn(function (loggedIn) {
-        if (next.authenticate && !loggedIn) {
+    $rootScope.$on('$stateChangeStart', function(event, next) {
+      Auth.isLoggedIn(function(loggedIn) {
+        if(next.authenticate && !loggedIn) {
           $location.path('/login');
         }
       });
@@ -54,6 +55,6 @@ angular.module('easierTvApp', [
 angular.element(document)
   .ready(() => {
     angular.bootstrap(document, ['easierTvApp'], {
-      strictDi : true
+      strictDi: true
     });
   });
