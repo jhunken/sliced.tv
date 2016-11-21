@@ -17,7 +17,7 @@
     "angular-validation-match": "^1.9.0",
     "apicache": "^0.3.4",
     "autoprefixer": "^6.0.0",
-    "awesome-typescript-loader": "0.17.0",
+    "awesome-typescript-loader": "2.2.4",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.6.5",
     "babel-eslint": "^6.0.4",
