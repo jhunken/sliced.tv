@@ -24,9 +24,7 @@ function handleError(res, statusCode) {
  */
 export function index(req, res) {
   return User.find({}, '-salt -password').exec()
-    .then(users => {
-      return res.status(200).json(users);
-    })
+    .then(users => res.status(200).json(users))
     .catch(handleError(res));
 }
 

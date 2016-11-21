@@ -1,6 +1,6 @@
 'use strict';
 
-var express    = require('express');
+var express = require('express');
 var controller = require('./search.controller');
 import * as auth from '../../auth/auth.service';
 

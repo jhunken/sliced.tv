@@ -13,7 +13,7 @@ var config = {
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: 'http://localhost:' + (process.env.PORT || '9000'),
+  baseUrl: `http://localhost:${process.env.PORT || '9000'}`,
 
   // Credientials for Saucelabs
   sauceUser: process.env.SAUCE_USERNAME,
@@ -35,10 +35,10 @@ var config = {
   // and
   // https://code.google.com/p/selenium/source/browse/javascript/webdriver/capabilities.js
   capabilities: {
-    'browserName': 'chrome',
-    'name': 'Fullstack E2E',
+    browserName: 'chrome',
+    name: 'Fullstack E2E',
     'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-    'build': process.env.TRAVIS_BUILD_NUMBER
+    build: process.env.TRAVIS_BUILD_NUMBER
   },
 
   // ----- The test framework -----
@@ -60,7 +60,7 @@ var config = {
     serverConfig: require('./server/config/environment')
   },
 
-  onPrepare: function() {
+  onPrepare() {
     require('babel-register');
     // Load Mocha and Chai + plugins
     require('./mocha.conf');
