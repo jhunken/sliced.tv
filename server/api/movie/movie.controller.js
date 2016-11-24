@@ -8,6 +8,7 @@
  */
 
 'use strict';
+require('babel-polyfill');
 import Movie from './movie.model';
 import config from '../../config/environment';
 import Promise from 'bluebird';
