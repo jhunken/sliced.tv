@@ -15,7 +15,7 @@
     "angular-ui-router": "~0.3.1",
     "angular-utils-pagination": "^0.11.1",
     "angular-validation-match": "^1.9.0",
-    "apicache": "^0.3.4",
+    "apicache": "^0.5.3",
     "autoprefixer": "^6.0.0",
     "awesome-typescript-loader": "2.2.4",
     "babel-cli": "^6.18.0",
