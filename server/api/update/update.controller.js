@@ -19,18 +19,14 @@ export function newMovies(req, res) {
       if(!error && response.statusCode === 200 && body !== {}) {
         try {
           var parasedRes = JSON.parse(body);
-          res.json(parasedRes).end();
+          return res.json(parasedRes);
         } catch(e) {
           console.error(e);
-          res.status(500).send()
-            .end();
-          return null;
+          return res.status(500).send();
         }
       } else {
         console.error('statusCode:', response.statusCode, ', error: ', `${error}, body: `, body);
-        res.status(response.statusCode).send(error)
-          .end();
-        return null;
+        return res.status(response.statusCode).send(error);
       }
     });
 }

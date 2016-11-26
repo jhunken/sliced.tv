@@ -8,6 +8,7 @@
  */
 
 'use strict';
+require('babel-polyfill');
 import Movie from './movie.model';
 import config from '../../config/environment';
 import Promise from 'bluebird';
@@ -277,10 +278,9 @@ export function index(req, res) {
       }
     })
     .then(function(results) {
-      return res.json({results, total_results: totalResults}).end();
+      return res.json({results, total_results: totalResults});
     })
-    .catch(errRes => res.status(500).json(JSON.parse(errRes.error))
-      .end());
+    .catch(errRes => res.status(500).json(JSON.parse(errRes.error)));
 }
 
 // Gets a single Movie from the DB
