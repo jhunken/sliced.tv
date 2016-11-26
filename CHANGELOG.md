@@ -1,3 +1,12 @@
+<a name="0.0.18"></a>
+## [0.0.18](https://github.com/jhunken/easier.tv/compare/v0.0.16-hf1...v0.0.18) (2016-11-26)
+
+
+### Bug Fixes
+
+* **apicache:** Reverting apicache due to gzip bug ([4b265f1](https://github.com/jhunken/easier.tv/commit/4b265f1))
+
+
 <a name="0.0.17"></a>
 ## [0.0.17](https://github.com/jhunken/easier.tv/compare/v0.0.16-hf1...v0.0.17) (2016-11-26)
 
