@@ -8,7 +8,6 @@
  */
 
 'use strict';
-require('babel-polyfill');
 import Movie from './movie.model';
 import config from '../../config/environment';
 import Promise from 'bluebird';
@@ -34,7 +33,7 @@ function handleMovieRequest(res, id) {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
         });
     } else {
       // Exists already locally
@@ -138,13 +137,6 @@ function saveMovie(movie) {
   });
 }
 
-function handleError(res, statusCode) {
-  statusCode = statusCode || 500;
-  return function(err) {
-    return res.status(statusCode).send(err);
-  };
-}
-
 const getContent = function(url) {
   // return new pending promise
   return new Promise((resolve, reject) => {
@@ -178,7 +170,7 @@ function getGuideboxMovies(start, limit, sources, platform) {
           m = movies[i];
           // This conflicts with mongodb id
           m.guidebox_id = m.id;
-          Reflect.deleteProperty(m, 'id');
+          delete m.id;
         }
         return {results: movies, totalResults: JSON.parse(body).total_results};
       } else {
@@ -186,11 +178,14 @@ function getGuideboxMovies(start, limit, sources, platform) {
       }
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
     });
 }
 
-
+/***
+ *
+ * @param movie
+ */
 function getOMDBInfo(movie) {
   return getContent(`${config.omdbapi.baseURL}i=${movie.imdb}&tomatoes=true`)
     .then(omdbBody => {
@@ -211,7 +206,33 @@ function getOMDBInfo(movie) {
       console.info('got omdb info for ', movie.title);
       return movie;
     })
-    .catch(handleError);
+    .catch(err => {
+      console.error(err);
+      return null;
+    });
+}
+
+/***
+ * Checks if given movie is in the savedMovies array. If so just returns the saved entity. Otherwise returns a promise
+ * that will retrieve the additonal info from the other api providers.
+ * @param movie
+ * @param savedMovies
+ * @returns {Promise<R>|Promise<void>}
+ */
+function compareArrays(movie, savedMovies) {
+  for(let element of savedMovies) {
+    if(movie.guidebox_id === element.guidebox_id) {
+      return Promise.resolve(element);
+    }
+  }
+  return getOMDBInfo(movie)
+    .then(function(omdbMovie) {
+      if(omdbMovie) {
+        return saveMovie(omdbMovie);
+      } else {
+        return movie;
+      }
+    });
 }
 
 /***
@@ -225,22 +246,6 @@ export function index(req, res) {
   let sources = req.params && req.params.sources ? req.params.sources : 'all';
   let platform = req.params && req.params.platform ? req.params.platform : 'all';
   let totalResults = 0;
-
-  /***
-   * Checks if given movie is in the savedMovies array. If so just returns the saved entity. Otherwise returns a promise
-   * that will retrieve the additonal info from the other api providers.
-   * @param movie
-   * @param savedMovies
-   * @returns {Promise<R>|Promise<void>}
-   */
-  function compareArrays(movie, savedMovies) {
-    for(let element of savedMovies) {
-      if(movie.guidebox_id === element.guidebox_id) {
-        return Promise.resolve(element);
-      }
-    }
-    return getOMDBInfo(movie).then(omdbMovie => saveMovie(omdbMovie));
-  }
 
   return getGuideboxMovies(start, limit, sources, platform)
     .then(guideboxMovies => {
@@ -280,15 +285,15 @@ export function index(req, res) {
     .then(function(results) {
       return res.json({results, total_results: totalResults});
     })
-    .catch(errRes => res.status(500).json(JSON.parse(errRes.error)));
+    .catch(errRes => res.status(500).json(errRes.message));
 }
 
 // Gets a single Movie from the DB
 export function show(req, res) {
   return Movie.findOne({guidebox_id: req.params.id}).exec()
     .then(handleMovieRequest(res, req.params.id))
-    // .catch(handleError(res));
     .catch(err => {
       console.log(err);
+      return res.status(400).json(err.message);
     });
 }
