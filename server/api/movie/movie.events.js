@@ -13,21 +13,21 @@ MovieEvents.setMaxListeners(0);
 
 // Model events
 var events = {
-  'save': 'save',
-  'remove': 'remove'
+  save: 'save',
+  remove: 'remove'
 };
 
 // Register the event emitter to the model events
-for (var e in events) {
+for(var e in events) {
   var event = events[e];
   Movie.schema.post(e, emitEvent(event));
 }
 
-function emitEvent(event) {
+function emitEvent(evt) {
   return function(doc) {
-    MovieEvents.emit(event + ':' + doc._id, doc);
-    MovieEvents.emit(event, doc);
-  }
+    MovieEvents.emit(`${evt}:${doc._id}`, doc);
+    MovieEvents.emit(evt, doc);
+  };
 }
 
 export default MovieEvents;

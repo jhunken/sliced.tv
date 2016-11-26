@@ -7,4 +7,4 @@ export default function routes($stateProvider) {
     url: '/movie/:id',
     template: '<movie></movie>'
   });
-};
+}

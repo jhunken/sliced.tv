@@ -1,7 +1,11 @@
 {
-    "extends": "../.eslintrc",
-    "env": {
-        "browser": true,
-        "commonjs": true
-    }
+  "extends": "../.eslintrc",
+  "env": {
+    "browser": true,
+    "commonjs": true
+  },
+  "globals": {
+    "_": true,
+    "angular": true
+  }
 }
