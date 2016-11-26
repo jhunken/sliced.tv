@@ -23,16 +23,14 @@ function search(req, res, mediaType) {
             Reflect.deleteProperty(m, 'id');
             results[i] = m;
           }
-          return res.json({results: results, total_results: JSON.parse(body).total_results}).end();
+          return res.json({results: results, total_results: JSON.parse(body).total_results});
         } else {
-          res.status(400).send()
-            .end();
+          res.status(400).end();
           return null;
         }
       } else {
         console.error('statusCode:', response.statusCode, ', error: ', `${error}, body: `, body);
-        res.status(response.statusCode).send(error)
-          .end();
+        res.status(response.statusCode).send(error);
         return null;
       }
     });
@@ -41,8 +39,7 @@ function search(req, res, mediaType) {
 export function searchAll(req, res) {
   // TODO
   // return search(req, res, 'all');
-  return res.status(500).send('not implemented')
-    .end();
+  return res.status(500).send('not implemented');
 }
 //
 export function searchMovies(req, res) {

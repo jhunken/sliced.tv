@@ -10,7 +10,7 @@ module.exports = {
   },
   apiCache: {
     debug: true,
-    defaultDuration: 60000 // 1 min
+    defaultDuration: 5000
   },
   sequelize: {
     uri: 'sqlite://',
