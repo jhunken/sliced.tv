@@ -6,7 +6,7 @@ import User from '../user/user.model';
 import request from 'supertest';
 
 describe('Movie API:', function() {
-  var user;
+  let user;
 
   // Cleanup movies and users before testing
   before(function() {
@@ -31,7 +31,7 @@ describe('Movie API:', function() {
   });
 
   describe('GET /api/movies', function() {
-    var token;
+    let token;
 
     before(function(done) {
       // Get authenticated user token
@@ -54,7 +54,7 @@ describe('Movie API:', function() {
 
 
     it('should respond with an array of movies when authenticated', function(done) {
-      var movies;
+      let movies;
       request(app)
         .get('/api/movies')
         .set('authorization', `Bearer ${token}`)
@@ -110,10 +110,59 @@ describe('Movie API:', function() {
         .expect(401)
         .end(done);
     });
+
+    it('should properly handle a mixture of new and previously saved movies', function(done) {
+      // Create newMovie
+      let previouslySavedMovie = new Movie({
+        guidebox_id: 134422,
+        title: 'Dirty Grandpa',
+        release_year: 2016,
+        themoviedb: 291870,
+        original_title: 'Dirty Grandpa (previously saved)',
+        alternate_titles: ['Dirty Grandpa (Unrated)', 'Dirty Grandpa (Unrated Version)', 'Dirty Grandpa Unrated'],
+        imdb: 'tt1860213',
+        pre_order: false,
+        in_theaters: false,
+        release_date: '2016-01-21',
+        rating: 'R',
+        rottentomatoes: 771388387,
+        freebase: '',
+        wikipedia_id: 0,
+        metacritic: 'http://www.metacritic.com/movie/dirty-grandpa',
+        common_sense_media: 'https://www.commonsensemedia.org/movie-reviews/dirty-grandpa',
+        poster_120x171: 'http://static-api.guidebox.com/111615/thumbnails_movies_small/134422-6324042329-7119411346-5142547209-small-120x171-alt-.jpg',
+        poster_240x342: 'http://static-api.guidebox.com/111615/thumbnails_movies_medium/134422-151683060-177236004-8937469679-medium-240x342-alt-.jpg',
+        poster_400x570: 'http://static-api.guidebox.com/111615/thumbnails_movies/-alt--134422-6996994163-7736085253-8175344849-large-400x570-alt-.jpg'
+      });
+      previouslySavedMovie.save().then(function() {
+        let movies;
+        let foundPreviouslySavedMovie = false;
+        request(app)
+          .get('/api/movies/all/99/10/all/all')
+          .set('authorization', `Bearer ${token}`)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end((err, res) => {
+            if(err) {
+              done(err);
+            }
+            movies = res.body.results;
+            expect(movies).to.be.instanceOf(Array);
+            expect(movies.length).to.equal(10);
+            for(let movie of movies) {
+              if(movie.original_title === previouslySavedMovie.original_title) {
+                foundPreviouslySavedMovie = true;
+              }
+            }
+            expect(foundPreviouslySavedMovie).to.be.true;
+            done();
+          });
+      });
+    });
   });
 
   describe('GET /api/movies/:id', function() {
-    var token, movie, newMovie;
+    let token, movie, newMovie;
 
     before(function(done) {
       // Get authenticated user token
@@ -146,6 +195,13 @@ describe('Movie API:', function() {
         });
     });
 
+    // Clears movies and users after testing
+    after(function(done) {
+      return Movie.remove().then(function() {
+        done();
+      });
+    });
+
     it('should respond with the requested movie', function(done) {
       request(app)
         .get(`/api/movies/${newMovie.guidebox_id}`)
@@ -166,9 +222,22 @@ describe('Movie API:', function() {
 
     it('should respond with an error if movie is not found', function(done) {
       request(app)
-        .get('/api/movies/' + '000000000')
+        .get('/api/movies/000000000')
         .set('authorization', `Bearer ${token}`)
         .expect(404)
+        .end(err => {
+          if(err) {
+            return done(err);
+          }
+          done();
+        });
+    });
+
+    it('should respond with an error if an invalid movie id is used', function(done) {
+      request(app)
+        .get('/api/movies/ABCDEFGH')
+        .set('authorization', `Bearer ${token}`)
+        .expect(400)
         .end(err => {
           if(err) {
             return done(err);

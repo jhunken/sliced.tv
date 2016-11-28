@@ -366,13 +366,13 @@ gulp.task('serve:dist', cb => {
     cb);
 });
 
-gulp.task('test', cb => runSequence('test:server', 'test:client', cb));
+gulp.task('test', cb => runSequence('test:server:coverage', 'test:client', cb));
 
 gulp.task('test:server', cb => {
   runSequence(
     'env:all',
     'env:test',
-    //'mocha:unit',
+    'mocha:unit',
     'mocha:integration',
     cb);
 });
