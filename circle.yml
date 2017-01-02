@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 4.6.2
+    version: 6.9.2
 test:
   post:
     - bash <(curl -s https://codecov.io/bash) -t ${COVERALLS_REPO_TOKEN}
