@@ -6,6 +6,7 @@ import angular from 'angular';
 export class NavbarComponent {
   menu = [
     {title: 'Popular', state: 'main'},
+    {title: 'Watchlist', state: 'watchlist'},
     //{title : 'New', state : 'new'}
   ];
 
