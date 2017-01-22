@@ -16,6 +16,7 @@ var apicache = require('apicache').options({
 
 export default function(app) {
   // Insert routes below
+  app.use('/api/watchlists', require('./api/watchlist'));
   app.use('/api/search', auth.isAuthenticated(), apicache(), require('./api/search'));
   app.use('/api/movies', auth.isAuthenticated(), apicache(), require('./api/movie'));
   app.use('/api/users', require('./api/user'));
