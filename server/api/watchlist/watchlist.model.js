@@ -2,10 +2,16 @@
 
 import mongoose from 'mongoose';
 
-var WatchlistSchema = new mongoose.Schema({
+let WatchlistSchema = new mongoose.Schema({
   name: String,
-  info: String,
-  active: Boolean
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  movies: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Movie'
+  }]
 });
 
 export default mongoose.model('Watchlist', WatchlistSchema);
