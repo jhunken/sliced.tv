@@ -6,15 +6,11 @@
 'use strict';
 import User from '../api/user/user.model';
 import Movie from '../api/movie/movie.model';
+import Watchlist from '../api/watchlist/watchlist.model';
 
 User.find({}).remove()
   .then(() => {
     User.create({
-      provider: 'local',
-      name: 'Test User',
-      email: 'test@example.com',
-      password: 'test'
-    }, {
       provider: 'local',
       role: 'admin',
       name: 'Admin',
@@ -23,6 +19,22 @@ User.find({}).remove()
     })
       .then(() => {
         console.log('finished populating users');
+        User.create({
+          provider: 'local',
+          name: 'Test User',
+          email: 'test@example.com',
+          password: 'test'
+        })
+          .then(user => {
+            let watchlist = new Watchlist({name: 'Watchlist', user});
+            watchlist.save()
+              .then(function() {
+                console.log('finished adding users');
+              })
+              .catch(err => {
+                console.error(err);
+              });
+          });
       });
   });
 
@@ -62,4 +74,9 @@ Movie.find({}).remove()
       poster_400x570: 'http://static-api.guidebox.com/111615/thumbnails_movies/135934-3318135408-2648539446-1696869368-large-400x570.jpg'
     });
     console.log('finished removing movies');
+  });
+
+Watchlist.find({}).remove()
+  .then(() => {
+    console.log('finished removing watchlists');
   });
