@@ -51,7 +51,7 @@ function removeEntity(res) {
 function handleEntityNotFound(res) {
   return function(entity) {
     if(!entity) {
-      return res.status(404).end();
+      res.status(404).end();
     }
     return entity;
   };
@@ -64,17 +64,17 @@ function checkPermissions(req, res) {
     return User.findOne({_id: userIdObj}, '-salt -password').exec()
       .then(user => { // don't ever give out the password or salt
         if(!user) {
-          return res.status(401).end();
+          res.status(401).end();
         }
         if(user.id !== userId) {
-          return res.status(403).end();
+          res.status(403).end();
         } else {
           return entity;
         }
       })
       .catch(err => {
         console.error(err);
-        return res.status(500).end();
+        res.status(500).end();
       });
   };
 }
@@ -114,7 +114,7 @@ export function show(req, res) {
       .then(respondWithResult(res))
       .catch(handleError(res));
   } else {
-    return res.status(404).end();
+    res.status(404).end();
   }
 }
 
