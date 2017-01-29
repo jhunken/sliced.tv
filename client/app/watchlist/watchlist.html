@@ -1,4 +1,9 @@
 <div class="container">
-  <div>This is the watchlist view.</div>
+  <div ng-repeat="watchlist in watchlistCtrl.watchlists">
+    <h1 ng-bind="watchlist.name"></h1>
+    <ul>
+      <li ng-repeat="movie in watchlist.movies">{{movie.title}}</li>
+    </ul>
+  </div>
 </div>
 

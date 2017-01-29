@@ -7,15 +7,27 @@ import routes from './watchlist.routes';
 
 export class WatchlistComponent {
   /*@ngInject*/
-  constructor() {
-    this.message = 'Hello';
+  constructor(watchlistService) {
+    this.watchlists = [];
+    this.watchlistService = watchlistService;
+  }
+
+  $onInit() {
+    this.loadWatchlists();
+  }
+
+  loadWatchlists() {
+    this.watchlistService.get()
+      .then(response => {
+        this.watchlists = response.data;
+      });
   }
 }
 
 export default angular.module('easierTvApp.watchlist', [uiRouter])
   .config(routes)
   .component('watchlist', {
-    templateUrl: 'app/watchlist/watchlist.html',
+    template: require('./watchlist.html'),
     controller: WatchlistComponent,
     controllerAs: 'watchlistCtrl'
   })

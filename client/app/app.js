@@ -32,12 +32,14 @@ import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
 import movieService from './movieService/movieService.service';
 import WatchlistComponent from './watchlist/watchlist.component';
+import watchlistService from './services/watchlistService/watchlistService.service';
 
 import './app.scss';
 
 angular.module('easierTvApp', [
   ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar,
-  footer, main, search, movieService, movie, newComp, constants, socket, util, 'angularUtils.directives.dirPagination', WatchlistComponent
+  footer, main, search, movieService, movie, newComp, constants, socket, util, 'angularUtils.directives.dirPagination',
+  WatchlistComponent, watchlistService
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
