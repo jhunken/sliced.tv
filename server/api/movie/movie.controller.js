@@ -12,17 +12,18 @@ import Movie from './movie.model';
 import config from '../../config/environment';
 import Promise from 'bluebird';
 
-function handleMovieRequest(res, id) {
+function handleMovieRequest(res) {
   return function(entity) {
-    if(!entity || !entity.overview) {
-      // Not found locally or requires additional lookup -- query remote
-      return getContent(`${config.guidebox.baseURL + config.guidebox.apiKey}/movies/${id}`)
+    if(!entity.overview) {
+      // Requires additional lookup -- query remote
+      return getContent(`${config.guidebox.baseURL + config.guidebox.apiKey}/movies/${entity.guideboxID}`)
         .then(body => {
-          let movie = JSON.parse(body);
-          if(movie && movie.id) {
-            if(!movie.imdb_rating) {
+          let guideboxMovie = JSON.parse(body);
+          if(guideboxMovie && guideboxMovie.id) {
+            guideboxMovie = normalizeGuideboxFields(guideboxMovie);
+            if(!guideboxMovie.imdbRating) {
               // Retrieve additional omdb api info
-              return getOMDBInfo(movie)
+              return getOMDBInfo(guideboxMovie)
                 .then(updatedMovie => res.json(updatedMovie).end());
             } else {
               // nothing else to retrieve
@@ -43,61 +44,61 @@ function handleMovieRequest(res, id) {
   };
 }
 
-function saveMovie(movie) {
+function saveMovie(movieToSave) {
   return new Promise(function(resolve, reject) {
-    return Movie.findOne({guidebox_id: movie.guidebox_id}).exec()
+    return Movie.findOne({guideboxID: movieToSave.id}).exec()
       .then(function(entity) {
         if(!entity) {
           // Save new
-          let newMovie = Movie({
-            cast: movie.cast,
-            directors: movie.directors,
-            genres: movie.genres,
-            other_sources: movie.other_sources,
-            overview: movie.overview,
-            purchase_android_sources: movie.purchase_android_sources,
-            purchase_ios_sources: movie.purchase_ios_sources,
-            purchase_web_sources: movie.purchase_web_sources,
-            social: movie.social,
-            tags: movie.tags,
-            trailers: movie.trailers,
-            writers: movie.writers,
-            guidebox_id: movie.guidebox_id,
-            title: movie.title,
-            release_year: movie.release_year,
-            themoviedb: movie.themoviedb,
-            original_title: movie.original_title,
-            alternate_titles: movie.alternate_titles,
-            imdb: movie.imdb,
-            pre_order: movie.pre_order,
-            in_theaters: movie.in_theaters,
-            release_date: movie.release_date,
-            rating: movie.rating,
-            rottentomatoes: movie.rottentomatoes,
-            imdb_rating: movie.imdb_rating,
-            imdb_votes: movie.imdb_votes,
-            tomato_meter: movie.tomato_meter,
-            tomato_image: movie.tomato_image,
-            tomato_rating: movie.tomato_rating,
-            tomato_reviews: movie.tomato_reviews,
-            tomato_fresh: movie.tomato_fresh,
-            tomato_rotten: movie.tomato_rotten,
-            tomato_consensus: movie.tomato_consensus,
-            tomato_user_meter: movie.tomato_user_meter,
-            tomato_user_rating: movie.tomato_user_rating,
-            tomato_user_reviews: movie.tomato_user_reviews,
-            tomato_url: movie.tomato_url,
-            freebase: movie.freebase,
-            wikipedia_id: movie.wikipedia_id,
-            metacritic: movie.metacritic,
-            common_sense_media: movie.common_sense_media,
-            poster_120x171: movie.poster_120x171,
-            poster_240x342: movie.poster_240x342,
-            poster_400x570: movie.poster_400x570
+          let movieModel = Movie({
+            cast: movieToSave.cast,
+            directors: movieToSave.directors,
+            genres: movieToSave.genres,
+            // other_sources: movie.other_sources,
+            overview: movieToSave.overview,
+            // purchase_android_sources: movie.purchase_android_sources,
+            // purchase_ios_sources: movie.purchase_ios_sources,
+            // purchase_web_sources: movie.purchase_web_sources,
+            social: movieToSave.social,
+            tags: movieToSave.tags,
+            trailers: movieToSave.trailers,
+            writers: movieToSave.writers,
+            guideboxID: movieToSave.id,
+            title: movieToSave.title,
+            releaseYear: movieToSave.releaseYear,
+            themoviedb: movieToSave.themoviedb,
+            originalTitle: movieToSave.originalTitle,
+            alternateTitles: movieToSave.alternateTitles,
+            imdb: movieToSave.imdb,
+            preOrder: movieToSave.preOrder,
+            inTheaters: movieToSave.inTheaters,
+            releaseDate: movieToSave.releaseDate,
+            rating: movieToSave.rating,
+            rottentomatoes: movieToSave.rottentomatoes,
+            imdbRating: movieToSave.imdbRating,
+            imdbVotes: movieToSave.imdbVotes,
+            tomatoMeter: movieToSave.tomatoMeter,
+            tomatoImage: movieToSave.tomatoImage,
+            tomatoRating: movieToSave.tomatoRating,
+            tomatoReviews: movieToSave.tomatoReviews,
+            tomatoFresh: movieToSave.tomatoFresh,
+            tomatoRotten: movieToSave.tomatoRotten,
+            tomatoConsensus: movieToSave.tomatoConsensus,
+            tomatoUserMeter: movieToSave.tomatoUserMeter,
+            tomatoUserRating: movieToSave.tomatoUserRating,
+            tomatoUserReviews: movieToSave.tomatoUserReviews,
+            tomatoUrl: movieToSave.tomatoUrl,
+            freebase: movieToSave.freebase,
+            wikipediaID: movieToSave.wikipediaID,
+            metacritic: movieToSave.metacritic,
+            commonSenseMedia: movieToSave.commonSenseMedia,
+            poster120x171: movieToSave.poster120x171,
+            poster240x342: movieToSave.poster240x342,
+            poster400x570: movieToSave.poster400x570
 
           });
 
-          return newMovie.save(function(err, savedMovie) {
+          return movieModel.save(function(err, savedMovie) {
             if(err) {
               return reject(err);
             } else {
@@ -107,19 +108,19 @@ function saveMovie(movie) {
           });
         } else {
           // Update
-          entity.imdb_rating = movie.imdb_rating;
-          entity.imdb_votes = movie.imdb_votes;
-          entity.tomato_meter = movie.tomato_meter;
-          entity.tomato_image = movie.tomato_image;
-          entity.tomato_rating = movie.tomato_rating;
-          entity.tomato_reviews = movie.tomato_reviews;
-          entity.tomato_fresh = movie.tomato_fresh;
-          entity.tomato_rotten = movie.tomato_rotten;
-          entity.tomato_consensus = movie.tomato_consensus;
-          entity.tomato_user_meter = movie.tomato_user_meter;
-          entity.tomato_user_rating = movie.tomato_user_rating;
-          entity.tomato_user_reviews = movie.tomato_user_reviews;
-          entity.tomato_url = movie.tomato_url;
+          entity.imdbRating = movieToSave.imdbRating;
+          entity.imdbVotes = movieToSave.imdbVotes;
+          entity.tomatoMeter = movieToSave.tomatoMeter;
+          entity.tomatoImage = movieToSave.tomatoImage;
+          entity.tomatoRating = movieToSave.tomatoRating;
+          entity.tomatoReviews = movieToSave.tomatoReviews;
+          entity.tomatoFresh = movieToSave.tomatoFresh;
+          entity.tomatoRotten = movieToSave.tomatoRotten;
+          entity.tomatoConsensus = movieToSave.tomatoConsensus;
+          entity.tomatoUserMeter = movieToSave.tomatoUserMeter;
+          entity.tomatoUserRating = movieToSave.tomatoUserRating;
+          entity.tomatoUserReviews = movieToSave.tomatoUserReviews;
+          entity.tomatoUrl = movieToSave.tomatoUrl;
           return entity.save(function(err, savedMovie) {
             if(err) {
               return reject(err);
@@ -145,7 +146,7 @@ const getContent = function(url) {
     const request = lib.get(url, response => {
       // handle http errors
       if(response.statusCode < 200 || response.statusCode > 299) {
-        return reject(new Error('Failed to load page, status code: ' + response.statusCode));
+        return reject(new Error(`Failed to load page, status code: ${response.statusCode}`));
       }
       // temporary data holder
       const body = [];
@@ -159,19 +160,81 @@ const getContent = function(url) {
   });
 };
 
+/***
+ * Maps guidebox fields to Movie model fields
+ * @param guideboxMovies
+ * @returns {*}
+ */
+function normalizeGuideboxFields(guideboxMovies) {
+  let mapFields = function(movie) {
+    movie.alternateTitles = movie.alternate_titles;
+    Reflect.deleteProperty(movie, 'alternate_titles');
+    movie.commonSenseMedia = movie.common_sense_media;
+    Reflect.deleteProperty(movie, 'common_sense_media');
+    movie.freeAndroidSources = movie.free_android_sources;
+    Reflect.deleteProperty(movie, 'free_android_sources');
+    movie.freeIOSSources = movie.free_ios_sources;
+    Reflect.deleteProperty(movie, 'free_ios_sources');
+    movie.freeWebSources = movie.free_web_sources;
+    Reflect.deleteProperty(movie, 'free_web_sources');
+    movie.inTheaters = movie.in_theaters;
+    Reflect.deleteProperty(movie, 'in_theaters');
+    movie.originalTitle = movie.original_title;
+    Reflect.deleteProperty(movie, 'original_title');
+    movie.otherSources = movie.other_sources;
+    Reflect.deleteProperty(movie, 'other_sources');
+    movie.poster120x171 = movie.poster_120x171;
+    Reflect.deleteProperty(movie, 'poster_120x171');
+    movie.poster240x342 = movie.poster_240x342;
+    Reflect.deleteProperty(movie, 'poster_240x342');
+    movie.poster400x570 = movie.poster_400x570;
+    Reflect.deleteProperty(movie, 'poster_400x570');
+    movie.preoOrder = movie.pre_order;
+    Reflect.deleteProperty(movie, 'pre_order');
+    movie.purchaseAndroidSources = movie.purchase_android_sources;
+    Reflect.deleteProperty(movie, 'purchase_android_sources');
+    movie.purchaseIOSSources = movie.purchase_ios_sources;
+    Reflect.deleteProperty(movie, 'purchase_ios_sources');
+    movie.purchaseWebSources = movie.purchase_web_sources;
+    Reflect.deleteProperty(movie, 'purchase_web_sources');
+    movie.releaseDate = movie.release_date;
+    Reflect.deleteProperty(movie, 'release_date');
+    movie.releaseYear = movie.release_year;
+    Reflect.deleteProperty(movie, 'release_year');
+    movie.subscriptionAndroidSources = movie.subscription_android_sources;
+    Reflect.deleteProperty(movie, 'subscription_android_sources');
+    movie.subscriptionIOSSources = movie.subscription_ios_sources;
+    Reflect.deleteProperty(movie, 'subscription_ios_sources');
+    movie.subscriptionWebSources = movie.subscription_web_sources;
+    Reflect.deleteProperty(movie, 'subscription_web_sources');
+    movie.wikiepediaID = movie.wikipedia_id;
+    Reflect.deleteProperty(movie, 'wikipedia_id');
+    movie.tvEverywhereAndroidSources = movie.tv_everywhere_android_sources;
+    Reflect.deleteProperty(movie, 'tv_everywhere_android_sources');
+    movie.tvEverywhereIOSSources = movie.tv_everywhere_ios_sources;
+    Reflect.deleteProperty(movie, 'tv_everywhere_ios_sources');
+    movie.tvEverywhereWebSources = movie.tv_everywhere_web_sources;
+    Reflect.deleteProperty(movie, 'tv_everywhere_web_sources');
+    return movie;
+  };
+  if(guideboxMovies.length) {
+    let normalizedMovies = [];
+    for(let movie of guideboxMovies) {
+      movie = mapFields(movie);
+      normalizedMovies.push(movie);
+    }
+    return normalizedMovies;
+  }
+  // single movie
+  return mapFields(guideboxMovies);
+}
+
 function getGuideboxMovies(start, limit, sources, platform) {
   return getContent(`${config.guidebox.baseURL + config.guidebox.apiKey}/movies/all/${start}/${limit}/${sources}/${platform}`)
     .then(body => {
       let movies = JSON.parse(body).results;
-
       if(movies && movies.length) {
-        let m;
-        for(let i = 0; i < movies.length; i++) {
-          m = movies[i];
-          // This conflicts with mongodb id
-          m.guidebox_id = m.id;
-          delete m.id;
-        }
+        movies = normalizeGuideboxFields(movies);
         return {results: movies, totalResults: JSON.parse(body).total_results};
       } else {
         return null;
@@ -190,19 +253,19 @@ function getOMDBInfo(movie) {
   return getContent(`${config.omdbapi.baseURL}i=${movie.imdb}&tomatoes=true`)
     .then(omdbBody => {
       let parsedOMDBMovie = JSON.parse(omdbBody);
-      movie.imdb_rating = parsedOMDBMovie.imdbRating;
-      movie.imdb_votes = parsedOMDBMovie.imdbVotes;
-      movie.tomato_meter = parsedOMDBMovie.tomatoMeter;
-      movie.tomato_image = parsedOMDBMovie.tomatoImage;
-      movie.tomato_rating = parsedOMDBMovie.tomatoRating;
-      movie.tomato_reviews = parsedOMDBMovie.tomatoReviews;
-      movie.tomato_fresh = parsedOMDBMovie.tomatoFresh;
-      movie.tomato_rotten = parsedOMDBMovie.tomatoRotten;
-      movie.tomato_consensus = parsedOMDBMovie.tomatoConsensus;
-      movie.tomato_user_meter = parsedOMDBMovie.tomatoUserMeter;
-      movie.tomato_user_rating = parsedOMDBMovie.tomatoUserRating;
-      movie.tomato_user_reviews = parsedOMDBMovie.tomatoUserReviews;
-      movie.tomato_url = parsedOMDBMovie.tomatoURL;
+      movie.imdbRating = parsedOMDBMovie.imdbRating;
+      movie.imdbVotes = parsedOMDBMovie.imdbVotes;
+      movie.tomatoMeter = parsedOMDBMovie.tomatoMeter;
+      movie.tomatoImage = parsedOMDBMovie.tomatoImage;
+      movie.tomatoRating = parsedOMDBMovie.tomatoRating;
+      movie.tomatoReviews = parsedOMDBMovie.tomatoReviews;
+      movie.tomatoFresh = parsedOMDBMovie.tomatoFresh;
+      movie.tomatoRotten = parsedOMDBMovie.tomatoRotten;
+      movie.tomatoConsensus = parsedOMDBMovie.tomatoConsensus;
+      movie.tomatoUserMeter = parsedOMDBMovie.tomatoUserMeter;
+      movie.tomatoUserRating = parsedOMDBMovie.tomatoUserRating;
+      movie.tomatoUserReviews = parsedOMDBMovie.tomatoUserReviews;
+      movie.tomatoUrl = parsedOMDBMovie.tomatoURL;
       console.info('got omdb info for ', movie.title);
       return movie;
     })
@@ -214,23 +277,23 @@ function getOMDBInfo(movie) {
 
 /***
  * Checks if given movie is in the savedMovies array. If so just returns the saved entity. Otherwise returns a promise
- * that will retrieve the additonal info from the other api providers.
- * @param movie
+ * that will retrieve the additional info from the other api providers.
+ * @param guideboxMovie
  * @param savedMovies
  * @returns {Promise<R>|Promise<void>}
  */
-function compareArrays(movie, savedMovies) {
+function compareArrays(guideboxMovie, savedMovies) {
   for(let element of savedMovies) {
-    if(movie.guidebox_id === element.guidebox_id) {
+    if(guideboxMovie.id === element.guideboxID) {
       return Promise.resolve(element);
     }
   }
-  return getOMDBInfo(movie)
+  return getOMDBInfo(guideboxMovie)
     .then(function(omdbMovie) {
       if(omdbMovie) {
         return saveMovie(omdbMovie);
       } else {
-        return movie;
+        return guideboxMovie;
       }
     });
 }
@@ -251,15 +314,15 @@ export function index(req, res) {
     .then(guideboxMovies => {
       if(guideboxMovies && guideboxMovies.results && guideboxMovies.results.length) {
         totalResults = guideboxMovies.totalResults;
-        let m;
+        let guideboxMovie;
         let promises = [];
         let guideboxIDs = [];
         let previouslySavedMovies = [];
         for(let i = 0; i < guideboxMovies.results.length; i++) {
-          guideboxIDs.push(guideboxMovies.results[i].guidebox_id);
+          guideboxIDs.push(guideboxMovies.results[i].id);
         }
         return Movie.find({
-          guidebox_id: {
+          guideboxID: {
             $in: guideboxIDs
           }
         }).exec()
@@ -269,8 +332,8 @@ export function index(req, res) {
             }
             // Compare the two arrays for any that haven't been saved
             for(let k = 0; k < guideboxMovies.results.length; k++) {
-              m = guideboxMovies.results[k];
-              promises.push(compareArrays(m, previouslySavedMovies));
+              guideboxMovie = guideboxMovies.results[k];
+              promises.push(compareArrays(guideboxMovie, previouslySavedMovies));
             }
             return Promise.all(promises);
           });
@@ -283,14 +346,14 @@ export function index(req, res) {
       }
     })
     .then(function(results) {
-      return res.json({results, total_results: totalResults});
+      return res.json({results, totalResults});
     })
     .catch(errRes => res.status(500).json(errRes.message));
 }
 
 // Gets a single Movie from the DB
 export function show(req, res) {
-  return Movie.findOne({guidebox_id: req.params.id}).exec()
+  return Movie.findById(req.params.id).exec()
     .then(handleMovieRequest(res, req.params.id))
     .catch(err => {
       console.log(err);
