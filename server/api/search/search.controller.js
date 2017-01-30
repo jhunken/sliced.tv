@@ -2,28 +2,32 @@
 
 import request from 'request';
 import config from '../../config/environment';
+import Utils from '../../components/utils';
+import Movie from '../movie/movie.model';
 
 function search(req, res, mediaType) {
   // Guidebox api requires TRIPLE url encoded query
-  var query = encodeURIComponent(encodeURIComponent(encodeURIComponent(req.params.query)));
-  var mediaTypeComponentUrl = mediaType === 'movie' ? '/search/movie/title/' : '/search/title/';
-  var fullSearchUrl = `${config.guidebox.baseURL + config.guidebox.apiKey + mediaTypeComponentUrl + query}/`;
+  let query = encodeURIComponent(encodeURIComponent(encodeURIComponent(req.params.query)));
+  let mediaTypeComponentUrl = mediaType === 'movie' ? '/search/movie/title/' : '/search/title/';
+  let fullSearchUrl = `${config.guidebox.baseURL + config.guidebox.apiKey + mediaTypeComponentUrl + query}/`;
   console.log(fullSearchUrl);
   return request(fullSearchUrl,
     function(error, response, body) {
       if(!error && response.statusCode === 200 && body !== {}) {
-        var results = JSON.parse(body).results;
+        let results = JSON.parse(body).results;
 
         if(results && results.length) {
-          var m;
-          for(var i = 0; i < results.length; i++) {
-            m = results[i];
-            // This conflicts with mongodb id
-            m.guidebox_id = m.id;
-            Reflect.deleteProperty(m, 'id');
-            results[i] = m;
+          let moviesToSave = [];
+          results = Utils.normalizeGuideboxFields(results);
+          for(let movieToSave of results) {
+            moviesToSave.push(new Movie(movieToSave));
           }
-          return res.json({results: results, total_results: JSON.parse(body).total_results});
+          Movie.create(moviesToSave)
+            .then(savedMovies => res.json({results: savedMovies, totalResults: JSON.parse(body).total_results}))
+            .catch(err => {
+              console.error(err);
+              return res.status(500).send();
+            });
         } else {
           res.status(400).end();
           return null;
