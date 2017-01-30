@@ -1,9 +1,10 @@
 <div class="container">
   <div ng-repeat="watchlist in watchlistCtrl.watchlists">
     <h1 ng-bind="watchlist.name"></h1>
-    <ul>
+    <ul ng-show="watchlist.movies.length">
       <li ng-repeat="movie in watchlist.movies">{{movie.title}}</li>
     </ul>
+    <p ng-show="!watchlist.movies.length">You haven't added anything yet!</p>
   </div>
 </div>
 
