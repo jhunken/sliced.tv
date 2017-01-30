@@ -11,6 +11,7 @@
 import Movie from './movie.model';
 import config from '../../config/environment';
 import Promise from 'bluebird';
+import Utils from '../../components/utils';
 
 function handleMovieRequest(res) {
   return function(entity) {
@@ -20,11 +21,14 @@ function handleMovieRequest(res) {
         .then(body => {
           let guideboxMovie = JSON.parse(body);
           if(guideboxMovie && guideboxMovie.id) {
-            guideboxMovie = normalizeGuideboxFields(guideboxMovie);
+            guideboxMovie = Utils.normalizeGuideboxFields(guideboxMovie);
             if(!guideboxMovie.imdbRating) {
               // Retrieve additional omdb api info
               return getOMDBInfo(guideboxMovie)
-                .then(updatedMovie => res.json(updatedMovie).end());
+                .then(updatedMovie => {
+                  updatedMovie._id = entity.id;
+                  return res.json(updatedMovie).end();
+                });
             } else {
               // nothing else to retrieve
               return res.json(entity).end();
@@ -50,53 +54,7 @@ function saveMovie(movieToSave) {
       .then(function(entity) {
         if(!entity) {
           // Save new
-          let movieModel = Movie({
-            cast: movieToSave.cast,
-            directors: movieToSave.directors,
-            genres: movieToSave.genres,
-            // other_sources: movie.other_sources,
-            overview: movieToSave.overview,
-            // purchase_android_sources: movie.purchase_android_sources,
-            // purchase_ios_sources: movie.purchase_ios_sources,
-            // purchase_web_sources: movie.purchase_web_sources,
-            social: movieToSave.social,
-            tags: movieToSave.tags,
-            trailers: movieToSave.trailers,
-            writers: movieToSave.writers,
-            guideboxID: movieToSave.id,
-            title: movieToSave.title,
-            releaseYear: movieToSave.releaseYear,
-            themoviedb: movieToSave.themoviedb,
-            originalTitle: movieToSave.originalTitle,
-            alternateTitles: movieToSave.alternateTitles,
-            imdb: movieToSave.imdb,
-            preOrder: movieToSave.preOrder,
-            inTheaters: movieToSave.inTheaters,
-            releaseDate: movieToSave.releaseDate,
-            rating: movieToSave.rating,
-            rottentomatoes: movieToSave.rottentomatoes,
-            imdbRating: movieToSave.imdbRating,
-            imdbVotes: movieToSave.imdbVotes,
-            tomatoMeter: movieToSave.tomatoMeter,
-            tomatoImage: movieToSave.tomatoImage,
-            tomatoRating: movieToSave.tomatoRating,
-            tomatoReviews: movieToSave.tomatoReviews,
-            tomatoFresh: movieToSave.tomatoFresh,
-            tomatoRotten: movieToSave.tomatoRotten,
-            tomatoConsensus: movieToSave.tomatoConsensus,
-            tomatoUserMeter: movieToSave.tomatoUserMeter,
-            tomatoUserRating: movieToSave.tomatoUserRating,
-            tomatoUserReviews: movieToSave.tomatoUserReviews,
-            tomatoUrl: movieToSave.tomatoUrl,
-            freebase: movieToSave.freebase,
-            wikipediaID: movieToSave.wikipediaID,
-            metacritic: movieToSave.metacritic,
-            commonSenseMedia: movieToSave.commonSenseMedia,
-            poster120x171: movieToSave.poster120x171,
-            poster240x342: movieToSave.poster240x342,
-            poster400x570: movieToSave.poster400x570
-
-          });
+          let movieModel = new Movie(movieToSave);
 
           return movieModel.save(function(err, savedMovie) {
             if(err) {
@@ -160,81 +118,13 @@ const getContent = function(url) {
   });
 };
 
-/***
- * Maps guidebox fields to Movie model fields
- * @param guideboxMovies
- * @returns {*}
- */
-function normalizeGuideboxFields(guideboxMovies) {
-  let mapFields = function(movie) {
-    movie.alternateTitles = movie.alternate_titles;
-    Reflect.deleteProperty(movie, 'alternate_titles');
-    movie.commonSenseMedia = movie.common_sense_media;
-    Reflect.deleteProperty(movie, 'common_sense_media');
-    movie.freeAndroidSources = movie.free_android_sources;
-    Reflect.deleteProperty(movie, 'free_android_sources');
-    movie.freeIOSSources = movie.free_ios_sources;
-    Reflect.deleteProperty(movie, 'free_ios_sources');
-    movie.freeWebSources = movie.free_web_sources;
-    Reflect.deleteProperty(movie, 'free_web_sources');
-    movie.inTheaters = movie.in_theaters;
-    Reflect.deleteProperty(movie, 'in_theaters');
-    movie.originalTitle = movie.original_title;
-    Reflect.deleteProperty(movie, 'original_title');
-    movie.otherSources = movie.other_sources;
-    Reflect.deleteProperty(movie, 'other_sources');
-    movie.poster120x171 = movie.poster_120x171;
-    Reflect.deleteProperty(movie, 'poster_120x171');
-    movie.poster240x342 = movie.poster_240x342;
-    Reflect.deleteProperty(movie, 'poster_240x342');
-    movie.poster400x570 = movie.poster_400x570;
-    Reflect.deleteProperty(movie, 'poster_400x570');
-    movie.preoOrder = movie.pre_order;
-    Reflect.deleteProperty(movie, 'pre_order');
-    movie.purchaseAndroidSources = movie.purchase_android_sources;
-    Reflect.deleteProperty(movie, 'purchase_android_sources');
-    movie.purchaseIOSSources = movie.purchase_ios_sources;
-    Reflect.deleteProperty(movie, 'purchase_ios_sources');
-    movie.purchaseWebSources = movie.purchase_web_sources;
-    Reflect.deleteProperty(movie, 'purchase_web_sources');
-    movie.releaseDate = movie.release_date;
-    Reflect.deleteProperty(movie, 'release_date');
-    movie.releaseYear = movie.release_year;
-    Reflect.deleteProperty(movie, 'release_year');
-    movie.subscriptionAndroidSources = movie.subscription_android_sources;
-    Reflect.deleteProperty(movie, 'subscription_android_sources');
-    movie.subscriptionIOSSources = movie.subscription_ios_sources;
-    Reflect.deleteProperty(movie, 'subscription_ios_sources');
-    movie.subscriptionWebSources = movie.subscription_web_sources;
-    Reflect.deleteProperty(movie, 'subscription_web_sources');
-    movie.wikiepediaID = movie.wikipedia_id;
-    Reflect.deleteProperty(movie, 'wikipedia_id');
-    movie.tvEverywhereAndroidSources = movie.tv_everywhere_android_sources;
-    Reflect.deleteProperty(movie, 'tv_everywhere_android_sources');
-    movie.tvEverywhereIOSSources = movie.tv_everywhere_ios_sources;
-    Reflect.deleteProperty(movie, 'tv_everywhere_ios_sources');
-    movie.tvEverywhereWebSources = movie.tv_everywhere_web_sources;
-    Reflect.deleteProperty(movie, 'tv_everywhere_web_sources');
-    return movie;
-  };
-  if(guideboxMovies.length) {
-    let normalizedMovies = [];
-    for(let movie of guideboxMovies) {
-      movie = mapFields(movie);
-      normalizedMovies.push(movie);
-    }
-    return normalizedMovies;
-  }
-  // single movie
-  return mapFields(guideboxMovies);
-}
 
 function getGuideboxMovies(start, limit, sources, platform) {
   return getContent(`${config.guidebox.baseURL + config.guidebox.apiKey}/movies/all/${start}/${limit}/${sources}/${platform}`)
     .then(body => {
       let movies = JSON.parse(body).results;
       if(movies && movies.length) {
-        movies = normalizeGuideboxFields(movies);
+        movies = Utils.normalizeGuideboxFields(movies);
         return {results: movies, totalResults: JSON.parse(body).total_results};
       } else {
         return null;
@@ -319,7 +209,7 @@ export function index(req, res) {
         let guideboxIDs = [];
         let previouslySavedMovies = [];
         for(let i = 0; i < guideboxMovies.results.length; i++) {
-          guideboxIDs.push(guideboxMovies.results[i].id);
+          guideboxIDs.push(guideboxMovies.results[i].guideboxID);
         }
         return Movie.find({
           guideboxID: {

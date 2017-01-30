@@ -96,7 +96,9 @@ export function index(req, res) {
       if(!user) {
         return res.status(401).end();
       }
-      return Watchlist.find({user}).exec()
+      return Watchlist.find({user})
+        .populate('movies')
+        .exec()
         .then(respondWithResult(res))
         .catch(handleError(res));
     })
@@ -108,6 +110,7 @@ export function show(req, res) {
   if(mongoose.Types.ObjectId.isValid(req.params.id)) {
     return Watchlist.findOne({_id: req.params.id})
       .populate('user', '-salt -password')
+      .populate('movies')
       .exec()
       .then(handleEntityNotFound(res))
       .then(checkPermissions(req, res))
