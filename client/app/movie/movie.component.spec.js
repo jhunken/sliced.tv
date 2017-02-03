@@ -17,9 +17,9 @@ describe('Component: MovieComponent', function() {
   // Initialize the controller and a mock scope
   beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope) {
     $httpBackend = _$httpBackend_;
-    stateparams = {id: 12345};
+    stateparams = {guideboxID: 12345};
     $httpBackend.expectGET('/api/movies/12345')
-      .respond({_id: 12345, guidebox_id: 12345, title: 'fake movie'});
+      .respond({_id: 12345, guideboxID: 12345, title: 'fake movie'});
 
     scope = $rootScope.$new();
     movieComponent = $componentController('movie', {

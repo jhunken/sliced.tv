@@ -2,9 +2,9 @@
 
 /* globals sinon, describe, expect, it */
 
-var proxyquire = require('proxyquire').noPreserveCache();
+let proxyquire = require('proxyquire').noPreserveCache();
 
-var watchlistCtrlStub = {
+let watchlistCtrlStub = {
   index: 'watchlistCtrl.index',
   show: 'watchlistCtrl.show',
   create: 'watchlistCtrl.create',
@@ -13,7 +13,16 @@ var watchlistCtrlStub = {
   destroy: 'watchlistCtrl.destroy'
 };
 
-var routerStub = {
+let authServiceStub = {
+  isAuthenticated() {
+    return 'authService.isAuthenticated';
+  },
+  hasRole(role) {
+    return `authService.hasRole.${role}`;
+  }
+};
+
+let routerStub = {
   get: sinon.spy(),
   put: sinon.spy(),
   patch: sinon.spy(),
@@ -22,13 +31,14 @@ var routerStub = {
 };
 
 // require the index with our stubbed out modules
-var watchlistIndex = proxyquire('./index.js', {
+let watchlistIndex = proxyquire('./index.js', {
   express: {
     Router() {
       return routerStub;
     }
   },
-  './watchlist.controller': watchlistCtrlStub
+  './watchlist.controller': watchlistCtrlStub,
+  '../../auth/auth.service': authServiceStub
 });
 
 describe('Watchlist API Router:', function() {
@@ -37,50 +47,50 @@ describe('Watchlist API Router:', function() {
   });
 
   describe('GET /api/watchlists', function() {
-    it('should route to watchlist.controller.index', function() {
+    it('should be authenticated and route to watchlist.controller.index', function() {
       expect(routerStub.get
-        .withArgs('/', 'watchlistCtrl.index')
-        ).to.have.been.calledOnce;
+        .withArgs('/', 'authService.isAuthenticated', 'watchlistCtrl.index')
+      ).to.have.been.calledOnce;
     });
   });
 
   describe('GET /api/watchlists/:id', function() {
-    it('should route to watchlist.controller.show', function() {
+    it('should be authenticated and route to watchlist.controller.show', function() {
       expect(routerStub.get
-        .withArgs('/:id', 'watchlistCtrl.show')
-        ).to.have.been.calledOnce;
+        .withArgs('/:id', 'authService.isAuthenticated', 'watchlistCtrl.show')
+      ).to.have.been.calledOnce;
     });
   });
 
   describe('POST /api/watchlists', function() {
-    it('should route to watchlist.controller.create', function() {
+    it('should be authenticated and route to watchlist.controller.create', function() {
       expect(routerStub.post
-        .withArgs('/', 'watchlistCtrl.create')
-        ).to.have.been.calledOnce;
+        .withArgs('/', 'authService.isAuthenticated', 'watchlistCtrl.create')
+      ).to.have.been.calledOnce;
     });
   });
 
   describe('PUT /api/watchlists/:id', function() {
-    it('should route to watchlist.controller.upsert', function() {
+    it('should be authenticated and route to watchlist.controller.upsert', function() {
       expect(routerStub.put
-        .withArgs('/:id', 'watchlistCtrl.upsert')
-        ).to.have.been.calledOnce;
+        .withArgs('/:id', 'authService.isAuthenticated', 'watchlistCtrl.upsert')
+      ).to.have.been.calledOnce;
     });
   });
 
   describe('PATCH /api/watchlists/:id', function() {
-    it('should route to watchlist.controller.patch', function() {
+    it('should be authenticated and route to watchlist.controller.patch', function() {
       expect(routerStub.patch
-        .withArgs('/:id', 'watchlistCtrl.patch')
-        ).to.have.been.calledOnce;
+        .withArgs('/:id', 'authService.isAuthenticated', 'watchlistCtrl.patch')
+      ).to.have.been.calledOnce;
     });
   });
 
   describe('DELETE /api/watchlists/:id', function() {
-    it('should route to watchlist.controller.destroy', function() {
+    it('should be authenticated and route to watchlist.controller.destroy', function() {
       expect(routerStub.delete
-        .withArgs('/:id', 'watchlistCtrl.destroy')
-        ).to.have.been.calledOnce;
+        .withArgs('/:id', 'authService.isAuthenticated', 'watchlistCtrl.destroy')
+      ).to.have.been.calledOnce;
     });
   });
 });

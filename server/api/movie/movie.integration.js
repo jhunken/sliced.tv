@@ -114,25 +114,25 @@ describe('Movie API:', function() {
     it('should properly handle a mixture of new and previously saved movies', function(done) {
       // Create newMovie
       let previouslySavedMovie = new Movie({
-        guidebox_id: 134422,
+        guideboxID: 134422,
         title: 'Dirty Grandpa',
-        release_year: 2016,
+        releaseYear: 2016,
         themoviedb: 291870,
-        original_title: 'Dirty Grandpa (previously saved)',
-        alternate_titles: ['Dirty Grandpa (Unrated)', 'Dirty Grandpa (Unrated Version)', 'Dirty Grandpa Unrated'],
+        originalTitle: 'Dirty Grandpa (previously saved)',
+        alternateTitles: ['Dirty Grandpa (Unrated)', 'Dirty Grandpa (Unrated Version)', 'Dirty Grandpa Unrated'],
         imdb: 'tt1860213',
-        pre_order: false,
-        in_theaters: false,
-        release_date: '2016-01-21',
+        preOrder: false,
+        inTheaters: false,
+        releaseDate: '2016-01-21',
         rating: 'R',
         rottentomatoes: 771388387,
         freebase: '',
-        wikipedia_id: 0,
+        wikipediaID: 0,
         metacritic: 'http://www.metacritic.com/movie/dirty-grandpa',
-        common_sense_media: 'https://www.commonsensemedia.org/movie-reviews/dirty-grandpa',
-        poster_120x171: 'http://static-api.guidebox.com/111615/thumbnails_movies_small/134422-6324042329-7119411346-5142547209-small-120x171-alt-.jpg',
-        poster_240x342: 'http://static-api.guidebox.com/111615/thumbnails_movies_medium/134422-151683060-177236004-8937469679-medium-240x342-alt-.jpg',
-        poster_400x570: 'http://static-api.guidebox.com/111615/thumbnails_movies/-alt--134422-6996994163-7736085253-8175344849-large-400x570-alt-.jpg'
+        commonSenseMedia: 'https://www.commonsensemedia.org/movie-reviews/dirty-grandpa',
+        poster120x171: 'http://static-api.guidebox.com/111615/thumbnails_movies_small/134422-6324042329-7119411346-5142547209-small-120x171-alt-.jpg',
+        poster240x342: 'http://static-api.guidebox.com/111615/thumbnails_movies_medium/134422-151683060-177236004-8937469679-medium-240x342-alt-.jpg',
+        poster400x570: 'http://static-api.guidebox.com/111615/thumbnails_movies/-alt--134422-6996994163-7736085253-8175344849-large-400x570-alt-.jpg'
       });
       previouslySavedMovie.save().then(function() {
         let movies;
@@ -150,7 +150,7 @@ describe('Movie API:', function() {
             expect(movies).to.be.instanceOf(Array);
             expect(movies.length).to.equal(10);
             for(let movie of movies) {
-              if(movie.original_title === previouslySavedMovie.original_title) {
+              if(movie.originalTitle === previouslySavedMovie.originalTitle) {
                 foundPreviouslySavedMovie = true;
               }
             }
@@ -161,7 +161,7 @@ describe('Movie API:', function() {
     });
   });
 
-  describe('GET /api/movies/:id', function() {
+  describe('GET /api/movies/:guideboxID', function() {
     let token, movie, newMovie;
 
     before(function(done) {
@@ -184,7 +184,7 @@ describe('Movie API:', function() {
             // Create newMovie
             movie = new Movie({
               title: 'Fake Movie',
-              guidebox_id: '123456789',
+              guideboxID: '123456789',
               overview: 'This is an overview'
             });
             movie.save().then(function(savedMovie) {
@@ -204,7 +204,7 @@ describe('Movie API:', function() {
 
     it('should respond with the requested movie', function(done) {
       request(app)
-        .get(`/api/movies/${newMovie.guidebox_id}`)
+        .get(`/api/movies/${newMovie.guideboxID}`)
         .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
@@ -215,7 +215,7 @@ describe('Movie API:', function() {
           console.log('in should respond with the requested movie', res.body);
           movie = res.body;
           expect(movie.title).to.equal('Fake Movie');
-          expect(movie.guidebox_id).to.equal(newMovie.guidebox_id);
+          expect(movie.guideboxID).to.equal(newMovie.guideboxID);
           done();
         });
     });
@@ -233,7 +233,7 @@ describe('Movie API:', function() {
         });
     });
 
-    it('should respond with an error if an invalid movie id is used', function(done) {
+    it('should respond with an error if an invalid movie guideboxID is used', function(done) {
       request(app)
         .get('/api/movies/ABCDEFGH')
         .set('authorization', `Bearer ${token}`)
