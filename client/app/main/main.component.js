@@ -16,6 +16,7 @@ export class MainController {
     this.movies = [];
     this.totalMovies = 0;
     this.moviesPerPage = 20;
+    this.pagination = {};
 
 
     $scope.$on('$destroy', function() {
