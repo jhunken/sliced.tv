@@ -150,6 +150,7 @@ describe('Movie API:', function() {
             expect(movies).to.be.instanceOf(Array);
             expect(movies.length).to.equal(10);
             for(let movie of movies) {
+              console.log(movie.originalTitle);
               if(movie.originalTitle === previouslySavedMovie.originalTitle) {
                 foundPreviouslySavedMovie = true;
               }
