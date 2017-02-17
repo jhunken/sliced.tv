@@ -15,33 +15,35 @@ import Utils from '../../components/utils';
 
 function handleMovieRequest(res) {
   return function(entity) {
-    if(!entity.overview) {
-      // Requires additional lookup -- query remote
+    if(!entity) {
+      return res.status(404).send('Not found');
+    } else if(!entity.overview) {
+        // Requires additional lookup -- query remote
       return getContent(`${config.guidebox.baseURL + config.guidebox.apiKey}/movies/${entity.guideboxID}`)
-        .then(body => {
-          let guideboxMovie = JSON.parse(body);
-          if(guideboxMovie && guideboxMovie.id) {
-            guideboxMovie = Utils.normalizeGuideboxFields(guideboxMovie);
-            if(!guideboxMovie.imdbRating) {
-              // Retrieve additional omdb api info
-              return getOMDBInfo(guideboxMovie)
-                .then(updatedMovie => {
-                  updatedMovie._id = entity.id;
-                  return res.json(updatedMovie).end();
-                });
+          .then(body => {
+            let guideboxMovie = JSON.parse(body);
+            if(guideboxMovie && guideboxMovie.id) {
+              guideboxMovie = Utils.normalizeGuideboxFields(guideboxMovie);
+              if(!guideboxMovie.imdbRating) {
+                // Retrieve additional omdb api info
+                return getOMDBInfo(guideboxMovie)
+                  .then(updatedMovie => {
+                    updatedMovie._id = entity.id;
+                    return res.json(updatedMovie).end();
+                  });
+              } else {
+                // nothing else to retrieve
+                return res.json(entity).end();
+              }
             } else {
-              // nothing else to retrieve
-              return res.json(entity).end();
+              return res.status(404).send('Not found');
             }
-          } else {
-            return res.status(404).send('Not found');
-          }
-        })
-        .catch(err => {
-          console.error(err);
-        });
+          })
+          .catch(err => {
+            console.error(err);
+          });
     } else {
-      // Exists already locally
+        // Exists already locally
       console.log('retrieved from mongodb: ', entity.title);
       return res.json(entity).end();
     }
@@ -174,7 +176,8 @@ function getOMDBInfo(movie) {
  */
 function compareArrays(guideboxMovie, savedMovies) {
   for(let element of savedMovies) {
-    if(guideboxMovie.id === element.guideboxID) {
+    if(guideboxMovie.guideboxID === element.guideboxID) {
+      console.log(element.originalTitle);
       return Promise.resolve(element);
     }
   }

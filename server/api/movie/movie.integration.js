@@ -150,8 +150,7 @@ describe('Movie API:', function() {
             expect(movies).to.be.instanceOf(Array);
             expect(movies.length).to.equal(10);
             for(let movie of movies) {
-              console.log(movie.originalTitle);
-              if(movie.originalTitle === previouslySavedMovie.originalTitle) {
+              if(movie.title === previouslySavedMovie.title) {
                 foundPreviouslySavedMovie = true;
               }
             }
@@ -162,7 +161,7 @@ describe('Movie API:', function() {
     });
   });
 
-  describe('GET /api/movies/:guideboxID', function() {
+  describe('GET /api/movies/:id', function() {
     let token, movie, newMovie;
 
     before(function(done) {
@@ -205,7 +204,7 @@ describe('Movie API:', function() {
 
     it('should respond with the requested movie', function(done) {
       request(app)
-        .get(`/api/movies/${newMovie.guideboxID}`)
+        .get(`/api/movies/${newMovie.id}`)
         .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
@@ -213,7 +212,6 @@ describe('Movie API:', function() {
           if(err) {
             done(err);
           }
-          console.log('in should respond with the requested movie', res.body);
           movie = res.body;
           expect(movie.title).to.equal('Fake Movie');
           expect(movie.guideboxID).to.equal(newMovie.guideboxID);
@@ -223,7 +221,7 @@ describe('Movie API:', function() {
 
     it('should respond with an error if movie is not found', function(done) {
       request(app)
-        .get('/api/movies/000000000')
+        .get('/api/movies/0000813f7b83032d4dbb1000')
         .set('authorization', `Bearer ${token}`)
         .expect(404)
         .end(err => {
