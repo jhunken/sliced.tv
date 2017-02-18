@@ -1,3 +1,21 @@
+<a name="0.0.19"></a>
+## [0.0.19](https://github.com/jhunken/easier.tv/compare/v0.0.16-hf1...v0.0.19) (2017-02-18)
+
+
+### Bug Fixes
+
+* require babel-polyfill for Reflect usage ([f0c53e3](https://github.com/jhunken/easier.tv/commit/f0c53e3))
+* **apicache:** Reverting apicache due to gzip bug ([4b265f1](https://github.com/jhunken/easier.tv/commit/4b265f1))
+* **search:** Fix incorrect template specification ([4ab6515](https://github.com/jhunken/easier.tv/commit/4ab6515))
+
+
+### Features
+
+* Add OMDB integration for imdb and tomato scores ([168ac84](https://github.com/jhunken/easier.tv/commit/168ac84))
+* Initial Watchlist Support ([a08c3b3](https://github.com/jhunken/easier.tv/commit/a08c3b3))
+
+
+
 <a name="0.0.18"></a>
 ## [0.0.18](https://github.com/jhunken/easier.tv/compare/v0.0.16-hf1...v0.0.18) (2016-11-26)
 
