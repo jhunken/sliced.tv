@@ -5,7 +5,8 @@ import routes from './watchlist.routes';
 
 export class WatchlistComponent {
   /*@ngInject*/
-  constructor(watchlistService) {
+  constructor(watchlistService, $http) {
+    this.$http = $http;
     this.watchlists = [];
     this.watchlistService = watchlistService;
   }
@@ -18,6 +19,17 @@ export class WatchlistComponent {
     this.watchlistService.get()
       .then(response => {
         this.watchlists = response.data;
+      });
+  }
+
+  removeMovie(watchlist, index) {
+    watchlist.movies.splice(index, 1);
+    this.$http.put(`/api/watchlists/${watchlist._id}`, watchlist)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(err => {
+        console.error(err);
       });
   }
 }
