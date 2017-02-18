@@ -25,7 +25,7 @@ export class MainController {
   }
 
   $onInit() {
-    var page = parseInt(this.$stateParams.page, 10);
+    let page = parseInt(this.$stateParams.page, 10);
     this.loadMovies(page);
     this.pagination = {
       current: page
@@ -37,7 +37,7 @@ export class MainController {
     this.movieService.movies(page === 1 ? 0 : page * this.moviesPerPage, this.moviesPerPage)
       .then(response => {
         this.movies = response.data.results;
-        this.totalMovies = response.data.total_results;
+        this.totalMovies = response.data.totalResults;
         this.$state.go('main', {page}, {notify: false});
 
         // Scroll to top on page change
