@@ -2,8 +2,8 @@
 
   <div class="row">
     <div ng-repeat="result in searchCtrl.results" class="col-md-4">
-      <a ui-sref="movie({id: result.guidebox_id})" class="thumbnail" href>
-        <div ng-style="{'background-image': 'url(' + result.poster_400x570 + ')'}" class="image"></div>
+      <a ui-sref="movie({id: result._id})" class="thumbnail" href>
+        <div ng-style="{'background-image': 'url(' + result.poster400x570 + ')'}" class="image"></div>
         <div class="caption text-center">
             <span ng-show="result.title">
               {{ result.title }}

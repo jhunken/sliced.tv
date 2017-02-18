@@ -1,10 +1,13 @@
 {
     "parser": "babel-eslint",
     "env": {
-        "es6": true
+        "es6": true,
+        "mocha" :true
     },
     "globals": {},
-    "plugins": [],
+    "plugins": [
+      "mocha"
+    ],
     "rules": {
         //Possible Errors
         "comma-dangle": 0,                                          //disallow or enforce trailing commas
@@ -249,6 +252,9 @@
         "require-yield": 2,                                         //disallow generator functions that do not have yield
         "rest-spread-spacing": ["error", "never"],                  //enforce spacing between rest and spread operators and their expressions
         "template-curly-spacing": 2,                                //enforce spacing around embedded expressions of template strings
-        "yield-star-spacing": [2, "after"]                          //enforce spacing around the * in yield* expressions
+        "yield-star-spacing": [2, "after"],                         //enforce spacing around the * in yield* expressions
+
+        // mocha
+        "mocha/no-exclusive-tests": "error"
     }
 }

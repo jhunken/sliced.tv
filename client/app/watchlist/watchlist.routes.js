@@ -3,8 +3,8 @@
 export default function($stateProvider) {
   'ngInject';
   $stateProvider
-    .state('new', {
-      url: '/new',
-      template: '<new></new>'
+    .state('watchlist', {
+      url: '/watchlist',
+      template: '<watchlist></watchlist>'
     });
 }

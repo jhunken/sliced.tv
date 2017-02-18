@@ -18,10 +18,10 @@ export class SearchComponent {
 
   $onInit() {
     if(this._$stateParams.query) {
-      this.results = this._movieService.search(this._$stateParams.query, 'movies')
+      this._movieService.search(this._$stateParams.query, 'movies')
         .then(response => {
           this.results = response.data.results;
-          this.totalResults = response.data.total_results;
+          this.totalResults = response.data.totalResults;
           this.loading = false;
         })
         .catch(err => {

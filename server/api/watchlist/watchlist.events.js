@@ -1,15 +1,15 @@
 /**
- * Update model events
+ * Watchlist model events
  */
 
 'use strict';
 
 import {EventEmitter} from 'events';
-import Update from './update.model';
-var UpdateEvents = new EventEmitter();
+import Watchlist from './watchlist.model';
+var WatchlistEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
-UpdateEvents.setMaxListeners(0);
+WatchlistEvents.setMaxListeners(0);
 
 // Model events
 var events = {
@@ -20,14 +20,14 @@ var events = {
 // Register the event emitter to the model events
 for(var e in events) {
   let event = events[e];
-  Update.schema.post(e, emitEvent(event));
+  Watchlist.schema.post(e, emitEvent(event));
 }
 
 function emitEvent(event) {
   return function(doc) {
-    UpdateEvents.emit(`${event}:${doc._id}`, doc);
-    UpdateEvents.emit(event, doc);
+    WatchlistEvents.emit(event + ':' + doc._id, doc);
+    WatchlistEvents.emit(event, doc);
   };
 }
 
-export default UpdateEvents;
+export default WatchlistEvents;

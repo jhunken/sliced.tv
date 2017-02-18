@@ -2,54 +2,54 @@
 
 import mongoose from 'mongoose';
 
-var MovieSchema = new mongoose.Schema({
-  cast: [{id: Number, name: String, character_name: String, imdb: String}],
-  directors: [{id: Number, name: String, imdb: String}],
+let MovieSchema = new mongoose.Schema({
+  cast: [{guideboxID: Number, name: String, characterName: String, imdb: String}],
+  directors: [{guideboxID: Number, name: String, imdb: String}],
   duration: Number,
-  genres: [{id: Number, title: String}],
+  genres: [{guideboxID: Number, title: String}],
   overview: String,
-  guidebox_id: Number,
+  guideboxID: Number,
   title: String,
   themoviedb: Number,
-  original_title: String,
-  alternate_titles: [
+  originalTitle: String,
+  alternateTitles: [
     String
   ],
   imdb: String,
-  imdb_rating: String,
-  imdb_votes: String,
-  pre_order: Boolean,
-  in_theaters: Boolean,
-  release_date: Date,
-  release_year: Number,
+  imdbRating: String,
+  imdbVotes: String,
+  preOrder: Boolean,
+  inTheaters: Boolean,
+  releaseDate: Date,
+  releaseYear: Number,
   rating: String,
   rottentomatoes: Number,
   social: {
-    facebook: {facebook_id: String, link: String}
+    facebook: {facebookID: String, link: String}
   },
-  tomato_meter: String,
-  tomato_image: String,
-  tomato_rating: String,
-  tomato_reviews: String,
-  tomato_fresh: String,
-  tomato_rotten: String,
-  tomato_consensus: String,
-  tomato_user_meter: String,
-  tomato_user_rating: String,
-  tomato_user_reviews: String,
-  tomato_url: String,
+  tomatoMeter: String,
+  tomatoImage: String,
+  tomatoRating: String,
+  tomatoReviews: String,
+  tomatoFresh: String,
+  tomatoRotten: String,
+  tomatoConsensus: String,
+  tomatoUserMeter: String,
+  tomatoUserRating: String,
+  tomatoUserReviews: String,
+  tomatoUrl: String,
   freebase: String,
-  wikipedia_id: Number,
+  wikipediaID: Number,
   metacritic: String,
-  common_sense_media: String,
-  poster_120x171: String,
-  poster_240x342: String,
-  poster_400x570: String,
+  commonSenseMedia: String,
+  poster120x171: String,
+  poster240x342: String,
+  poster400x570: String,
   tags: [
-    {id: Number, tag: String}
+    {guideboxID: Number, tag: String}
   ],
 
-  writers: [{id: Number, name: String, imdb: String}]
+  writers: [{guideboxID: Number, name: String, imdb: String}]
 
   // TODO add missing attributes
   // purchase_android_sources : [
@@ -60,7 +60,7 @@ var MovieSchema = new mongoose.Schema({
   //     app_required      : Boolean,
   //     display_name      : String,
   //     formats           : [
-  //       {format : String, pre_order : Boolean, price : String, type : String}
+  //       {format : String, preOrder : Boolean, price : String, type : String}
   //     ],
   //     link              : String,
   //     source            : String
@@ -74,7 +74,7 @@ var MovieSchema = new mongoose.Schema({
   //     app_required      : Boolean,
   //     display_name      : String,
   //     formats           : [
-  //       {format : String, pre_order : Boolean, price : String, type : String}
+  //       {format : String, preOrder : Boolean, price : String, type : String}
   //     ],
   //     link              : String,
   //     source            : String
@@ -84,7 +84,7 @@ var MovieSchema = new mongoose.Schema({
   //   {
   //     display_name : String,
   //     formats      : [
-  //       {format : String, pre_order : Boolean, price : String, type : String}
+  //       {format : String, preOrder : Boolean, price : String, type : String}
   //     ],
   //     link         : String,
   //     source       : String
@@ -103,7 +103,7 @@ var MovieSchema = new mongoose.Schema({
   //           price     : String,
   //           format    : String,
   //           type      : String,
-  //           pre_order : Boolean
+  //           preOrder : Boolean
   //         }
   //       ]
   //     }

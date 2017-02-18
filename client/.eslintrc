@@ -2,10 +2,15 @@
   "extends": "../.eslintrc",
   "env": {
     "browser": true,
-    "commonjs": true
+    "commonjs": true,
+    "es6": true,
+    "mocha": true,
+    "protractor": true,
+    "jasmine": true
   },
   "globals": {
-    "_": true,
-    "angular": true
+    "_": false,
+    "angular": false,
+    "inject"
   }
 }
