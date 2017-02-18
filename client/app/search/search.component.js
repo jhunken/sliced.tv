@@ -21,7 +21,7 @@ export class SearchComponent {
       this._movieService.search(this._$stateParams.query, 'movies')
         .then(response => {
           this.results = response.data.results;
-          this.totalResults = response.data.total_results;
+          this.totalResults = response.data.totalResults;
           this.loading = false;
         })
         .catch(err => {

@@ -1,8 +1,9 @@
 'use strict';
+/* globals sinon, describe, expect, it */
 
-var proxyquire = require('proxyquire').noPreserveCache();
+let proxyquire = require('proxyquire').noPreserveCache();
 
-var movieCtrlStub = {
+let movieCtrlStub = {
   index: 'movieCtrl.index',
   show: 'movieCtrl.show',
   create: 'movieCtrl.create',
@@ -10,7 +11,7 @@ var movieCtrlStub = {
   destroy: 'movieCtrl.destroy'
 };
 
-var authServiceStub = {
+let authServiceStub = {
   isAuthenticated() {
     return 'authService.isAuthenticated';
   },
@@ -19,12 +20,12 @@ var authServiceStub = {
   }
 };
 
-var routerStub = {
+let routerStub = {
   get: sinon.spy()
 };
 
 // require the index with our stubbed out modules
-var movieIndex = proxyquire('./index.js', {
+let movieIndex = proxyquire('./index.js', {
   express: {
     Router() {
       return routerStub;
