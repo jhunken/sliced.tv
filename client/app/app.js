@@ -26,7 +26,6 @@ import footer from '../components/footer/footer.component';
 import main from './main/main.component';
 import movie from './movie/movie.component';
 import search from './search/search.component';
-import newComp from './new/new.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
@@ -38,7 +37,7 @@ import './app.scss';
 
 angular.module('easierTvApp', [
   ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar,
-  footer, main, search, movieService, movie, newComp, constants, socket, util, 'angularUtils.directives.dirPagination',
+  footer, main, search, movieService, movie, constants, socket, util, 'angularUtils.directives.dirPagination',
   WatchlistComponent, watchlistService
 ])
   .config(routeConfig)

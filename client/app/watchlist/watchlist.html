@@ -2,7 +2,8 @@
   <div ng-repeat="watchlist in watchlistCtrl.watchlists">
     <h1 ng-bind="watchlist.name"></h1>
     <ul ng-show="watchlist.movies.length">
-      <li ng-repeat="movie in watchlist.movies">{{movie.title}}</li>
+      <li ng-repeat="movie in watchlist.movies"><a ui-sref="movie({id: movie._id})" href>{{movie.title}}</a>
+      </li>
     </ul>
     <p ng-show="!watchlist.movies.length">You haven't added anything yet!</p>
   </div>
