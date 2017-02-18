@@ -15,11 +15,12 @@ describe('Service: movieService', () => {
     $httpBackend = _$httpBackend_;
   }));
 
-  it('should be defined', function () {
+  it('should be defined', () => {
     expect(!!movieService).to.be.true;
   });
 
   describe('movies function', () => {
+
     it('should use default parameters', () => {
       $httpBackend.expectGET('/api/movies/all/0/25/all/all')
         .respond([{_id: 12345, guidebox_id: 12345, title: 'fake movie'}, {

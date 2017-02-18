@@ -3,7 +3,7 @@
 import main from './main.component';
 import movieService from '../movieService/movieService.service';
 
-describe('Component: MainComponent', function () {
+describe('Component: MainComponent', () => {
   beforeEach(angular.mock.module(main));
   beforeEach(angular.mock.module(movieService));
   beforeEach(angular.mock.module('stateMock'));
@@ -103,38 +103,38 @@ describe('Component: MainComponent', function () {
     ]
   };
 
-    // Initialize the controller and a mock scope
-    beforeEach(inject(function (_$httpBackend_, $http, $componentController, $rootScope, $state,
-                                socket, movieService) {
-      $httpBackend = _$httpBackend_;
-      scope = $rootScope.$new();
-      state = $state;
-      stateparams = {page: 1};
-      mainComponent = $componentController('main', {
-        $http,
-        $scope: scope,
-        socket,
-        movieService,
-        $stateParams: stateparams
-      });
-    }));
-
-    it('should handle errors', () => {
-      $httpBackend.expectGET('/api/movies/all/0/20/all/all')
-        .respond(500);
-      mainComponent.$onInit();
-      expect(mainComponent.movies).to.have.lengthOf(0);
-      expect(mainComponent.pagination.current).to.equal(1);
+  // Initialize the controller and a mock scope
+  beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, $state,
+                             socket, movieService) {
+    $httpBackend = _$httpBackend_;
+    scope = $rootScope.$new();
+    state = $state;
+    stateparams = {page: 1};
+    mainComponent = $componentController('main', {
+      $http,
+      $scope: scope,
+      socket,
+      movieService,
+      $stateParams: stateparams
     });
+  }));
 
-    it('should attach a list of movies to the controller', () => {
-      $httpBackend.expectGET('/api/movies/all/0/20/all/all')
-        .respond(mockMoviesPg1);
-      state.expectTransitionTo('main');
-      mainComponent.$onInit();
-      $httpBackend.flush();
-      state.expectTransitionTo('main/1');
-      expect(mainComponent.movies).to.have.lengthOf(3);
-      expect(mainComponent.pagination.current).to.equal(1);
-    });
+  it('should handle errors', () => {
+    $httpBackend.expectGET('/api/movies/all/0/20/all/all')
+      .respond(500);
+    mainComponent.$onInit();
+    expect(mainComponent.movies).to.have.lengthOf(0);
+    expect(mainComponent.pagination.current).to.equal(1);
   });
+
+  it('should attach a list of movies to the controller', () => {
+    $httpBackend.expectGET('/api/movies/all/0/20/all/all')
+      .respond(mockMoviesPg1);
+    state.expectTransitionTo('main');
+    mainComponent.$onInit();
+    $httpBackend.flush();
+    state.expectTransitionTo('main/1');
+    expect(mainComponent.movies).to.have.lengthOf(3);
+    expect(mainComponent.pagination.current).to.equal(1);
+  });
+});

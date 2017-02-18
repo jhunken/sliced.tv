@@ -1,9 +1,6 @@
 'use strict';
-const angular = require('angular');
 
-/*@ngInject*/
-export function watchlistServiceService($http) {
-	// AngularJS will instantiate a singleton by calling "new" on this function
+function watchlistService($http) {
   let get = function() {
     return $http.get('/api/watchlists/')
       .then(response => response);
@@ -15,5 +12,5 @@ export function watchlistServiceService($http) {
 }
 
 export default angular.module('easierTvApp.watchlistService', [])
-  .service('watchlistService', watchlistServiceService)
+  .service('watchlistService', watchlistService)
   .name;

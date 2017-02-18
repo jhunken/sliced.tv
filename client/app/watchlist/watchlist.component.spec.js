@@ -1,14 +1,18 @@
 'use strict';
 
+import watchlistModule from './watchlist.component';
+import watchlistService from '../services/watchlistService/watchlistService.service';
+
 describe('Component: WatchlistComponent', function() {
   // load the controller's module
-  beforeEach(module('easierTvApp.watchlist'));
+  beforeEach(angular.mock.module(watchlistModule));
+  beforeEach(angular.mock.module(watchlistService));
 
-  var WatchlistComponent;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function($componentController) {
-    WatchlistComponent = $componentController('watchlist', {});
+  let watchlistComponent;
+  beforeEach(inject(function($componentController, watchlistService) {
+    watchlistComponent = $componentController('watchlist', {});
   }));
 
   it('should ...', function() {
