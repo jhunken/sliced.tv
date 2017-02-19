@@ -1,3 +1,13 @@
+<a name="0.0.26"></a>
+## [0.0.26](https://github.com/jhunken/easier.tv/compare/0.0.25...0.0.26) (2017-02-19)
+
+
+### Features
+
+* do not require user to be authenticated for movies and search routes ([1e0879f](https://github.com/jhunken/easier.tv/commit/1e0879f))
+
+
+
 <a name="0.0.25"></a>
 ## [0.0.25](https://github.com/jhunken/easier.tv/compare/0.0.24...0.0.25) (2017-02-19)
 
