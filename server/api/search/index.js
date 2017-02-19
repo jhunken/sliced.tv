@@ -1,14 +1,13 @@
 'use strict';
 
-var express = require('express');
-var controller = require('./search.controller');
-import * as auth from '../../auth/auth.service';
+let express = require('express');
+let controller = require('./search.controller');
 
-var router = express.Router();
+let router = express.Router();
 
-router.get('/:query', auth.isAuthenticated(), controller.searchAll);
-router.get('/movies/:query', auth.isAuthenticated(), controller.searchMovies);
-router.get('/shows/:query', auth.isAuthenticated(), controller.searchShows);
+router.get('/:query', controller.searchAll);
+router.get('/movies/:query', controller.searchMovies);
+router.get('/shows/:query', controller.searchShows);
 
 
 module.exports = router;

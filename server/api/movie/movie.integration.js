@@ -31,33 +31,10 @@ describe('Movie API:', function() {
   });
 
   describe('GET /api/movies', function() {
-    let token;
-
-    before(function(done) {
-      // Get authenticated user token
-      request(app)
-        .post('/auth/local')
-        .send({
-          email: 'test@example.com',
-          password: 'password'
-        })
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if(err) {
-            done(err);
-          }
-          token = res.body.token;
-          done();
-        });
-    });
-
-
-    it('should respond with an array of movies when authenticated', function(done) {
+    it('should respond with an array of movies', done => {
       let movies;
       request(app)
         .get('/api/movies')
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -71,10 +48,9 @@ describe('Movie API:', function() {
     });
 
     it('should respond with an array of movies using params', function(done) {
-      var movies;
+      let movies;
       request(app)
         .get('/api/movies/all/50/10/all/all')
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -91,7 +67,6 @@ describe('Movie API:', function() {
     it('should respond with a 200 when "start" param is incorrect', function(done) {
       request(app)
         .get('/api/movies/all/999999999/10/all/all')
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .end(done);
     });
@@ -99,17 +74,10 @@ describe('Movie API:', function() {
     it('should respond with a 200 when using invalid params', function(done) {
       request(app)
         .get('/api/movies/all/invalid/invalid/invalid/invalid')
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .end(done);
     });
 
-    it('should respond with a 401 when not authenticated', function(done) {
-      request(app)
-        .get('/api/movies')
-        .expect(401)
-        .end(done);
-    });
 
     it('should properly handle a mixture of new and previously saved movies', function(done) {
       // Create newMovie
@@ -139,7 +107,6 @@ describe('Movie API:', function() {
         let foundPreviouslySavedMovie = false;
         request(app)
           .get('/api/movies/all/99/10/all/all')
-          .set('authorization', `Bearer ${token}`)
           .expect(200)
           .expect('Content-Type', /json/)
           .end((err, res) => {
@@ -162,37 +129,20 @@ describe('Movie API:', function() {
   });
 
   describe('GET /api/movies/:id', function() {
-    let token, movie, newMovie;
+    let movie;
+    let newMovie;
 
-    before(function(done) {
-      // Get authenticated user token
-      request(app)
-        .post('/auth/local')
-        .send({
-          email: 'test@example.com',
-          password: 'password'
-        })
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if(err) {
-            console.error(err);
-          }
-          token = res.body.token;
-
-          user.save().then(function() {
-            // Create newMovie
-            movie = new Movie({
-              title: 'Fake Movie',
-              guideboxID: '123456789',
-              overview: 'This is an overview'
-            });
-            movie.save().then(function(savedMovie) {
-              newMovie = savedMovie;
-              done();
-            });
-          });
-        });
+    before(done => {
+      // Create newMovie
+      movie = new Movie({
+        title: 'Fake Movie',
+        guideboxID: '123456789',
+        overview: 'This is an overview'
+      });
+      movie.save().then(function(savedMovie) {
+        newMovie = savedMovie;
+        done();
+      });
     });
 
     // Clears movies and users after testing
@@ -205,7 +155,6 @@ describe('Movie API:', function() {
     it('should respond with the requested movie', function(done) {
       request(app)
         .get(`/api/movies/${newMovie.id}`)
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -222,7 +171,6 @@ describe('Movie API:', function() {
     it('should respond with an error if movie is not found', function(done) {
       request(app)
         .get('/api/movies/0000813f7b83032d4dbb1000')
-        .set('authorization', `Bearer ${token}`)
         .expect(404)
         .end(err => {
           if(err) {
@@ -235,7 +183,6 @@ describe('Movie API:', function() {
     it('should respond with an error if an invalid movie guideboxID is used', function(done) {
       request(app)
         .get('/api/movies/ABCDEFGH')
-        .set('authorization', `Bearer ${token}`)
         .expect(400)
         .end(err => {
           if(err) {
@@ -245,4 +192,5 @@ describe('Movie API:', function() {
         });
     });
   });
-});
+})
+;

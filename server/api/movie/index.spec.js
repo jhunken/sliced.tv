@@ -11,14 +11,6 @@ let movieCtrlStub = {
   destroy: 'movieCtrl.destroy'
 };
 
-let authServiceStub = {
-  isAuthenticated() {
-    return 'authService.isAuthenticated';
-  },
-  hasRole(role) {
-    return `authService.hasRole.${role}`;
-  }
-};
 
 let routerStub = {
   get: sinon.spy()
@@ -31,8 +23,7 @@ let movieIndex = proxyquire('./index.js', {
       return routerStub;
     }
   },
-  './movie.controller': movieCtrlStub,
-  '../../auth/auth.service': authServiceStub
+  './movie.controller': movieCtrlStub
 });
 
 describe('Movie API Router:', function() {
@@ -43,21 +34,21 @@ describe('Movie API Router:', function() {
   describe('GET /api/movies', function() {
     it('should be authenticated and route to movie.controller.index', function() {
       expect(routerStub.get
-        .withArgs('/', 'authService.isAuthenticated', 'movieCtrl.index')
+        .withArgs('/', 'movieCtrl.index')
       ).to.have.been.calledOnce;
     });
   });
   describe('GET /api/movies/all/:start/:limit/:sources/:platform', function() {
     it('should be authenticated and route to movie.controller.index', function() {
       expect(routerStub.get
-        .withArgs('/all/:start/:limit/:sources/:platform', 'authService.isAuthenticated', 'movieCtrl.index')
+        .withArgs('/all/:start/:limit/:sources/:platform', 'movieCtrl.index')
       ).to.have.been.calledOnce;
     });
   });
   describe('GET /api/movies/:id', function() {
     it('should be authenticated and route to movie.controller.show', function() {
       expect(routerStub.get
-        .withArgs('/:id', 'authService.isAuthenticated', 'movieCtrl.show')
+        .withArgs('/:id', 'movieCtrl.show')
       ).to.have.been.calledOnce;
     });
   });

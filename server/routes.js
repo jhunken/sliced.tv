@@ -7,7 +7,6 @@
 import errors from './components/errors';
 import path from 'path';
 import config from './config/environment';
-import * as auth from './auth/auth.service';
 import apicache from 'apicache';
 
 let cache = apicache.options({
@@ -18,8 +17,8 @@ let cache = apicache.options({
 export default function(app) {
   // Insert routes below
   app.use('/api/watchlists', require('./api/watchlist'));
-  app.use('/api/search', auth.isAuthenticated(), cache(), require('./api/search'));
-  app.use('/api/movies', auth.isAuthenticated(), require('./api/movie'));
+  app.use('/api/search', cache(), require('./api/search'));
+  app.use('/api/movies', require('./api/movie'));
   app.use('/api/users', require('./api/user'));
 
   app.use('/auth', require('./auth').default);

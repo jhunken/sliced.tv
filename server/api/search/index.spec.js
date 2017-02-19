@@ -1,34 +1,26 @@
 'use strict';
 
-var proxyquire = require('proxyquire').noPreserveCache();
+let proxyquire = require('proxyquire').noPreserveCache();
 
-var searchCtrlStub = {
+let searchCtrlStub = {
   searchAll: 'searchCtrl.searchAll',
   searchMovies: 'searchCtrl.searchMovies',
   searchShows: 'searchCtrl.searchShows'
 };
 
-var authServiceStub = {
-  isAuthenticated() {
-    return 'authService.isAuthenticated';
-  },
-  hasRole(role) {
-    return `authService.hasRole.${role}`;
-  }
-};
-var routerStub = {
+
+let routerStub = {
   get: sinon.spy(),
 };
 
 // require the index with our stubbed out modules
-var searchIndex = proxyquire('./index.js', {
+let searchIndex = proxyquire('./index.js', {
   express: {
     Router() {
       return routerStub;
     }
   },
-  './search.controller': searchCtrlStub,
-  '../../auth/auth.service': authServiceStub
+  './search.controller': searchCtrlStub
 });
 
 describe('Search API Router:', function() {
@@ -39,14 +31,14 @@ describe('Search API Router:', function() {
   describe('GET /api/search/:query', function() {
     it('should route to search.controller.searchAll', function() {
       expect(routerStub.get
-        .withArgs('/:query', 'authService.isAuthenticated', 'searchCtrl.searchAll')
+        .withArgs('/:query', 'searchCtrl.searchAll')
       ).to.have.been.calledOnce;
     });
   });
   describe('GET /api/search/movies/:query', function() {
     it('should route to search.controller.searchMovies', function() {
       expect(routerStub.get
-        .withArgs('/movies/:query', 'authService.isAuthenticated', 'searchCtrl.searchMovies')
+        .withArgs('/movies/:query', 'searchCtrl.searchMovies')
       ).to.have.been.calledOnce;
     });
   });
@@ -54,7 +46,7 @@ describe('Search API Router:', function() {
   describe('GET /api/search/shows/:query', function() {
     it('should route to search.controller.searchMovies', function() {
       expect(routerStub.get
-        .withArgs('/shows/:query', 'authService.isAuthenticated', 'searchCtrl.searchShows')
+        .withArgs('/shows/:query', 'searchCtrl.searchShows')
       ).to.have.been.calledOnce;
     });
   });
