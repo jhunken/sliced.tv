@@ -24,17 +24,17 @@ User.find({}).remove()
           name: 'Test User',
           email: 'test@example.com',
           password: 'test'
-        })
-          .then(user => {
-            let watchlist = new Watchlist({name: 'Watchlist', user});
-            watchlist.save()
-              .then(function() {
-                console.log('finished adding users');
-              })
-              .catch(err => {
-                console.error(err);
-              });
-          });
+        });
+          // .then(user => {
+          //   let watchlist = new Watchlist({name: 'Watchlist', user});
+          //   watchlist.save()
+          //     .then(function() {
+          //       console.log('finished adding users');
+          //     })
+          //     .catch(err => {
+          //       console.error(err);
+          //     });
+          // });
       });
   });
 
