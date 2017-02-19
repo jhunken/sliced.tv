@@ -1,3 +1,13 @@
+<a name="0.0.25"></a>
+## [0.0.25](https://github.com/jhunken/easier.tv/compare/0.0.24...0.0.25) (2017-02-19)
+
+
+### Bug Fixes
+
+* strictdi error ([90278b1](https://github.com/jhunken/easier.tv/commit/90278b1))
+
+
+
 <a name="0.0.24"></a>
 ## [0.0.24](https://github.com/jhunken/easier.tv/compare/0.0.23...0.0.24) (2017-02-19)
 
