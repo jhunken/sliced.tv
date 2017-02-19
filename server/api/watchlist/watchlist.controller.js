@@ -68,6 +68,17 @@ function checkPermissions(req, res) {
         }
         if(user.id !== userId) {
           res.status(403).end();
+        } else if(!entity.length) {
+            // create default watchlist
+          let watchlist = new Watchlist({name: 'Watchlist', user});
+          return watchlist.save()
+              .then(function(savedWatchlist) {
+                return [savedWatchlist];
+              })
+              .catch(err => {
+                console.error(err);
+                res.status(500).end();
+              });
         } else {
           return entity;
         }
@@ -99,6 +110,7 @@ export function index(req, res) {
       return Watchlist.find({user})
         .populate('movies')
         .exec()
+        .then(checkPermissions(req, res))
         .then(respondWithResult(res))
         .catch(handleError(res));
     })
