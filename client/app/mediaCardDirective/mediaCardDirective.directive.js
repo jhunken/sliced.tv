@@ -3,6 +3,7 @@ import angular from 'angular';
 
 export default angular.module('easierTvApp.mediaCardDirective', [])
   .directive('mediaCardDirective', function(watchlistService, $http) {
+    'ngInject';
     return {
       template: require('./mediaCardDirective.html'),
       restrict: 'EA',
