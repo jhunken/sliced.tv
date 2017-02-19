@@ -1,5 +1,15 @@
+<a name="0.0.23"></a>
+## [0.0.23](https://github.com/jhunken/easier.tv/compare/0.0.22...0.0.23) (2017-02-19)
+
+
+### Features
+
+* convert guidebox thumbnail urls to https ([fe5d52c](https://github.com/jhunken/easier.tv/commit/fe5d52c))
+
+
+
 <a name="0.0.22"></a>
-## [0.0.22](https://github.com/jhunken/easier.tv/compare/0.0.21...v0.0.22) (2017-02-19)
+## [0.0.22](https://github.com/jhunken/easier.tv/compare/0.0.21...0.0.22) (2017-02-19)
 
 
 ### Features
