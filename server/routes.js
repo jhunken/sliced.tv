@@ -8,8 +8,9 @@ import errors from './components/errors';
 import path from 'path';
 import config from './config/environment';
 import * as auth from './auth/auth.service';
+import apicache from 'apicache';
 
-var apicache = require('apicache').options({
+let cache = apicache.options({
   debug: config.apiCache.debug,
   defaultDuration: config.apiCache.defaultDuration
 }).middleware;
@@ -17,8 +18,8 @@ var apicache = require('apicache').options({
 export default function(app) {
   // Insert routes below
   app.use('/api/watchlists', require('./api/watchlist'));
-  app.use('/api/search', auth.isAuthenticated(), apicache(), require('./api/search'));
-  app.use('/api/movies', auth.isAuthenticated(), apicache(), require('./api/movie'));
+  app.use('/api/search', auth.isAuthenticated(), cache(), require('./api/search'));
+  app.use('/api/movies', auth.isAuthenticated(), require('./api/movie'));
   app.use('/api/users', require('./api/user'));
 
   app.use('/auth', require('./auth').default);
