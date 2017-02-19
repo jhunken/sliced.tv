@@ -212,9 +212,9 @@ Movie.find({}).remove()
           platform: 'Movie Theater'
         }]
       },
-      poster120x171: 'http://static-api.guidebox.com/091716/thumbnails_movies_small/147232-9867285997-6028612861-1102585225-small-120x171-alt-.jpg',
-      poster240x342: 'http://static-api.guidebox.com/091716/thumbnails_movies_medium/147232-1491943053-1310606436-524138231-medium-240x342-alt-.jpg',
-      poster400x570: 'http://static-api.guidebox.com/091716/thumbnails_movies/-alt--147232-2317507062-7811895022-3038267978-large-400x570-alt-.jpg',
+      poster120x171: 'https://static-api.guidebox.com/091716/thumbnails_movies_small/147232-9867285997-6028612861-1102585225-small-120x171-alt-.jpg',
+      poster240x342: 'https://static-api.guidebox.com/091716/thumbnails_movies_medium/147232-1491943053-1310606436-524138231-medium-240x342-alt-.jpg',
+      poster400x570: 'https://static-api.guidebox.com/091716/thumbnails_movies/-alt--147232-2317507062-7811895022-3038267978-large-400x570-alt-.jpg',
       preoOrder: false,
       purchaseAndroidSources: [{
         source: 'vudu',

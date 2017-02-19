@@ -25,11 +25,11 @@ let utils = (() => {
       Reflect.deleteProperty(movie, 'original_title');
       movie.otherSources = movie.other_sources;
       Reflect.deleteProperty(movie, 'other_sources');
-      movie.poster120x171 = movie.poster_120x171;
+      movie.poster120x171 = convertToHTTPS(movie.poster_120x171);
       Reflect.deleteProperty(movie, 'poster_120x171');
-      movie.poster240x342 = movie.poster_240x342;
+      movie.poster240x342 = convertToHTTPS(movie.poster_240x342);
       Reflect.deleteProperty(movie, 'poster_240x342');
-      movie.poster400x570 = movie.poster_400x570;
+      movie.poster400x570 = convertToHTTPS(movie.poster_400x570);
       Reflect.deleteProperty(movie, 'poster_400x570');
       movie.preoOrder = movie.pre_order;
       Reflect.deleteProperty(movie, 'pre_order');
@@ -71,8 +71,15 @@ let utils = (() => {
     return mapFields(guideboxMovies);
   }
 
+  function convertToHTTPS(url) {
+    if(url.match('^http://')) {
+      return url.replace(/^http:\/\//i, 'https://');
+    }
+  }
+
   return {
-    normalizeGuideboxFields
+    normalizeGuideboxFields,
+    convertToHTTPS
   };
 })();
 
