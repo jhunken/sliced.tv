@@ -1,3 +1,18 @@
+<a name="0.0.24"></a>
+## [0.0.24](https://github.com/jhunken/easier.tv/compare/0.0.23...0.0.24) (2017-02-19)
+
+
+### Bug Fixes
+
+* close navbar on click ([9b635ad](https://github.com/jhunken/easier.tv/commit/9b635ad))
+
+
+### Features
+
+* Add mediaCardDirective with ability to add to watchlist ([7a32310](https://github.com/jhunken/easier.tv/commit/7a32310))
+
+
+
 <a name="0.0.23"></a>
 ## [0.0.23](https://github.com/jhunken/easier.tv/compare/0.0.22...0.0.23) (2017-02-19)
 
