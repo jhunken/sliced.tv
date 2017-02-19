@@ -21,6 +21,7 @@ $fa-font-path: '/assets/fonts/font-awesome/';
 /* inject:scss */
 @import 'admin/admin';
 @import 'main/main';
+@import 'mediaCardDirective/mediaCardDirective';
 @import 'movie/movie';
 @import 'search/search';
 @import 'watchlist/watchlist';

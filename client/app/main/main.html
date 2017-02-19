@@ -1,21 +1,9 @@
 <div class="container">
 
   <div class="row">
-    <div dir-paginate="movie in $ctrl.movies | itemsPerPage: $ctrl.moviesPerPage" total-items="$ctrl.totalMovies"
-         current-page="$ctrl.pagination.current" class="col-md-3">
-      <a ui-sref="movie({id: movie._id})" class="thumbnail" href>
-        <div ng-style="{'background-image': 'url(' + movie.poster400x570 + ')'}" class="image"></div>
-        <div class="caption text-center">
-            <span ng-show="movie.title">
-              {{ movie.title }}
-            </span>
-          <span ng-hide="movie.title">
-              N/A
-            </span>
-          <p>IMDB: {{movie.imdbRating}}</p>
-          <p>Rotten Tomatoes: {{movie.tomatoMeter}}% fresh</p>
-        </div>
-      </a>
+    <div dir-paginate="media in $ctrl.movies | itemsPerPage: $ctrl.moviesPerPage" total-items="$ctrl.totalMovies"
+         current-page="$ctrl.pagination.current" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+      <media-card-directive></media-card-directive>
     </div>
 
 

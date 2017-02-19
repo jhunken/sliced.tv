@@ -32,13 +32,14 @@ import socket from '../components/socket/socket.service';
 import movieService from './movieService/movieService.service';
 import WatchlistComponent from './watchlist/watchlist.component';
 import watchlistService from './services/watchlistService/watchlistService.service';
+import MediaCardDirective from './mediaCardDirective/mediaCardDirective.directive';
 
 import './app.scss';
 
 angular.module('easierTvApp', [
   ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar,
   footer, main, search, movieService, movie, constants, socket, util, 'angularUtils.directives.dirPagination',
-  WatchlistComponent, watchlistService
+  WatchlistComponent, watchlistService, MediaCardDirective
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
