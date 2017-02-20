@@ -31,33 +31,10 @@ describe('Movie API:', function() {
   });
 
   describe('GET /api/movies', function() {
-    let token;
-
-    before(function(done) {
-      // Get authenticated user token
-      request(app)
-        .post('/auth/local')
-        .send({
-          email: 'test@example.com',
-          password: 'password'
-        })
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if(err) {
-            done(err);
-          }
-          token = res.body.token;
-          done();
-        });
-    });
-
-
-    it('should respond with an array of movies when authenticated', function(done) {
+    it('should respond with an array of movies', done => {
       let movies;
       request(app)
         .get('/api/movies')
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -71,10 +48,9 @@ describe('Movie API:', function() {
     });
 
     it('should respond with an array of movies using params', function(done) {
-      var movies;
+      let movies;
       request(app)
         .get('/api/movies/all/50/10/all/all')
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -91,7 +67,6 @@ describe('Movie API:', function() {
     it('should respond with a 200 when "start" param is incorrect', function(done) {
       request(app)
         .get('/api/movies/all/999999999/10/all/all')
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .end(done);
     });
@@ -99,47 +74,39 @@ describe('Movie API:', function() {
     it('should respond with a 200 when using invalid params', function(done) {
       request(app)
         .get('/api/movies/all/invalid/invalid/invalid/invalid')
-        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .end(done);
     });
 
-    it('should respond with a 401 when not authenticated', function(done) {
-      request(app)
-        .get('/api/movies')
-        .expect(401)
-        .end(done);
-    });
 
     it('should properly handle a mixture of new and previously saved movies', function(done) {
       // Create newMovie
       let previouslySavedMovie = new Movie({
-        guidebox_id: 134422,
+        guideboxID: 134422,
         title: 'Dirty Grandpa',
-        release_year: 2016,
+        releaseYear: 2016,
         themoviedb: 291870,
-        original_title: 'Dirty Grandpa (previously saved)',
-        alternate_titles: ['Dirty Grandpa (Unrated)', 'Dirty Grandpa (Unrated Version)', 'Dirty Grandpa Unrated'],
+        originalTitle: 'Dirty Grandpa (previously saved)',
+        alternateTitles: ['Dirty Grandpa (Unrated)', 'Dirty Grandpa (Unrated Version)', 'Dirty Grandpa Unrated'],
         imdb: 'tt1860213',
-        pre_order: false,
-        in_theaters: false,
-        release_date: '2016-01-21',
+        preOrder: false,
+        inTheaters: false,
+        releaseDate: '2016-01-21',
         rating: 'R',
         rottentomatoes: 771388387,
         freebase: '',
-        wikipedia_id: 0,
+        wikipediaID: 0,
         metacritic: 'http://www.metacritic.com/movie/dirty-grandpa',
-        common_sense_media: 'https://www.commonsensemedia.org/movie-reviews/dirty-grandpa',
-        poster_120x171: 'http://static-api.guidebox.com/111615/thumbnails_movies_small/134422-6324042329-7119411346-5142547209-small-120x171-alt-.jpg',
-        poster_240x342: 'http://static-api.guidebox.com/111615/thumbnails_movies_medium/134422-151683060-177236004-8937469679-medium-240x342-alt-.jpg',
-        poster_400x570: 'http://static-api.guidebox.com/111615/thumbnails_movies/-alt--134422-6996994163-7736085253-8175344849-large-400x570-alt-.jpg'
+        commonSenseMedia: 'https://www.commonsensemedia.org/movie-reviews/dirty-grandpa',
+        poster120x171: 'http://static-api.guidebox.com/111615/thumbnails_movies_small/134422-6324042329-7119411346-5142547209-small-120x171-alt-.jpg',
+        poster240x342: 'http://static-api.guidebox.com/111615/thumbnails_movies_medium/134422-151683060-177236004-8937469679-medium-240x342-alt-.jpg',
+        poster400x570: 'http://static-api.guidebox.com/111615/thumbnails_movies/-alt--134422-6996994163-7736085253-8175344849-large-400x570-alt-.jpg'
       });
       previouslySavedMovie.save().then(function() {
         let movies;
         let foundPreviouslySavedMovie = false;
         request(app)
           .get('/api/movies/all/99/10/all/all')
-          .set('authorization', `Bearer ${token}`)
           .expect(200)
           .expect('Content-Type', /json/)
           .end((err, res) => {
@@ -150,7 +117,7 @@ describe('Movie API:', function() {
             expect(movies).to.be.instanceOf(Array);
             expect(movies.length).to.equal(10);
             for(let movie of movies) {
-              if(movie.original_title === previouslySavedMovie.original_title) {
+              if(movie.title === previouslySavedMovie.title) {
                 foundPreviouslySavedMovie = true;
               }
             }
@@ -162,37 +129,20 @@ describe('Movie API:', function() {
   });
 
   describe('GET /api/movies/:id', function() {
-    let token, movie, newMovie;
+    let movie;
+    let newMovie;
 
-    before(function(done) {
-      // Get authenticated user token
-      request(app)
-        .post('/auth/local')
-        .send({
-          email: 'test@example.com',
-          password: 'password'
-        })
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if(err) {
-            console.error(err);
-          }
-          token = res.body.token;
-
-          user.save().then(function() {
-            // Create newMovie
-            movie = new Movie({
-              title: 'Fake Movie',
-              guidebox_id: '123456789',
-              overview: 'This is an overview'
-            });
-            movie.save().then(function(savedMovie) {
-              newMovie = savedMovie;
-              done();
-            });
-          });
-        });
+    before(done => {
+      // Create newMovie
+      movie = new Movie({
+        title: 'Fake Movie',
+        guideboxID: '123456789',
+        overview: 'This is an overview'
+      });
+      movie.save().then(function(savedMovie) {
+        newMovie = savedMovie;
+        done();
+      });
     });
 
     // Clears movies and users after testing
@@ -204,26 +154,23 @@ describe('Movie API:', function() {
 
     it('should respond with the requested movie', function(done) {
       request(app)
-        .get(`/api/movies/${newMovie.guidebox_id}`)
-        .set('authorization', `Bearer ${token}`)
+        .get(`/api/movies/${newMovie.id}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if(err) {
             done(err);
           }
-          console.log('in should respond with the requested movie', res.body);
           movie = res.body;
           expect(movie.title).to.equal('Fake Movie');
-          expect(movie.guidebox_id).to.equal(newMovie.guidebox_id);
+          expect(movie.guideboxID).to.equal(newMovie.guideboxID);
           done();
         });
     });
 
     it('should respond with an error if movie is not found', function(done) {
       request(app)
-        .get('/api/movies/000000000')
-        .set('authorization', `Bearer ${token}`)
+        .get('/api/movies/0000813f7b83032d4dbb1000')
         .expect(404)
         .end(err => {
           if(err) {
@@ -233,10 +180,9 @@ describe('Movie API:', function() {
         });
     });
 
-    it('should respond with an error if an invalid movie id is used', function(done) {
+    it('should respond with an error if an invalid movie guideboxID is used', function(done) {
       request(app)
         .get('/api/movies/ABCDEFGH')
-        .set('authorization', `Bearer ${token}`)
         .expect(400)
         .end(err => {
           if(err) {
@@ -246,4 +192,5 @@ describe('Movie API:', function() {
         });
     });
   });
-});
+})
+;

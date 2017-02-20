@@ -7,18 +7,18 @@
 import errors from './components/errors';
 import path from 'path';
 import config from './config/environment';
-import * as auth from './auth/auth.service';
+import apicache from 'apicache';
 
-var apicache = require('apicache').options({
+let cache = apicache.options({
   debug: config.apiCache.debug,
   defaultDuration: config.apiCache.defaultDuration
 }).middleware;
 
 export default function(app) {
   // Insert routes below
-  app.use('/api/search', auth.isAuthenticated(), apicache(), require('./api/search'));
-  app.use('/api/updates', auth.isAuthenticated(), apicache(), require('./api/update'));
-  app.use('/api/movies', auth.isAuthenticated(), apicache(), require('./api/movie'));
+  app.use('/api/watchlists', require('./api/watchlist'));
+  app.use('/api/search', cache(), require('./api/search'));
+  app.use('/api/movies', require('./api/movie'));
   app.use('/api/users', require('./api/user'));
 
   app.use('/auth', require('./auth').default);

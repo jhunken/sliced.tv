@@ -1,38 +1,38 @@
 'use strict';
 
-import request from 'request';
 import config from '../../config/environment';
+import Utils from '../../components/utils';
+import Movie from '../movie/movie.model';
+let Guidebox = require('guidebox')(config.guidebox.apiKey);
 
-function search(req, res, mediaType) {
-  // Guidebox api requires TRIPLE url encoded query
-  var query = encodeURIComponent(encodeURIComponent(encodeURIComponent(req.params.query)));
-  var mediaTypeComponentUrl = mediaType === 'movie' ? '/search/movie/title/' : '/search/title/';
-  var fullSearchUrl = `${config.guidebox.baseURL + config.guidebox.apiKey + mediaTypeComponentUrl + query}/`;
-  console.log(fullSearchUrl);
-  return request(fullSearchUrl,
-    function(error, response, body) {
-      if(!error && response.statusCode === 200 && body !== {}) {
-        var results = JSON.parse(body).results;
-
-        if(results && results.length) {
-          var m;
-          for(var i = 0; i < results.length; i++) {
-            m = results[i];
-            // This conflicts with mongodb id
-            m.guidebox_id = m.id;
-            Reflect.deleteProperty(m, 'id');
-            results[i] = m;
-          }
-          return res.json({results: results, total_results: JSON.parse(body).total_results});
-        } else {
-          res.status(400).end();
-          return null;
+function search(req, res, type) {
+  let todo = type;
+  todo;
+  let query = req.params.query;
+  return Guidebox.search.movies({query})
+    .then(searchRes => {
+      let results = searchRes.results;
+      if(results && results.length) {
+        let moviesToSave = [];
+        results = Utils.normalizeGuideboxFields(results);
+        for(let movieToSave of results) {
+          moviesToSave.push(new Movie(movieToSave));
         }
+        Movie.create(moviesToSave)
+          .then(savedMovies => res.json({results: savedMovies, totalResults: searchRes.total_results}))
+          .catch(err => {
+            console.error(err);
+            return res.status(500).send();
+          });
       } else {
-        console.error('statusCode:', response.statusCode, ', error: ', `${error}, body: `, body);
-        res.status(response.statusCode).send(error);
+        res.status(500).end();
         return null;
       }
+    })
+    .catch(e => {
+      console.error(e);
+      res.status(500).send(e);
+      return null;
     });
 }
 
