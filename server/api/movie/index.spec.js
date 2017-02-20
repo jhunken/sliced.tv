@@ -32,21 +32,21 @@ describe('Movie API Router:', function() {
   });
 
   describe('GET /api/movies', function() {
-    it('should be authenticated and route to movie.controller.index', function() {
+    it('should route to movie.controller.index', function() {
       expect(routerStub.get
         .withArgs('/', 'movieCtrl.index')
       ).to.have.been.calledOnce;
     });
   });
-  describe('GET /api/movies/all/:start/:limit/:sources/:platform', function() {
-    it('should be authenticated and route to movie.controller.index', function() {
+  describe('GET /api/movies/all/:offset/:limit/:sources/:platform', function() {
+    it('should route to movie.controller.index with given params', function() {
       expect(routerStub.get
-        .withArgs('/all/:start/:limit/:sources/:platform', 'movieCtrl.index')
+        .withArgs('/all/:offset/:limit/:sources/:platform', 'movieCtrl.index')
       ).to.have.been.calledOnce;
     });
   });
   describe('GET /api/movies/:id', function() {
-    it('should be authenticated and route to movie.controller.show', function() {
+    it('should route to movie.controller.show', function() {
       expect(routerStub.get
         .withArgs('/:id', 'movieCtrl.show')
       ).to.have.been.calledOnce;
