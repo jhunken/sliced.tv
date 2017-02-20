@@ -1,3 +1,13 @@
+<a name="0.0.27"></a>
+## [0.0.27](https://github.com/jhunken/easier.tv/compare/0.0.26...0.0.27) (2017-02-20)
+
+
+### Features
+
+* use Guidebox SDK and v2 api ([f39835d](https://github.com/jhunken/easier.tv/commit/f39835d))
+
+
+
 <a name="0.0.26"></a>
 ## [0.0.26](https://github.com/jhunken/easier.tv/compare/0.0.25...0.0.26) (2017-02-19)
 
