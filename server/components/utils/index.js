@@ -57,6 +57,30 @@ let utils = (() => {
       Reflect.deleteProperty(movie, 'tv_everywhere_ios_sources');
       movie.tvEverywhereWebSources = movie.tv_everywhere_web_sources;
       Reflect.deleteProperty(movie, 'tv_everywhere_web_sources');
+      if(typeof movie.banners !== 'undefined' && movie.banners.length) {
+        let banner;
+        for(let i = 0; i < movie.banners.length; i++) {
+          banner = movie.banners[i];
+          if(banner.small) {
+            movie.banners[i].small.url = convertToHTTPS(banner.small.url);
+          }
+          if(banner.medium) {
+            movie.banners[i].medium.url = convertToHTTPS(banner.medium.url);
+          }
+          if(banner.large) {
+            movie.banners[i].large.url = convertToHTTPS(banner.large.url);
+          }
+          if(banner.xlarge) {
+            movie.banners[i].xlarge.url = convertToHTTPS(banner.xlarge.url);
+          }
+          movie.banners[i].imageRating = banner.image_rating;
+          Reflect.deleteProperty(movie.banners[i], 'image_rating');
+          movie.banners[i].originalHeight = banner.original_height;
+          Reflect.deleteProperty(movie.banners[i], 'original_height');
+          movie.banners[i].originalWidth = banner.original_width;
+          Reflect.deleteProperty(movie.banners[i], 'original_width');
+        }
+      }
       return movie;
     };
     if(guideboxMovies.length) {
