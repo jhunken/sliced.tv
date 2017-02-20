@@ -1,12 +1,13 @@
 'use strict';
 
-import request from 'request';
 import config from '../../config/environment';
 import Utils from '../../components/utils';
 import Movie from '../movie/movie.model';
 let Guidebox = require('guidebox')(config.guidebox.apiKey);
 
 function search(req, res, type) {
+  let todo = type;
+  todo;
   let query = req.params.query;
   return Guidebox.search.movies({query})
     .then(searchRes => {
