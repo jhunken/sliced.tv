@@ -12,38 +12,38 @@ import Movie from './movie.model';
 import config from '../../config/environment';
 import Promise from 'bluebird';
 import Utils from '../../components/utils';
+let Guidebox = require('guidebox')(config.guidebox.apiKey);
 
 function handleMovieRequest(res) {
   return function(entity) {
     if(!entity) {
       return res.status(404).send('Not found');
     } else if(!entity.overview) {
-        // Requires additional lookup -- query remote
-      return getContent(`${config.guidebox.baseURL + config.guidebox.apiKey}/movies/${entity.guideboxID}`)
-          .then(body => {
-            let guideboxMovie = JSON.parse(body);
-            if(guideboxMovie && guideboxMovie.id) {
-              guideboxMovie = Utils.normalizeGuideboxFields(guideboxMovie);
-              if(!guideboxMovie.imdbRating) {
-                // Retrieve additional omdb api info
-                return getOMDBInfo(guideboxMovie)
-                  .then(updatedMovie => {
-                    updatedMovie._id = entity.id;
-                    return res.json(updatedMovie).end();
-                  });
-              } else {
-                // nothing else to retrieve
-                return res.json(entity).end();
-              }
+      // Requires additional lookup -- query remote
+      return Guidebox.movies.retrieve(entity.guideboxID)
+        .then(guideboxMovie => {
+          if(guideboxMovie && guideboxMovie.id) {
+            guideboxMovie = Utils.normalizeGuideboxFields(guideboxMovie);
+            if(!guideboxMovie.imdbRating) {
+              // Retrieve additional omdb api info
+              return getOMDBInfo(guideboxMovie)
+                .then(updatedMovie => {
+                  updatedMovie._id = entity.id;
+                  return res.json(updatedMovie).end();
+                });
             } else {
-              return res.status(404).send('Not found');
+              // nothing else to retrieve
+              return res.json(entity).end();
             }
-          })
-          .catch(err => {
-            console.error(err);
-          });
+          } else {
+            return res.status(404).send('Not found');
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
     } else {
-        // Exists already locally
+      // Exists already locally
       console.log('retrieved from mongodb: ', entity.title);
       return res.json(entity).end();
     }
@@ -121,19 +121,19 @@ const getContent = function(url) {
 };
 
 
-function getGuideboxMovies(start, limit, sources, platform) {
-  return getContent(`${config.guidebox.baseURL + config.guidebox.apiKey}/movies/all/${start}/${limit}/${sources}/${platform}`)
-    .then(body => {
-      let movies = JSON.parse(body).results;
+function getGuideboxMovies(offset, limit, sources, platform) {
+  return Guidebox.movies.list({offset, limit, sources, platform})
+    .then(function(res) {
+      let movies = res.results;
       if(movies && movies.length) {
         movies = Utils.normalizeGuideboxFields(movies);
-        return {results: movies, totalResults: JSON.parse(body).total_results};
+        return {results: movies, totalResults: res.total_results};
       } else {
         return null;
       }
     })
-    .catch(err => {
-      console.error(err);
+    .catch(function(e) {
+      console.log(e);
     });
 }
 
@@ -177,7 +177,6 @@ function getOMDBInfo(movie) {
 function compareArrays(guideboxMovie, savedMovies) {
   for(let element of savedMovies) {
     if(guideboxMovie.guideboxID === element.guideboxID) {
-      console.log(element.originalTitle);
       return Promise.resolve(element);
     }
   }
@@ -197,13 +196,14 @@ function compareArrays(guideboxMovie, savedMovies) {
  * @param res
  */
 export function index(req, res) {
-  let start = req.params && req.params.start && Number.parseInt(req.params.start, 10) ? req.params.start : '0';
+  let offset = req.params && req.params.offset && Number.parseInt(req.params.offset, 10) ? req.params.offset : '0';
   let limit = req.params && req.params.limit && Number.parseInt(req.params.limit, 10) ? req.params.limit : '25';
   let sources = req.params && req.params.sources ? req.params.sources : 'all';
   let platform = req.params && req.params.platform ? req.params.platform : 'all';
   let totalResults = 0;
 
-  return getGuideboxMovies(start, limit, sources, platform)
+
+  return getGuideboxMovies(offset, limit, sources, platform)
     .then(guideboxMovies => {
       if(guideboxMovies && guideboxMovies.results && guideboxMovies.results.length) {
         totalResults = guideboxMovies.totalResults;

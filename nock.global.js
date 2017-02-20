@@ -1,10 +1,9 @@
 import nock from 'nock';
-import config from './server/config/environment';
 import fs from 'fs';
 
 // Mock external http requests
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get(`/v1.43/US/${config.guidebox.apiKey}/movies/all/0/25/all/all`)
+  .get('/v2/movies?offset=0&limit=25&sources=all&platform=all')
   .reply(200, JSON.parse(fs.readFileSync(`${__dirname}/movies.mock.json`)), {
     'cache-control': 'no-cache',
     'content-type': 'application/json',
@@ -18,7 +17,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get(`/v1.43/US/${config.guidebox.apiKey}/movies/000000000`)
+  .get('/v2/movies/000000000')
   .reply(200, {}, {
     'cache-control': 'no-cache',
     'content-type': 'application/json',
@@ -32,7 +31,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get(`/v1.43/US/${config.guidebox.apiKey}/movies/all/50/10/all/all`)
+  .get('/v2/movies?offset=50&limit=10&sources=all&platform=all')
   .reply(200, {
     total_results: 68951,
     total_returned: 10,
@@ -252,7 +251,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get(`/v1.43/US/${config.guidebox.apiKey}/movies/all/99/10/all/all`)
+  .get('/v2/movies?offset=99&limit=10&sources=all&platform=all')
   .reply(200, {
     total_results: 68951,
     total_returned: 10,
@@ -472,7 +471,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get(`/v1.43/US/${config.guidebox.apiKey}/movies/all/0/25/invalid/invalid`)
+  .get('/v2/movies?offset=0&limit=25&sources=invalid&platform=invalid')
   .reply(500, {error: 'You need to specify the content type (free, tv_everywhere, subscription, purchase or all) or a particular source (i.e. hbo or amazon_prime). You entered: {invalid}, which isn\'t a correct variable. Please see the API docs.'}, {
     'cache-control': 'no-cache',
     'content-type': 'application/json',
@@ -486,7 +485,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get(`/v1.43/US/${config.guidebox.apiKey}/movies/all/999999999/10/all/all`)
+  .get('/v2/movies?offset=999999999&limit=10&sources=all&platform=all')
   .reply(200, {total_results: 68951, total_returned: 0, results: []}, {
     'cache-control': 'no-cache',
     'content-type': 'application/json',
@@ -500,7 +499,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get(`/v1.43/US/${config.guidebox.apiKey}/updates/movies/new/1474749294`)
+  .get('/v2/updates/movies/new/1474749294')
   .query({limit: '100', page: '1'})
   .reply(200, {
     total_results: 27,
@@ -550,7 +549,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get(`/v1.43/US/${config.guidebox.apiKey}/search/movie/title/batman/`)
+  .get('/v2/search/movie/title/batman/')
   .reply(200, {
     results: [
       {
