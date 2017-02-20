@@ -23,24 +23,53 @@ function handleMovieRequest(res) {
       return Guidebox.movies.retrieve(entity.guideboxID)
         .then(guideboxMovie => {
           if(guideboxMovie && guideboxMovie.id) {
-            guideboxMovie = Utils.normalizeGuideboxFields(guideboxMovie);
-            if(!guideboxMovie.imdbRating) {
-              // Retrieve additional omdb api info
-              return getOMDBInfo(guideboxMovie)
-                .then(updatedMovie => {
-                  updatedMovie._id = entity.id;
-                  return res.json(updatedMovie).end();
-                });
-            } else {
-              // nothing else to retrieve
-              return res.json(entity).end();
-            }
+            // Retrieve additional images
+            return Guidebox.movies.images(entity.guideboxID)
+              .then(imagesRes => {
+                guideboxMovie.banners = imagesRes.results.banners;
+                guideboxMovie = Utils.normalizeGuideboxFields(guideboxMovie);
+                // copy new guideboxMovie properties to entity
+                entity = Object.assign(entity, guideboxMovie);
+                if(!guideboxMovie.imdbRating) {
+                  // Retrieve additional omdb api info
+                  return getOMDBInfo(guideboxMovie)
+                    .then(updatedMovie => {
+                      // copy updatedMovie properties to entity
+                      entity = Object.assign(entity, updatedMovie);
+                      // Save updated entity
+                      return entity.save(function(err, savedMovie) {
+                        if(err) {
+                          return res.status(500).end();
+                        } else {
+                          console.log('movie updated to db: ', savedMovie.title);
+                          return res.json(savedMovie).end();
+                        }
+                      });
+                    });
+                } else {
+                  // Retrieved guidebox info, but not omdb. Nothing else to retrieve at this point.
+                  // Save updated entity
+                  return entity.save(function(err, savedMovie) {
+                    if(err) {
+                      return res.status(500).end();
+                    } else {
+                      console.log('movie updated to db: ', savedMovie.title);
+                      return res.json(savedMovie).end();
+                    }
+                  });
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                return res.status(500).end();
+              });
           } else {
             return res.status(404).send('Not found');
           }
         })
         .catch(err => {
           console.error(err);
+          return res.status(500).end();
         });
     } else {
       // Exists already locally
@@ -121,8 +150,8 @@ const getContent = function(url) {
 };
 
 
-function getGuideboxMovies(offset, limit, sources, platform) {
-  return Guidebox.movies.list({offset, limit, sources, platform})
+function getGuideboxMovies(offset, limit, sources, platform, includePreorders, includeInTheaters) {
+  return Guidebox.movies.list({offset, limit, sources, platform, include_preorders: includePreorders, include_in_theaters: includeInTheaters})
     .then(function(res) {
       let movies = res.results;
       if(movies && movies.length) {
@@ -203,7 +232,7 @@ export function index(req, res) {
   let totalResults = 0;
 
 
-  return getGuideboxMovies(offset, limit, sources, platform)
+  return getGuideboxMovies(offset, limit, sources, platform, true, true)
     .then(guideboxMovies => {
       if(guideboxMovies && guideboxMovies.results && guideboxMovies.results.length) {
         totalResults = guideboxMovies.totalResults;

@@ -1,13 +1,18 @@
+<img ng-if="$ctrl.movie.banners.length" class="banner" ng-src="{{$ctrl.movie.banners[0].xlarge.url}}">
 <div class="container">
   <div class="row">
-    <h1>{{$ctrl.movie.title}}<small ng-repeat="genre in $ctrl.movie.genres">{{genre.title}} </small></h1>
+    <h1>{{$ctrl.movie.title}}
+      <small ng-repeat="genre in $ctrl.movie.genres">{{genre.title}}</small>
+    </h1>
   </div>
   <div class="row">
     <div class="col-md-4">
       <img ng-src="{{$ctrl.movie.poster400x570}}" class="img-responsive">
     </div>
     <div class="col-md-4">
-      <h1>Synopsis <button ng-click="$ctrl.addToWatchlist($ctrl.movie._id)" class="btn btn-primary">+Watchlist</button></h1>
+      <h1>Synopsis
+        <button ng-click="$ctrl.addToWatchlist($ctrl.movie._id)" class="btn btn-primary">+Watchlist</button>
+      </h1>
 
       <p>{{$ctrl.movie.overview}}</p>
     </div>
@@ -19,7 +24,8 @@
       <dt>Release Date</dt>
       <dd>{{$ctrl.movie.releaseDate}}</dd>
       <dt>IMDB</dt>
-      <dd><a target="_blank" ng-href="http://www.imdb.com/title/{{$ctrl.movie.imdb}}">{{$ctrl.movie.imdbRating}} with {{$ctrl.movie.imdbVotes}} votes</a>
+      <dd><a target="_blank" ng-href="http://www.imdb.com/title/{{$ctrl.movie.imdb}}">{{$ctrl.movie.imdbRating}} with
+        {{$ctrl.movie.imdbVotes}} votes</a>
 
       </dd>
       <dt>Rotten Tomatoes</dt>
