@@ -45,6 +45,33 @@ let MovieSchema = new mongoose.Schema({
   poster120x171: String,
   poster240x342: String,
   poster400x570: String,
+  banners: [
+    {
+      xlarge: {
+        url: String,
+        width: Number,
+        height: Number
+      },
+      large: {
+        url: String,
+        width: Number,
+        height: Number
+      },
+      medium: {
+        url: String,
+        width: Number,
+        height: Number
+      },
+      small: {
+        url: String,
+        width: Number,
+        height: Number
+      },
+      originalWidth: Number,
+      originalHeight: Number,
+      imageRating: Number
+    }
+  ],
   tags: [
     {guideboxID: Number, tag: String}
   ],
