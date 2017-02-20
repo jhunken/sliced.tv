@@ -1,3 +1,15 @@
+<a name="0.0.28"></a>
+## [0.0.28](https://github.com/jhunken/easier.tv/compare/0.0.27...0.0.28) (2017-02-20)
+
+
+### Features
+
+* get unreleased and preorder movies by default ([365085e](https://github.com/jhunken/easier.tv/commit/365085e))
+* **api:** retrieve movie banners for movie queries ([c3f04c0](https://github.com/jhunken/easier.tv/commit/c3f04c0))
+* **client:** add movie banners to movie view ([3441f0a](https://github.com/jhunken/easier.tv/commit/3441f0a))
+
+
+
 <a name="0.0.27"></a>
 ## [0.0.27](https://github.com/jhunken/easier.tv/compare/0.0.26...0.0.27) (2017-02-20)
 

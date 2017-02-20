@@ -3,7 +3,7 @@ import fs from 'fs';
 
 // Mock external http requests
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get('/v2/movies?offset=0&limit=25&sources=all&platform=all')
+  .get('/v2/movies?offset=0&limit=25&sources=all&platform=all&include_preorders=true&include_in_theaters=true')
   .reply(200, JSON.parse(fs.readFileSync(`${__dirname}/movies.mock.json`)), {
     'cache-control': 'no-cache',
     'content-type': 'application/json',
@@ -31,7 +31,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get('/v2/movies?offset=50&limit=10&sources=all&platform=all')
+  .get('/v2/movies?offset=50&limit=10&sources=all&platform=all&include_preorders=true&include_in_theaters=true')
   .reply(200, {
     total_results: 68951,
     total_returned: 10,
@@ -251,7 +251,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get('/v2/movies?offset=99&limit=10&sources=all&platform=all')
+  .get('/v2/movies?offset=99&limit=10&sources=all&platform=all&include_preorders=true&include_in_theaters=true')
   .reply(200, {
     total_results: 68951,
     total_returned: 10,
@@ -471,7 +471,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get('/v2/movies?offset=0&limit=25&sources=invalid&platform=invalid')
+  .get('/v2/movies?offset=0&limit=25&sources=invalid&platform=invalid&include_preorders=true&include_in_theaters=true')
   .reply(500, {error: 'You need to specify the content type (free, tv_everywhere, subscription, purchase or all) or a particular source (i.e. hbo or amazon_prime). You entered: {invalid}, which isn\'t a correct variable. Please see the API docs.'}, {
     'cache-control': 'no-cache',
     'content-type': 'application/json',
@@ -485,7 +485,7 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get('/v2/movies?offset=999999999&limit=10&sources=all&platform=all')
+  .get('/v2/movies?offset=999999999&limit=10&sources=all&platform=all&include_preorders=true&include_in_theaters=true')
   .reply(200, {total_results: 68951, total_returned: 0, results: []}, {
     'cache-control': 'no-cache',
     'content-type': 'application/json',
@@ -498,55 +498,6 @@ nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
     connection: 'Close'
   });
 
-nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
-  .get('/v2/updates/movies/new/1474749294')
-  .query({limit: '100', page: '1'})
-  .reply(200, {
-    total_results: 27,
-    total_returned: 27,
-    page: 1,
-    total_pages: 1,
-    results: [
-      {id: 109037, time: 1474787729}, {
-        id: 114451,
-        time: 1474787853
-      }, {id: 137012, time: 1474790462}, {id: 1250, time: 1474790663}, {
-        id: 3087,
-        time: 1474790664
-      }, {id: 119840, time: 1474795143}, {id: 56814, time: 1474795143}, {
-        id: 113343,
-        time: 1474795144
-      }, {id: 134123, time: 1474795240}, {id: 94804, time: 1474796615}, {
-        id: 97390,
-        time: 1474798223
-      }, {id: 94016, time: 1474798225}, {id: 96014, time: 1474798227}, {
-        id: 75752,
-        time: 1474809519
-      }, {id: 142012, time: 1474826437}, {id: 142013, time: 1474826454}, {
-        id: 142016,
-        time: 1474826544
-      }, {id: 142022, time: 1474826558}, {id: 142024, time: 1474826572}, {
-        id: 142025,
-        time: 1474826694
-      }, {id: 141257, time: 1474827464}, {id: 142017, time: 1474830851}, {
-        id: 142018,
-        time: 1474830852
-      }, {id: 142020, time: 1474830853}, {id: 142023, time: 1474830854}, {
-        id: 9741,
-        time: 1474830982
-      }, {id: 26565, time: 1474832496}
-    ]
-  }, {
-    'cache-control': 'no-cache',
-    'content-type': 'application/json',
-    date: 'Mon, 26 Sep 2016 01:13:03 GMT',
-    responsetime: '0.076862096786499',
-    server: 'nginx/1.4.6 (Ubuntu)',
-    'x-ratelimit-limit': '240',
-    'x-ratelimit-remaining': '235',
-    'content-length': '928',
-    connection: 'Close'
-  });
 
 nock('https://api-public.guidebox.com:443', {encodedQueryParams: true})
   .get('/v2/search/movie/title/batman/')
