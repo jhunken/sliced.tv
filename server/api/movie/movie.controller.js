@@ -121,8 +121,8 @@ const getContent = function(url) {
 };
 
 
-function getGuideboxMovies(offset, limit, sources, platform) {
-  return Guidebox.movies.list({offset, limit, sources, platform})
+function getGuideboxMovies(offset, limit, sources, platform, includePreorders, includeInTheaters) {
+  return Guidebox.movies.list({offset, limit, sources, platform, include_preorders: includePreorders, include_in_theaters: includeInTheaters})
     .then(function(res) {
       let movies = res.results;
       if(movies && movies.length) {
@@ -203,7 +203,7 @@ export function index(req, res) {
   let totalResults = 0;
 
 
-  return getGuideboxMovies(offset, limit, sources, platform)
+  return getGuideboxMovies(offset, limit, sources, platform, true, true)
     .then(guideboxMovies => {
       if(guideboxMovies && guideboxMovies.results && guideboxMovies.results.length) {
         totalResults = guideboxMovies.totalResults;
