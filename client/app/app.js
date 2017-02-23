@@ -23,7 +23,9 @@ import account from './account';
 import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
-import main from './main/main.component';
+import MoviesComponent from './movies/movies.component';
+import ShowsComponent from './shows/shows.component';
+import ShowComponent from './show/show.component';
 import movie from './movie/movie.component';
 import search from './search/search.component';
 import constants from './app.constants';
@@ -39,8 +41,9 @@ import './app.scss';
 
 angular.module('easierTvApp', [
   ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar,
-  footer, main, search, movieService, movie, constants, socket, util, 'angularUtils.directives.dirPagination',
-  WatchlistComponent, watchlistService, MediaCardDirective, AngularLoadingBar
+  footer, search, movieService, movie, constants, socket, util, 'angularUtils.directives.dirPagination',
+  WatchlistComponent, watchlistService, MediaCardDirective, AngularLoadingBar, MoviesComponent, ShowsComponent,
+  ShowComponent
 ])
   .config(routeConfig)
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {

@@ -2,12 +2,12 @@
 <div class="container">
   <div class="row">
     <h1>{{$ctrl.movie.title}}
-      <small ng-repeat="genre in $ctrl.movie.genres">{{genre.title}}</small>
+      <small ng-repeat="genre in $ctrl.movie.genres">{{genre.title}} </small>
     </h1>
   </div>
   <div class="row">
     <div class="col-md-4">
-      <img ng-src="{{$ctrl.movie.poster400x570}}" class="img-responsive">
+      <img ng-src="{{$ctrl.movie.poster400X570}}" class="img-responsive">
     </div>
     <div class="col-md-4">
       <h1>Synopsis
@@ -24,7 +24,7 @@
       <dt>Release Date</dt>
       <dd>{{$ctrl.movie.releaseDate}}</dd>
       <dt>IMDB</dt>
-      <dd><a target="_blank" ng-href="http://www.imdb.com/title/{{$ctrl.movie.imdb}}">{{$ctrl.movie.imdbRating}} with
+      <dd><a target="_blank" ng-href="http://www.imdb.com/title/{{$ctrl.movie.imdbId}}">{{$ctrl.movie.imdbRating}} with
         {{$ctrl.movie.imdbVotes}} votes</a>
 
       </dd>
@@ -33,7 +33,5 @@
       </dd>
 
     </dl>
-
-
   </div>
 </div>

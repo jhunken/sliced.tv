@@ -1,16 +1,16 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /api/movies              ->  index
- * GET     /api/movies/:id          ->  show
+ * GET     /api/shows              ->  index
+ * GET     /api/shows/:id          ->  show
  */
 
 'use strict';
-import Movie from './movie.model';
-import Utils from '../../components/utils';
-const mediaType = 'movies';
 
+import Show from './show.model';
+import Utils from '../../components/utils';
+const mediaType = 'shows';
 /***
- * Get a list of movies from guidebox with given parameters.
+ * Get a list of Movies from guidebox with given parameters.
  * @param req
  * @param res
  */
@@ -31,9 +31,9 @@ export function index(req, res) {
     .catch(errRes => res.status(500).json(errRes.message));
 }
 
-// Gets a single Movie from the DB
+// Gets a single Show from the DB
 export function show(req, res) {
-  return Movie.findById(req.params.id).exec()
+  return Show.findById(req.params.id).exec()
     .then(Utils.handleMediaRequest(res, mediaType))
     .catch(err => {
       console.log(err);

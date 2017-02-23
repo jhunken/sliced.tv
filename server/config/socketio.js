@@ -16,6 +16,7 @@ function onConnect(socket) {
   });
 
   // Insert sockets below
+  require('../api/show/show.socket').register(socket);
   require('../api/watchlist/watchlist.socket').register(socket);
   require('../api/movie/movie.socket').register(socket);
 }

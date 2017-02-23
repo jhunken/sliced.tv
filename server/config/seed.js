@@ -7,6 +7,7 @@
 import User from '../api/user/user.model';
 import Movie from '../api/movie/movie.model';
 import Watchlist from '../api/watchlist/watchlist.model';
+import Show from '../api/show/show.model';
 
 User.find({}).remove()
   .then(() => {
@@ -25,16 +26,6 @@ User.find({}).remove()
           email: 'test@example.com',
           password: 'test'
         });
-          // .then(user => {
-          //   let watchlist = new Watchlist({name: 'Watchlist', user});
-          //   watchlist.save()
-          //     .then(function() {
-          //       console.log('finished adding users');
-          //     })
-          //     .catch(err => {
-          //       console.error(err);
-          //     });
-          // });
       });
   });
 
@@ -455,7 +446,10 @@ Movie.find({}).remove()
     });
     console.log('finished removing movies');
   });
-
+Show.find({}).remove()
+  .then(() => {
+    console.log('finished removing shows');
+  });
 Watchlist.find({}).remove()
   .then(() => {
     console.log('finished removing watchlists');
