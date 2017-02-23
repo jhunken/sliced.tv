@@ -1,16 +1,16 @@
 'use strict';
 
-import main from './main.component';
+import MoviesComponent from './movies.component';
 import movieService from '../movieService/movieService.service';
 
-describe('Component: MainComponent', () => {
-  beforeEach(angular.mock.module(main));
+describe('Component: MoviesComponent', () => {
+  beforeEach(angular.mock.module(MoviesComponent));
   beforeEach(angular.mock.module(movieService));
   beforeEach(angular.mock.module('stateMock'));
   beforeEach(angular.mock.module('socketMock'));
 
   let scope;
-  let mainComponent;
+  let moviesComponent;
   let state;
   let $httpBackend;
   let stateparams;
@@ -110,7 +110,7 @@ describe('Component: MainComponent', () => {
     scope = $rootScope.$new();
     state = $state;
     stateparams = {page: 1};
-    mainComponent = $componentController('main', {
+    moviesComponent = $componentController('movies', {
       $http,
       $scope: scope,
       socket,
@@ -122,19 +122,19 @@ describe('Component: MainComponent', () => {
   it('should handle errors', () => {
     $httpBackend.expectGET('/api/movies/all/0/20/all/all')
       .respond(500);
-    mainComponent.$onInit();
-    expect(mainComponent.movies).to.have.lengthOf(0);
-    expect(mainComponent.pagination.current).to.equal(1);
+    moviesComponent.$onInit();
+    expect(moviesComponent.movies).to.have.lengthOf(0);
+    expect(moviesComponent.pagination.current).to.equal(1);
   });
 
   it('should attach a list of movies to the controller', () => {
     $httpBackend.expectGET('/api/movies/all/0/20/all/all')
       .respond(mockMoviesPg1);
     state.expectTransitionTo('main');
-    mainComponent.$onInit();
+    moviesComponent.$onInit();
     $httpBackend.flush();
     state.expectTransitionTo('main/1');
-    expect(mainComponent.movies).to.have.lengthOf(3);
-    expect(mainComponent.pagination.current).to.equal(1);
+    expect(moviesComponent.movies).to.have.lengthOf(3);
+    expect(moviesComponent.pagination.current).to.equal(1);
   });
 });

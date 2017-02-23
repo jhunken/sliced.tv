@@ -3,19 +3,19 @@
 import mongoose from 'mongoose';
 
 let MovieSchema = new mongoose.Schema({
-  cast: [{guideboxID: Number, name: String, characterName: String, imdb: String}],
-  directors: [{guideboxID: Number, name: String, imdb: String}],
+  cast: [{guideboxId: Number, name: String, characterName: String, imdb: String}],
+  directors: [{guideboxId: Number, name: String, imdb: String}],
   duration: Number,
-  genres: [{guideboxID: Number, title: String}],
+  genres: [{guideboxId: Number, title: String}],
   overview: String,
-  guideboxID: Number,
+  guideboxId: Number,
   title: String,
   themoviedb: Number,
   originalTitle: String,
   alternateTitles: [
     String
   ],
-  imdb: String,
+  imdbId: String,
   imdbRating: String,
   imdbVotes: String,
   preOrder: Boolean,
@@ -42,9 +42,9 @@ let MovieSchema = new mongoose.Schema({
   wikipediaID: Number,
   metacritic: String,
   commonSenseMedia: String,
-  poster120x171: String,
-  poster240x342: String,
-  poster400x570: String,
+  poster120X171: String,
+  poster240X342: String,
+  poster400X570: String,
   banners: [
     {
       xlarge: {
@@ -73,95 +73,9 @@ let MovieSchema = new mongoose.Schema({
     }
   ],
   tags: [
-    {guideboxID: Number, tag: String}
+    {guideboxId: Number, tag: String}
   ],
-
-  writers: [{guideboxID: Number, name: String, imdb: String}]
-
-  // TODO add missing attributes
-  // purchase_android_sources : [
-  //   {
-  //     app_download_link : String,
-  //     app_link          : Number,
-  //     app_name          : String,
-  //     app_required      : Boolean,
-  //     display_name      : String,
-  //     formats           : [
-  //       {format : String, preOrder : Boolean, price : String, type : String}
-  //     ],
-  //     link              : String,
-  //     source            : String
-  //   }
-  // ],
-  // purchase_ios_sources     : [
-  //   {
-  //     app_download_link : String,
-  //     app_link          : Number,
-  //     app_name          : String,
-  //     app_required      : Boolean,
-  //     display_name      : String,
-  //     formats           : [
-  //       {format : String, preOrder : Boolean, price : String, type : String}
-  //     ],
-  //     link              : String,
-  //     source            : String
-  //   }
-  // ],
-  // purchase_web_sources     : [
-  //   {
-  //     display_name : String,
-  //     formats      : [
-  //       {format : String, preOrder : Boolean, price : String, type : String}
-  //     ],
-  //     link         : String,
-  //     source       : String
-  //   }
-  // ],
-  // other_sources            : {
-  //   tv_on_demand : [
-  //     {
-  //       source       : String,
-  //       source_type  : String,
-  //       display_name : String,
-  //       platform     : String,
-  //       link         : String,
-  //       formats      : [
-  //         {
-  //           price     : String,
-  //           format    : String,
-  //           type      : String,
-  //           preOrder : Boolean
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // },
-  // trailers           : {
-  //   android : [{type : String, source : String, display_name : String, embed : String, link : String}],
-  //   ios     : [{type : String, source : String, display_name : String, embed : String, link : String}],
-  //   web     : [{type : String, source : String, display_name : String, embed : String, link : String}]
-  // },
-  // tv_everywhere_android_sources
-  //   :
-  //   []
-  // tv_everywhere_ios_sources
-  //   :
-  //   []
-  // tv_everywhere_web_sources
-  //   :
-  //   []
-  // free_android_sources : [String],
-  // free_ios_sources     : [String],
-  // free_web_sources     : [String],
-  // subscription_android_sources
-  //   :
-  //   []
-  // subscription_ios_sources
-  //   :
-  //   []
-  // subscription_web_sources
-  //   :
-  //   []
+  writers: [{guideboxId: Number, name: String, imdb: String}]
 
 });
 

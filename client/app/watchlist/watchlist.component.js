@@ -32,6 +32,17 @@ export class WatchlistComponent {
         console.error(err);
       });
   }
+
+  removeShow(watchlist, index) {
+    watchlist.shows.splice(index, 1);
+    this.$http.put(`/api/watchlists/${watchlist._id}`, watchlist)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
 }
 
 export default angular.module('easierTvApp.watchlist', [uiRouter])

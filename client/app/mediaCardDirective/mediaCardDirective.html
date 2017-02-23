@@ -1,10 +1,10 @@
 <div class="thumbnail">
-  <a ui-sref="movie({id: media._id})" href>
-    <img ng-src="{{media.poster400x570}}">
+  <a ng-click="goToMediaDetails(media._id)" href>
+    <img ng-src="{{thumbnail}}">
   </a>
   <div class="caption">
     <p>IMDB: {{media.imdbRating}}</p>
-    <p>Rotten Tomatoes {{media.tomatoMeter}}% fresh</p>
+    <p ng-if="mediaType === 'movie'">Rotten Tomatoes {{media.tomatoMeter}}% fresh</p>
     <p><button ng-click="addToWatchlist(media._id)" class="btn btn-primary">+Watchlist</button>
     </p>
   </div>

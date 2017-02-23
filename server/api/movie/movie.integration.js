@@ -2,32 +2,17 @@
 
 import app from '../..';
 import Movie from './movie.model';
-import User from '../user/user.model';
 import request from 'supertest';
 
 describe('Movie API:', function() {
-  let user;
-
-  // Cleanup movies and users before testing
+  // Cleanup movies before testing
   before(function() {
-    return Movie.remove().then(function() {
-      return User.remove().then(function() {
-        user = new User({
-          name: 'Fake User',
-          email: 'test@example.com',
-          password: 'password'
-        });
-
-        return user.save();
-      });
-    });
+    return Movie.remove();
   });
 
-  // Clears movies and users after testing
+  // Clears movies after testing
   after(function() {
-    return Movie.remove().then(function() {
-      return User.remove();
-    });
+    return Movie.remove();
   });
 
   describe('GET /api/movies', function() {
@@ -64,17 +49,17 @@ describe('Movie API:', function() {
         });
     });
 
-    it('should respond with a 200 when "start" param is incorrect', function(done) {
+    it('should respond with a 500 when "start" param is incorrect', function(done) {
       request(app)
         .get('/api/movies/all/999999999/10/all/all')
-        .expect(200)
+        .expect(500)
         .end(done);
     });
 
-    it('should respond with a 200 when using invalid params', function(done) {
+    it('should respond with a 500 when using invalid params', function(done) {
       request(app)
         .get('/api/movies/all/invalid/invalid/invalid/invalid')
-        .expect(200)
+        .expect(500)
         .end(done);
     });
 
@@ -145,7 +130,7 @@ describe('Movie API:', function() {
       });
     });
 
-    // Clears movies and users after testing
+    // Clears movies after testing
     after(function(done) {
       return Movie.remove().then(function() {
         done();

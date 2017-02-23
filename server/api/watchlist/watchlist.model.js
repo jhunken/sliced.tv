@@ -11,6 +11,10 @@ let WatchlistSchema = new mongoose.Schema({
   movies: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Movie'
+  }],
+  shows: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Show'
   }]
 });
 
