@@ -1,16 +1,16 @@
 'use strict';
 
-import movie from './movie.component';
+import show from './show.component';
 import watchlistService from '../services/watchlistService/watchlistService.service';
 
 
-describe('Component: MovieComponent', function() {
-  beforeEach(angular.mock.module(movie));
+describe('Component: ShowComponent', function() {
+  beforeEach(angular.mock.module(show));
   beforeEach(angular.mock.module(watchlistService));
   beforeEach(angular.mock.module('stateMock'));
 
   let scope;
-  let movieComponent;
+  let showComponent;
   let $httpBackend;
   let stateparams;
 
@@ -18,21 +18,21 @@ describe('Component: MovieComponent', function() {
   beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, watchlistService) {
     $httpBackend = _$httpBackend_;
     stateparams = {id: 12345};
-    $httpBackend.expectGET('/api/movies/12345')
-      .respond({_id: 12345, guideboxID: 56789, title: 'fake movie'});
+    $httpBackend.expectGET('/api/shows/12345')
+      .respond({_id: 12345, guideboxID: 56789, title: 'fake show'});
 
     scope = $rootScope.$new();
-    movieComponent = $componentController('movie', {
+    showComponent = $componentController('show', {
       $http,
       $scope: scope,
       $stateParams: stateparams
     });
   }));
 
-  it('should attach a movie to the controller', function() {
-    movieComponent.$onInit();
+  it('should attach a show to the controller', function() {
+    showComponent.$onInit();
     $httpBackend.flush();
-    expect(movieComponent.movie.title)
-      .to.equal('fake movie');
+    expect(showComponent.show.title)
+      .to.equal('fake show');
   });
 });
