@@ -6,6 +6,11 @@ function movieService($http, $q) {
       .then(response => response);
   };
 
+  let shows = function(start, limit, sources, platform) {
+    return $http.get(`/api/shows/all/${(start && Number.parseInt(start, 10) ? start : '0')}/${(limit && Number.parseInt(limit, 10) ? limit : '25')}/${(sources ? sources : 'all')}/${(platform ? platform : 'all')}`)
+      .then(response => response);
+  };
+
   let search = function(query, type) {
     if(type === 'movies' || type === 'shows') {
       return $http.get(`/api/search/${type}/${query}`);
@@ -17,6 +22,7 @@ function movieService($http, $q) {
   };
   return {
     movies,
+    shows,
     search
   };
 }

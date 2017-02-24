@@ -16,6 +16,7 @@ let cache = apicache.options({
 
 export default function(app) {
   // Insert routes below
+  app.use('/api/shows', require('./api/show'));
   app.use('/api/watchlists', require('./api/watchlist'));
   app.use('/api/search', cache(), require('./api/search'));
   app.use('/api/movies', require('./api/movie'));

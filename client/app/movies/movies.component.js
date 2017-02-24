@@ -1,10 +1,11 @@
-import angular from 'angular';
-import uiRouter from 'angular-ui-router';
-import routing from './main.routes';
+'use strict';
+const angular = require('angular');
 
-export class MainController {
+const uiRouter = require('angular-ui-router');
 
+import routes from './movies.routes';
 
+export class MoviesComponent {
   /*@ngInject*/
   constructor($http, $scope, movieService, $stateParams, $state, $window, socket) {
     this.$http = $http;
@@ -38,7 +39,7 @@ export class MainController {
       .then(response => {
         this.movies = response.data.results;
         this.totalMovies = response.data.totalResults;
-        this.$state.go('main', {page}, {notify: false});
+        this.$state.go('movies', {page}, {notify: false});
 
         // Scroll to top on page change
         this.$window.scrollTo(0, 0);
@@ -57,13 +58,13 @@ export class MainController {
   pageChanged(newPage) {
     this.loadMovies(newPage);
   }
-
 }
 
-export default angular.module('easierTvApp.main', [uiRouter])
-  .config(routing)
-  .component('main', {
-    template: require('./main.html'),
-    controller: MainController
+export default angular.module('easierTvApp.movies', [uiRouter])
+  .config(routes)
+  .component('movies', {
+    template: require('./movies.html'),
+    controller: MoviesComponent,
+    controllerAs: 'moviesCtrl'
   })
   .name;

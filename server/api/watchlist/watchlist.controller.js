@@ -109,6 +109,7 @@ export function index(req, res) {
       }
       return Watchlist.find({user})
         .populate('movies')
+        .populate('shows')
         .exec()
         .then(checkPermissions(req, res))
         .then(respondWithResult(res))
@@ -123,6 +124,7 @@ export function show(req, res) {
     return Watchlist.findOne({_id: req.params.id})
       .populate('user', '-salt -password')
       .populate('movies')
+      .populate('shows')
       .exec()
       .then(handleEntityNotFound(res))
       .then(checkPermissions(req, res))
