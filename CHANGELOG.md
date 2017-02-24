@@ -1,3 +1,14 @@
+<a name="0.0.29"></a>
+## [0.0.29](https://github.com/jhunken/easier.tv/compare/0.0.28...v0.0.29) (2017-02-24)
+
+
+### Features
+
+* **api:** add shows endpoint and major refactor ([656c7f4](https://github.com/jhunken/easier.tv/commit/656c7f4))
+* **client:** shows and show details views ([e902146](https://github.com/jhunken/easier.tv/commit/e902146))
+
+
+
 <a name="0.0.28"></a>
 ## [0.0.28](https://github.com/jhunken/easier.tv/compare/0.0.27...0.0.28) (2017-02-20)
 
