@@ -69,16 +69,16 @@ function checkPermissions(req, res) {
         if(user.id !== userId) {
           res.status(403).end();
         } else if(!entity.length) {
-            // create default watchlist
-          let watchlist = new Watchlist({name: 'Watchlist', user});
+          // create default watchlist
+          let watchlist = new Watchlist({name: 'Watchlist', owner: user});
           return watchlist.save()
-              .then(function(savedWatchlist) {
-                return [savedWatchlist];
-              })
-              .catch(err => {
-                console.error(err);
-                res.status(500).end();
-              });
+            .then(function(savedWatchlist) {
+              return [savedWatchlist];
+            })
+            .catch(err => {
+              console.error(err);
+              res.status(500).end();
+            });
         } else {
           return entity;
         }
@@ -107,9 +107,10 @@ export function index(req, res) {
       if(!user) {
         return res.status(401).end();
       }
-      return Watchlist.find({user})
+      return Watchlist.find({owner: user})
         .populate('movies')
         .populate('shows')
+        .populate('collaborators')
         .exec()
         .then(checkPermissions(req, res))
         .then(respondWithResult(res))
@@ -122,9 +123,25 @@ export function index(req, res) {
 export function show(req, res) {
   if(mongoose.Types.ObjectId.isValid(req.params.id)) {
     return Watchlist.findOne({_id: req.params.id})
-      .populate('user', '-salt -password')
+      .populate('owner', '-salt -password')
       .populate('movies')
       .populate('shows')
+      .populate('collaborators')
+      .exec()
+      .then(handleEntityNotFound(res))
+      .then(checkPermissions(req, res))
+      .then(respondWithResult(res))
+      .catch(handleError(res));
+  } else {
+    res.status(404).end();
+  }
+}
+
+// Gets the collaborators for a given watchlist
+export function getCollaborators(req, res) {
+  if(mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return Watchlist.findOne({_id: req.params.id})
+      .populate('collaborators')
       .exec()
       .then(handleEntityNotFound(res))
       .then(checkPermissions(req, res))
@@ -168,6 +185,46 @@ export function patch(req, res) {
     .then(patchUpdates(req.body))
     .then(respondWithResult(res))
     .catch(handleError(res));
+}
+
+// Adds a collaborator to the given Watchlist
+export function addCollaborator(req, res) {
+  if(mongoose.Types.ObjectId.isValid(req.params.id)) {
+    if(req.query.email) {
+      // Find user by email
+      let collaboratorEmail = req.query.email;
+      return User.findOne({email: collaboratorEmail}, '-salt -password').exec()
+        .then(user => { // don't ever give out the password or salt
+          if(!user) {
+            return res.status(401).end();
+          }
+          return Watchlist.findById({_id: req.params.id})
+            .populate('collaborators')
+            .exec()
+            .then(watchlist => {
+              watchlist.collaborators.push(user);
+              return watchlist.save();
+            })
+            // .then(checkPermissions(req, res))
+            .then(respondWithResult(res))
+            .catch(handleError(res));
+        })
+        .catch(handleError(res));
+
+
+      // return Watchlist.findOne({_id: req.params.id})
+      //   .populate('collaborators')
+      //   .exec()
+      //   .then(handleEntityNotFound(res))
+      //   .then(checkPermissions(req, res))
+      //   .then(respondWithResult(res))
+      //   .catch(handleError(res));
+    } else {
+      res.status(400).end();
+    }
+  } else {
+    res.status(404).end();
+  }
 }
 
 // Deletes a Watchlist from the DB

@@ -14,4 +14,8 @@ router.put('/:id', auth.isAuthenticated(), controller.upsert);
 router.patch('/:id', auth.isAuthenticated(), controller.patch);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
+// Collaborators
+router.get('/:id/collaborators', auth.isAuthenticated(), controller.getCollaborators);
+router.put('/:id/collaborators', auth.isAuthenticated(), controller.addCollaborator);
+
 module.exports = router;
