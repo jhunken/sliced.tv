@@ -28,26 +28,12 @@ export class WatchlistComponent {
       });
   }
 
-  removeMovie(watchlist, index) {
-    watchlist.movies.splice(index, 1);
-    this.$http.put(`/api/watchlists/${watchlist._id}`, watchlist)
-      .then(response => {
-        console.log(response);
-      })
-      .catch(err => {
-        console.error(err);
-      });
+  removeMovie(watchlist, movie) {
+    this.watchlistService.removeMedia(watchlist._id, movie._id, 'movies');
   }
 
-  removeShow(watchlist, index) {
-    watchlist.shows.splice(index, 1);
-    this.$http.put(`/api/watchlists/${watchlist._id}`, watchlist)
-      .then(response => {
-        console.log(response);
-      })
-      .catch(err => {
-        console.error(err);
-      });
+  removeShow(watchlist, show) {
+    this.watchlistService.removeMedia(watchlist._id, show._id, 'shows');
   }
 
   addCollaborator(email) {

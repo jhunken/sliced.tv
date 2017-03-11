@@ -8,13 +8,13 @@
       <tr ng-repeat="movie in watchlist.movies">
         <td><a ui-sref="movie({id: movie._id})" href>{{movie.title}}</a></td>
         <td>
-          <button ng-click="watchlistCtrl.removeMovie(watchlist, $index)" class="btn btn-default">x</button>
+          <button ng-click="watchlistCtrl.removeMovie(watchlist, movie)" class="btn btn-default">x</button>
         </td>
       </tr>
       <tr ng-repeat="show in watchlist.shows">
         <td><a ui-sref="show({id: show._id})" href>{{show.title}}</a></td>
         <td>
-          <button ng-click="watchlistCtrl.removeShow(watchlist, $index)" class="btn btn-default">x</button>
+          <button ng-click="watchlistCtrl.removeShow(watchlist, show)" class="btn btn-default">x</button>
         </td>
       </tr>
     </table>

@@ -13,8 +13,8 @@ export default angular.module('easierTvApp.mediaCardDirective', [])
         scope.goToMediaDetails = function(id) {
           $state.go(scope.mediaType, {id});
         };
-        scope.addToWatchlist = function(id) {
-          if(id) {
+        scope.addToWatchlist = function(mediaID) {
+          if(mediaID) {
             // get watchlist
             watchlistService.get()
               .then(watchlistResponse => {
@@ -23,14 +23,7 @@ export default angular.module('easierTvApp.mediaCardDirective', [])
                 // TODO: This needs to be more thoughtful than assuming the watchlist we want to add to is the first index the
                 // array.
                 let watchlist = watchlists[0];
-                watchlist[mediaType].push({_id: id});
-                $http.put(`/api/watchlists/${watchlist._id}`, watchlist)
-                  .then(response => {
-                    console.log(response);
-                  })
-                  .catch(err => {
-                    console.error(err);
-                  });
+                watchlistService.add(watchlist._id, mediaID, mediaType);
               });
           } else {
             console.error('No id provided');
