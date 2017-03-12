@@ -14,6 +14,7 @@ import jsonpatch from 'fast-json-patch';
 import Watchlist from './watchlist.model';
 import User from '../user/user.model';
 import mongoose from 'mongoose';
+import _ from 'lodash';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -42,7 +43,7 @@ function removeEntity(res) {
     if(entity) {
       return entity.remove()
         .then(() => {
-          res.status(204).end();
+          return res.status(204).end();
         });
     }
   };
@@ -51,7 +52,7 @@ function removeEntity(res) {
 function handleEntityNotFound(res) {
   return function(entity) {
     if(!entity) {
-      res.status(404).end();
+      return res.status(404).end();
     }
     return entity;
   };
@@ -64,10 +65,10 @@ function checkPermissions(req, res) {
     return User.findOne({_id: userIdObj}, '-salt -password').exec()
       .then(user => { // don't ever give out the password or salt
         if(!user) {
-          res.status(401).end();
+          return res.status(401).end();
         }
         if(user.id !== userId) {
-          res.status(403).end();
+          return res.status(403).end();
         } else if(!entity.length) {
           // create default watchlist
           let watchlist = new Watchlist({name: 'Watchlist', owner: user});
@@ -77,7 +78,7 @@ function checkPermissions(req, res) {
             })
             .catch(err => {
               console.error(err);
-              res.status(500).end();
+              return res.status(500).end();
             });
         } else {
           return entity;
@@ -85,7 +86,7 @@ function checkPermissions(req, res) {
       })
       .catch(err => {
         console.error(err);
-        res.status(500).end();
+        return res.status(500).end();
       });
   };
 }
@@ -94,7 +95,7 @@ function checkPermissions(req, res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
-    res.status(statusCode).send(err);
+    return res.status(statusCode).send(err);
   };
 }
 
@@ -133,7 +134,7 @@ export function show(req, res) {
       .then(respondWithResult(res))
       .catch(handleError(res));
   } else {
-    res.status(404).end();
+    return res.status(404).end();
   }
 }
 
@@ -148,7 +149,7 @@ export function getCollaborators(req, res) {
       .then(respondWithResult(res))
       .catch(handleError(res));
   } else {
-    res.status(404).end();
+    return res.status(404).end();
   }
 }
 
@@ -196,7 +197,8 @@ export function addCollaborator(req, res) {
       return User.findOne({email: collaboratorEmail}, '-salt -password').exec()
         .then(user => { // don't ever give out the password or salt
           if(!user) {
-            return res.status(401).end();
+            // TODO: How to handle new users that don't yet exist
+            return res.status(400).end();
           }
           return Watchlist.findById({_id: req.params.id})
             .populate('collaborators')
@@ -220,10 +222,10 @@ export function addCollaborator(req, res) {
       //   .then(respondWithResult(res))
       //   .catch(handleError(res));
     } else {
-      res.status(400).end();
+      return res.status(400).end();
     }
   } else {
-    res.status(404).end();
+    return res.status(404).end();
   }
 }
 
@@ -233,4 +235,59 @@ export function destroy(req, res) {
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
+}
+
+export function removeMedia(req, res) {
+  if(mongoose.Types.ObjectId.isValid(req.params.id) && mongoose.Types.ObjectId.isValid(req.params.mediaid) && req.params.mediatype) {
+    let mediaID = req.params.mediaid;
+    let mediaType = req.params.mediatype;
+    return Watchlist.findById(req.params.id)
+      .populate(mediaType)
+      .exec()
+      .then(handleEntityNotFound(res))
+      .then(watchlist => {
+        let mediaToDeleteIndex = _.findIndex(watchlist[mediaType], function(o) {
+          return o.id === mediaID;
+        });
+        if(mediaToDeleteIndex >= 0) {
+          watchlist[mediaType].splice(mediaToDeleteIndex, 1);
+          return watchlist.save()
+            .then(() => res.status(200).end())
+            .catch(handleError(res));
+        } else {
+          return res.status(400).end();
+        }
+      })
+      .catch(handleError(res));
+  } else {
+    return res.status(404).end();
+  }
+}
+
+export function addMedia(req, res) {
+  if(mongoose.Types.ObjectId.isValid(req.params.id) && mongoose.Types.ObjectId.isValid(req.params.mediaid) && req.params.mediatype) {
+    let mediaID = req.params.mediaid;
+    let mediaType = req.params.mediatype;
+    return Watchlist.findById(req.params.id)
+      .populate(mediaType)
+      .exec()
+      .then(handleEntityNotFound(res))
+      .then(watchlist => {
+        let foundMediaIndex = _.findIndex(watchlist[mediaType], function(o) {
+          return o.id === mediaID;
+        });
+        if(foundMediaIndex >= 0) {
+          // don't add duplicates
+          return res.status(409).end();
+        } else {
+          watchlist[mediaType].push(mediaID);
+          return watchlist.save()
+            .then(() => res.status(200).end())
+            .catch(handleError(res));
+        }
+      })
+      .catch(handleError(res));
+  } else {
+    return res.status(404).end();
+  }
 }
