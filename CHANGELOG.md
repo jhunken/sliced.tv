@@ -1,5 +1,25 @@
+<a name="0.0.30"></a>
+## [0.0.30](https://github.com/jhunken/easier.tv/compare/0.0.29...0.0.30) (2017-03-12)
+
+
+### Bug Fixes
+
+* address promise not returned warning ([6d20fb0](https://github.com/jhunken/easier.tv/commit/6d20fb0))
+* convert images to https urls ([8f4829b](https://github.com/jhunken/easier.tv/commit/8f4829b))
+* more changes to prevent unreturned promise warnings ([222792a](https://github.com/jhunken/easier.tv/commit/222792a))
+* **watchlist:** populate both media types when saving watchlist ([4a8116b](https://github.com/jhunken/easier.tv/commit/4a8116b))
+* **watchlist:** working socket.io configuration ([2af8208](https://github.com/jhunken/easier.tv/commit/2af8208))
+
+
+### Features
+
+* increase JWT expiration to 30 days (#132) ([20a3ff2](https://github.com/jhunken/easier.tv/commit/20a3ff2))
+* **watchlist:** add/remove media endpoints ([0e150b7](https://github.com/jhunken/easier.tv/commit/0e150b7))
+
+
+
 <a name="0.0.29"></a>
-## [0.0.29](https://github.com/jhunken/easier.tv/compare/0.0.28...v0.0.29) (2017-02-24)
+## [0.0.29](https://github.com/jhunken/easier.tv/compare/0.0.28...0.0.29) (2017-02-24)
 
 
 ### Features

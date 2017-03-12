@@ -7,22 +7,28 @@ function localAuthenticate(User, email, password, done) {
   }).exec()
     .then(user => {
       if(!user) {
-        return done(null, false, {
+        done(null, false, {
           message: 'This email is not registered.'
         });
+        return null;
       }
       user.authenticate(password, function(authError, authenticated) {
         if(authError) {
           return done(authError);
         }
         if(!authenticated) {
-          return done(null, false, { message: 'This password is not correct.' });
+          done(null, false, {message: 'This password is not correct.'});
+          return null;
         } else {
-          return done(null, user);
+          done(null, user);
+          return null;
         }
       });
     })
-    .catch(err => done(err));
+    .catch(err => {
+      done(err);
+      return err;
+    });
 }
 
 export function setup(User/*, config*/) {

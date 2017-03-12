@@ -1,13 +1,18 @@
 'use strict';
 
 import mongoose from 'mongoose';
+import {registerEvents} from './watchlist.events';
 
 let WatchlistSchema = new mongoose.Schema({
   name: String,
-  user: {
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  collaborators: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   movies: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Movie'
@@ -18,4 +23,5 @@ let WatchlistSchema = new mongoose.Schema({
   }]
 });
 
+registerEvents(WatchlistSchema);
 export default mongoose.model('Watchlist', WatchlistSchema);

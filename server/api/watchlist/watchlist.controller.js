@@ -14,6 +14,7 @@ import jsonpatch from 'fast-json-patch';
 import Watchlist from './watchlist.model';
 import User from '../user/user.model';
 import mongoose from 'mongoose';
+import _ from 'lodash';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -41,9 +42,7 @@ function removeEntity(res) {
   return function(entity) {
     if(entity) {
       return entity.remove()
-        .then(() => {
-          res.status(204).end();
-        });
+        .then(() => res.status(204).end());
     }
   };
 }
@@ -51,7 +50,7 @@ function removeEntity(res) {
 function handleEntityNotFound(res) {
   return function(entity) {
     if(!entity) {
-      res.status(404).end();
+      return res.status(404).end();
     }
     return entity;
   };
@@ -64,28 +63,28 @@ function checkPermissions(req, res) {
     return User.findOne({_id: userIdObj}, '-salt -password').exec()
       .then(user => { // don't ever give out the password or salt
         if(!user) {
-          res.status(401).end();
+          return res.status(401).end();
         }
         if(user.id !== userId) {
-          res.status(403).end();
+          return res.status(403).end();
         } else if(!entity.length) {
-            // create default watchlist
-          let watchlist = new Watchlist({name: 'Watchlist', user});
+          // create default watchlist
+          let watchlist = new Watchlist({name: 'Watchlist', owner: user});
           return watchlist.save()
-              .then(function(savedWatchlist) {
-                return [savedWatchlist];
-              })
-              .catch(err => {
-                console.error(err);
-                res.status(500).end();
-              });
+            .then(function(savedWatchlist) {
+              return [savedWatchlist];
+            })
+            .catch(err => {
+              console.error(err);
+              return res.status(500).end();
+            });
         } else {
           return entity;
         }
       })
       .catch(err => {
         console.error(err);
-        res.status(500).end();
+        return res.status(500).end();
       });
   };
 }
@@ -94,7 +93,7 @@ function checkPermissions(req, res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
-    res.status(statusCode).send(err);
+    return res.status(statusCode).send(err);
   };
 }
 
@@ -107,9 +106,10 @@ export function index(req, res) {
       if(!user) {
         return res.status(401).end();
       }
-      return Watchlist.find({user})
+      return Watchlist.find({owner: user})
         .populate('movies')
         .populate('shows')
+        .populate('collaborators')
         .exec()
         .then(checkPermissions(req, res))
         .then(respondWithResult(res))
@@ -122,16 +122,32 @@ export function index(req, res) {
 export function show(req, res) {
   if(mongoose.Types.ObjectId.isValid(req.params.id)) {
     return Watchlist.findOne({_id: req.params.id})
-      .populate('user', '-salt -password')
+      .populate('owner', '-salt -password')
       .populate('movies')
       .populate('shows')
+      .populate('collaborators')
       .exec()
       .then(handleEntityNotFound(res))
       .then(checkPermissions(req, res))
       .then(respondWithResult(res))
       .catch(handleError(res));
   } else {
-    res.status(404).end();
+    return res.status(404).end();
+  }
+}
+
+// Gets the collaborators for a given watchlist
+export function getCollaborators(req, res) {
+  if(mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return Watchlist.findOne({_id: req.params.id})
+      .populate('collaborators')
+      .exec()
+      .then(handleEntityNotFound(res))
+      .then(checkPermissions(req, res))
+      .then(respondWithResult(res))
+      .catch(handleError(res));
+  } else {
+    return res.status(404).end();
   }
 }
 
@@ -170,10 +186,107 @@ export function patch(req, res) {
     .catch(handleError(res));
 }
 
+// Adds a collaborator to the given Watchlist
+export function addCollaborator(req, res) {
+  if(mongoose.Types.ObjectId.isValid(req.params.id)) {
+    if(req.query.email) {
+      // Find user by email
+      let collaboratorEmail = req.query.email;
+      return User.findOne({email: collaboratorEmail}, '-salt -password').exec()
+        .then(user => { // don't ever give out the password or salt
+          if(!user) {
+            // TODO: How to handle new users that don't yet exist
+            return res.status(400).end();
+          }
+          return Watchlist.findById({_id: req.params.id})
+            .populate('collaborators')
+            .exec()
+            .then(watchlist => {
+              watchlist.collaborators.push(user);
+              return watchlist.save();
+            })
+            // .then(checkPermissions(req, res))
+            .then(respondWithResult(res))
+            .catch(handleError(res));
+        })
+        .catch(handleError(res));
+
+
+      // return Watchlist.findOne({_id: req.params.id})
+      //   .populate('collaborators')
+      //   .exec()
+      //   .then(handleEntityNotFound(res))
+      //   .then(checkPermissions(req, res))
+      //   .then(respondWithResult(res))
+      //   .catch(handleError(res));
+    } else {
+      return res.status(400).end();
+    }
+  } else {
+    return res.status(404).end();
+  }
+}
+
 // Deletes a Watchlist from the DB
 export function destroy(req, res) {
   return Watchlist.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
+}
+
+export function removeMedia(req, res) {
+  if(mongoose.Types.ObjectId.isValid(req.params.id) && mongoose.Types.ObjectId.isValid(req.params.mediaid) && req.params.mediatype) {
+    let mediaID = req.params.mediaid;
+    let mediaType = req.params.mediatype;
+    return Watchlist.findById(req.params.id)
+      .populate('shows')
+      .populate('movies')
+      .exec()
+      .then(handleEntityNotFound(res))
+      .then(watchlist => {
+        let mediaToDeleteIndex = _.findIndex(watchlist[mediaType], function(o) {
+          return o.id === mediaID;
+        });
+        if(mediaToDeleteIndex >= 0) {
+          watchlist[mediaType].splice(mediaToDeleteIndex, 1);
+          return watchlist.save()
+            .then(() => res.status(200).end())
+            .catch(handleError(res));
+        } else {
+          return res.status(400).end();
+        }
+      })
+      .catch(handleError(res));
+  } else {
+    return res.status(404).end();
+  }
+}
+
+export function addMedia(req, res) {
+  if(mongoose.Types.ObjectId.isValid(req.params.id) && mongoose.Types.ObjectId.isValid(req.params.mediaid) && req.params.mediatype) {
+    let mediaID = req.params.mediaid;
+    let mediaType = req.params.mediatype;
+    return Watchlist.findById(req.params.id)
+      .populate(mediaType)
+      .exec()
+      .then(handleEntityNotFound(res))
+      .then(watchlist => {
+        let foundMediaIndex = _.findIndex(watchlist[mediaType], function(o) {
+          return o.id === mediaID;
+        });
+        if(foundMediaIndex >= 0) {
+          // don't add duplicates
+          return res.status(409).end();
+        } else {
+          watchlist[mediaType].push(mediaID);
+          return watchlist.save()
+            .then(() => res.status(200).end())
+            .catch(handleError(res));
+        }
+      })
+      .catch(handleError(res));
+  } else {
+    return res.status(404).end();
+  }
 }
