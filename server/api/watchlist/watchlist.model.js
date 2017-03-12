@@ -1,6 +1,7 @@
 'use strict';
 
 import mongoose from 'mongoose';
+import {registerEvents} from './watchlist.events';
 
 let WatchlistSchema = new mongoose.Schema({
   name: String,
@@ -22,4 +23,5 @@ let WatchlistSchema = new mongoose.Schema({
   }]
 });
 
+registerEvents(WatchlistSchema);
 export default mongoose.model('Watchlist', WatchlistSchema);
