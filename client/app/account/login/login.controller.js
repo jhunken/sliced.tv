@@ -3,8 +3,8 @@
 export default class LoginController {
   user = {
     name: '',
-    email: 'test@example.com',
-    password: 'test'
+    email: '',
+    password: ''
   };
   errors = {
     login: undefined

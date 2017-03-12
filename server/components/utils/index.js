@@ -25,6 +25,54 @@ let utils = (() => {
       for(let i in keys) {
         media[_.camelCase(keys[i])] = media[keys[i]];
       }
+
+      // convert all images to https
+      if(media.poster120X171) {
+        media.poster120X171 = convertToHTTPS(media.poster120X171);
+      }
+      if(media.poster240X342) {
+        media.poster240X342 = convertToHTTPS(media.poster240X342);
+      }
+      if(media.poster400X570) {
+        media.poster400X570 = convertToHTTPS(media.poster400X570);
+      }
+
+      // shows
+      if(media.artwork208X117) {
+        media.artwork208X117 = convertToHTTPS(media.artwork208X117);
+      }
+      if(media.artwork304X171) {
+        media.artwork304X171 = convertToHTTPS(media.artwork304X171);
+      }
+      if(media.artwork448X252) {
+        media.artwork448X252 = convertToHTTPS(media.artwork448X252);
+      }
+      if(media.artwork608X342) {
+        media.artwork608X342 = convertToHTTPS(media.artwork608X342);
+      }
+      if(media.poster) {
+        media.poster = convertToHTTPS(media.poster);
+      }
+      if(media.banners && media.banners.length) {
+        let banner;
+        for(let bIdx in media.banners) {
+          banner = media.banners[bIdx];
+          if(banner.small && banner.small.url) {
+            banner.small.url = convertToHTTPS(banner.small.url);
+          }
+          if(banner.medium && banner.medium.url) {
+            banner.medium.url = convertToHTTPS(banner.medium.url);
+          }
+          if(banner.large && banner.large.url) {
+            banner.large.url = convertToHTTPS(banner.large.url);
+          }
+          if(banner.xlarge && banner.xlarge.url) {
+            banner.xlarge.url = convertToHTTPS(banner.xlarge.url);
+          }
+        }
+      }
+
+
       return media;
     };
     if(guideboxMedia.length) {
@@ -315,6 +363,7 @@ let utils = (() => {
     if(url.match('^http://')) {
       return url.replace(/^http:\/\//i, 'https://');
     }
+    return url;
   }
 
   return {

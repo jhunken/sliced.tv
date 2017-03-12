@@ -12,28 +12,30 @@ export class MovieController {
   }
 
   $onInit() {
-    this.$http.get(`/api/movies/${this.$stateParams.id}`).then(response => {
-      this.movie = response.data;
-    });
+    this.$http.get(`/api/movies/${this.$stateParams.id}`)
+      .then(response => {
+        this.movie = response.data;
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
-  addToWatchlist(id) {
-    // get watchlist
-    this.watchlistService.get()
-      .then(watchlistResponse => {
-        let watchlists = watchlistResponse.data;
-        // TODO: This needs to be more thoughtful than assuming the watchlist we want to add to is the first index the
-        // array.
-        let watchlist = watchlists[0];
-        watchlist.movies.push({_id: id});
-        this.$http.put(`/api/watchlists/${watchlist._id}`, watchlist)
-          .then(response => {
-            console.log(response);
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      });
+  addToWatchlist(mediaID) {
+    if(mediaID) {
+      // get watchlist
+      this.watchlistService.get()
+        .then(watchlistResponse => {
+          let watchlists = watchlistResponse.data;
+          let mediaType = 'movies';
+          // TODO: This needs to be more thoughtful than assuming the watchlist we want to add to is the first index the
+          // array.
+          let watchlist = watchlists[0];
+          this.watchlistService.add(watchlist._id, mediaID, mediaType);
+        });
+    } else {
+      console.error('No id provided');
+    }
   }
 }
 
