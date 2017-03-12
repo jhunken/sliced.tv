@@ -240,7 +240,8 @@ export function removeMedia(req, res) {
     let mediaID = req.params.mediaid;
     let mediaType = req.params.mediatype;
     return Watchlist.findById(req.params.id)
-      .populate(mediaType)
+      .populate('shows')
+      .populate('movies')
       .exec()
       .then(handleEntityNotFound(res))
       .then(watchlist => {
