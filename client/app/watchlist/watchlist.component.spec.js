@@ -7,12 +7,16 @@ describe('Component: WatchlistComponent', function() {
   // load the controller's module
   beforeEach(angular.mock.module(watchlistModule));
   beforeEach(angular.mock.module(watchlistService));
+  beforeEach(angular.mock.module('socketMock'));
 
 
   // Initialize the controller and a mock scope
   let watchlistComponent;
-  beforeEach(inject(function($componentController, watchlistService) {
-    watchlistComponent = $componentController('watchlist', {});
+  beforeEach(inject(function($componentController, watchlistService, socket) {
+    watchlistComponent = $componentController('watchlist', {
+      watchlistService,
+      socket,
+    });
   }));
 
   it('should ...', function() {
