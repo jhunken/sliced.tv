@@ -31,7 +31,7 @@ export function index(req, res) {
     })
     .catch(errRes => {
       logger.log('error', errRes);
-      return res.status(500).json(errRes.message);
+      return res.status(400).json(errRes.message);
     });
 }
 
@@ -40,7 +40,7 @@ export function show(req, res) {
   return Movie.findById(req.params.id).exec()
     .then(Utils.handleMediaRequest(res, mediaType))
     .catch(err => {
-      logger.log('error', err);
-      return res.status(500).json(err.message);
+      logger.log('warn', err);
+      return res.status(404).json(err.message);
     });
 }
