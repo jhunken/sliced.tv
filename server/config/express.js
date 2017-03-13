@@ -19,10 +19,12 @@ import passport from 'passport';
 import session from 'express-session';
 import connectMongo from 'connect-mongo';
 import mongoose from 'mongoose';
-var MongoStore = connectMongo(session);
+const logger = require('../components/utils').logger;
+
+let MongoStore = connectMongo(session);
 
 export default function(app) {
-  var env = app.get('env');
+  let env = app.get('env');
 
   if(env === 'development' || env === 'test') {
     app.use(express.static(path.join(config.root, '.tmp')));
@@ -40,7 +42,7 @@ export default function(app) {
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
   app.use(shrinkRay());
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.urlencoded({extended: false}));
   app.use(bodyParser.json());
   app.use(methodOverride());
   app.use(cookieParser());
@@ -84,7 +86,7 @@ export default function(app) {
     const stripAnsi = require('strip-ansi');
     const webpack = require('webpack');
     const makeWebpackConfig = require('../../webpack.make');
-    const webpackConfig = makeWebpackConfig({ DEV: true });
+    const webpackConfig = makeWebpackConfig({DEV: true});
     const compiler = webpack(webpackConfig);
     const browserSync = require('browser-sync').create();
 
@@ -115,7 +117,7 @@ export default function(app) {
      * or send a fullscreen error message to the browser instead
      */
     compiler.plugin('done', function(stats) {
-      console.log('webpack done hook');
+      logger.log('debug', 'webpack done hook');
       if(stats.hasErrors() || stats.hasWarnings()) {
         return browserSync.sockets.emit('fullscreen:message', {
           title: 'Webpack Error:',

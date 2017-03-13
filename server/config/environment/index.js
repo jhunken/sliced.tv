@@ -13,7 +13,7 @@ import _ from 'lodash';
 
 // All configurations will extend these options
 // ============================================
-var all = {
+let all = {
   env: process.env.NODE_ENV,
 
   // Root path of server
@@ -51,11 +51,13 @@ var all = {
     callbackURL: `${process.env.DOMAIN || ''}/auth/google/callback`
   },
   guidebox: {
-    apiKey: process.env.GUIDEBOX_API_KEY,
-    baseURL: 'https://api-public.guidebox.com/v1.43/US/'
+    apiKey: process.env.GUIDEBOX_API_KEY
   },
   omdbapi: {
     baseURL: 'https://www.omdbapi.com/?'
+  },
+  winston: {
+    level: process.env.LOG_LEVEL || 'warn'
   }
 };
 
