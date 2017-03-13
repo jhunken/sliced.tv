@@ -8,6 +8,7 @@
 import Movie from './movie.model';
 import Utils from '../../components/utils';
 const mediaType = 'movies';
+const logger = require('../../components/utils').logger;
 
 /***
  * Get a list of movies from guidebox with given parameters.
@@ -28,7 +29,10 @@ export function index(req, res) {
     .then(function(results) {
       return res.json({results, totalResults});
     })
-    .catch(errRes => res.status(500).json(errRes.message));
+    .catch(errRes => {
+      logger.log('error', errRes);
+      return res.status(500).json(errRes.message);
+    });
 }
 
 // Gets a single Movie from the DB
@@ -36,7 +40,7 @@ export function show(req, res) {
   return Movie.findById(req.params.id).exec()
     .then(Utils.handleMediaRequest(res, mediaType))
     .catch(err => {
-      console.log(err);
-      return res.status(400).json(err.message);
+      logger.log('error', err);
+      return res.status(500).json(err.message);
     });
 }

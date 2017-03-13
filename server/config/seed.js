@@ -8,7 +8,7 @@ import User from '../api/user/user.model';
 import Movie from '../api/movie/movie.model';
 import Watchlist from '../api/watchlist/watchlist.model';
 import Show from '../api/show/show.model';
-
+const logger = require('../components/utils').logger;
 User.find({}).remove()
   .then(() => {
     User.create({
@@ -19,7 +19,7 @@ User.find({}).remove()
       password: 'a'
     })
       .then(() => {
-        console.log('finished populating users');
+        logger.log('info', 'finished populating users');
         User.create({
           provider: 'local',
           name: 'Test User',
@@ -444,13 +444,13 @@ Movie.find({}).remove()
       tomatoUserReviews: '66754',
       tomatoUrl: 'http://www.rottentomatoes.com/m/story_of_your_life/'
     });
-    console.log('finished removing movies');
+    logger.log('info', 'finished removing movies');
   });
 Show.find({}).remove()
   .then(() => {
-    console.log('finished removing shows');
+    logger.log('info', 'finished removing shows');
   });
 Watchlist.find({}).remove()
   .then(() => {
-    console.log('finished removing watchlists');
+    logger.log('info', 'finished removing watchlists');
   });

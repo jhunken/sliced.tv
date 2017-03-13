@@ -15,6 +15,7 @@ import Watchlist from './watchlist.model';
 import User from '../user/user.model';
 import mongoose from 'mongoose';
 import _ from 'lodash';
+const logger = require('../../components/utils').logger;
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -75,7 +76,7 @@ function checkPermissions(req, res) {
               return [savedWatchlist];
             })
             .catch(err => {
-              console.error(err);
+              logger.log('error %j', err);
               return res.status(500).end();
             });
         } else {
@@ -83,7 +84,7 @@ function checkPermissions(req, res) {
         }
       })
       .catch(err => {
-        console.error(err);
+        logger.log('error', err);
         return res.status(500).end();
       });
   };
@@ -93,6 +94,7 @@ function checkPermissions(req, res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    logger.log('debug', err);
     return res.status(statusCode).send(err);
   };
 }
@@ -203,8 +205,10 @@ export function addCollaborator(req, res) {
             .exec()
             .then(watchlist => {
               watchlist.collaborators.push(user);
+              logger.log('debug', 'added', collaboratorEmail, 'to', watchlist.id);
               return watchlist.save();
             })
+            //TODO
             // .then(checkPermissions(req, res))
             .then(respondWithResult(res))
             .catch(handleError(res));
@@ -251,9 +255,13 @@ export function removeMedia(req, res) {
         if(mediaToDeleteIndex >= 0) {
           watchlist[mediaType].splice(mediaToDeleteIndex, 1);
           return watchlist.save()
-            .then(() => res.status(200).end())
+            .then(() => {
+              logger.log('debug', '%s removed from watchlist %s', mediaID, watchlist.id);
+              return res.status(200).end();
+            })
             .catch(handleError(res));
         } else {
+          logger.log('warn', 'media not found in watchlist', mediaID, watchlist.id);
           return res.status(400).end();
         }
       })
@@ -277,11 +285,15 @@ export function addMedia(req, res) {
         });
         if(foundMediaIndex >= 0) {
           // don't add duplicates
+          logger.log('debug', 'media already exists in watchlist', mediaID, watchlist.id);
           return res.status(409).end();
         } else {
           watchlist[mediaType].push(mediaID);
           return watchlist.save()
-            .then(() => res.status(200).end())
+            .then(() => {
+              logger.log('debug', '%s added to watchlist %s', mediaID, watchlist.id);
+              return res.status(200).end();
+            })
             .catch(handleError(res));
         }
       })
