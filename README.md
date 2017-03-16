@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/jhunken/easier.tv.svg?style=svg&circle-token=b8f3d32891a3cd47d8e77921057a7e3399ac2255)](https://circleci.com/gh/jhunken/easier.tv)[![codecov](https://codecov.io/gh/jhunken/easier.tv/branch/develop/graph/badge.svg?token=6J4uzv5AoE)](https://codecov.io/gh/jhunken/easier.tv)
+[![CircleCI](https://circleci.com/gh/jhunken/sliced.tv.svg?style=svg&circle-token=b8f3d32891a3cd47d8e77921057a7e3399ac2255)](https://circleci.com/gh/jhunken/sliced.tv)[![codecov](https://codecov.io/gh/jhunken/easier.tv/branch/develop/graph/badge.svg?token=6J4uzv5AoE)](https://codecov.io/gh/jhunken/easier.tv)
 # easier-tv
 
 ## Getting Started
