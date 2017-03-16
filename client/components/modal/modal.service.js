@@ -73,6 +73,6 @@ export function Modal($rootScope, $uibModal) {
   };
 }
 
-export default angular.module('easierTvApp.Modal', [])
+export default angular.module('slicedTvApp.Modal', [])
   .factory('Modal', Modal)
   .name;

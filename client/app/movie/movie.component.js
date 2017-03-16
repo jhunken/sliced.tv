@@ -39,7 +39,7 @@ export class MovieController {
   }
 }
 
-export default angular.module('easierTvApp.movie', [uiRouter])
+export default angular.module('slicedTvApp.movie', [uiRouter])
   .config(routing)
   .component('movie', {
     template: require('./movie.html'),

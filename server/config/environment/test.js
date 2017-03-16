@@ -6,7 +6,7 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/easiertv-test'
+    uri: 'mongodb://localhost/slicedtv-test'
   },
   apiCache: {
     debug: true,

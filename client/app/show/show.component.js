@@ -39,7 +39,7 @@ export class ShowComponent {
   }
 }
 
-export default angular.module('easierTvApp.show', [uiRouter])
+export default angular.module('slicedTvApp.show', [uiRouter])
   .config(routes)
   .component('show', {
     template: require('./show.html'),
