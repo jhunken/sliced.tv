@@ -1,3 +1,19 @@
+<a name="0.0.31"></a>
+## [0.0.31](https://github.com/jhunken/easier.tv/compare/0.0.30...0.0.31) (2017-03-16)
+
+
+### Bug Fixes
+
+* add missing Google Analytics code ([15a616b](https://github.com/jhunken/easier.tv/commit/15a616b))
+* send more appropriate http status codes for invalid requests ([d4dbeba](https://github.com/jhunken/easier.tv/commit/d4dbeba))
+
+
+### Features
+
+* add winston logging module ([b4ac202](https://github.com/jhunken/easier.tv/commit/b4ac202))
+
+
+
 <a name="0.0.30"></a>
 ## [0.0.30](https://github.com/jhunken/easier.tv/compare/0.0.29...0.0.30) (2017-03-12)
 
