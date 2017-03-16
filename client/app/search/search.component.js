@@ -34,7 +34,7 @@ export class SearchComponent {
   }
 }
 
-export default angular.module('easierTvApp.search', [uiRouter])
+export default angular.module('slicedTvApp.search', [uiRouter])
   .config(routes)
   .component('search', {
     template: require('./search.html'),

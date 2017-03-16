@@ -27,6 +27,6 @@ function movieService($http, $q) {
   };
 }
 
-export default angular.module('easierTvApp.movieService', [])
+export default angular.module('slicedTvApp.movieService', [])
   .service('movieService', movieService)
   .name;

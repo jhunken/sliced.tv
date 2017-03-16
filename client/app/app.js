@@ -39,7 +39,7 @@ import AngularLoadingBar from 'angular-loading-bar';
 
 import './app.scss';
 
-angular.module('easierTvApp', [
+angular.module('slicedTvApp', [
   ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar,
   footer, search, movieService, movie, constants, socket, util, 'angularUtils.directives.dirPagination',
   WatchlistComponent, watchlistService, MediaCardDirective, AngularLoadingBar, MoviesComponent, ShowsComponent,
@@ -64,7 +64,7 @@ angular.module('easierTvApp', [
 
 angular.element(document)
   .ready(() => {
-    angular.bootstrap(document, ['easierTvApp'], {
+    angular.bootstrap(document, ['slicedTvApp'], {
       strictDi: true
     });
   });

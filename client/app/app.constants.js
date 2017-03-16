@@ -2,6 +2,6 @@
 
 import angular from 'angular';
 
-export default angular.module('easierTvApp.constants', [])
+export default angular.module('slicedTvApp.constants', [])
   .constant('appConfig', require('../../server/config/environment/shared'))
   .name;

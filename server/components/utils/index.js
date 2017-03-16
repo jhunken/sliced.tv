@@ -2,6 +2,7 @@
 import config from '../../config/environment';
 import Movie from '../../api/movie/movie.model';
 import Show from '../../api/show/show.model';
+const winston = require('winston');
 
 let Guidebox = require('guidebox')(config.guidebox.apiKey);
 let _ = require('lodash');
@@ -120,7 +121,7 @@ let utils = (() => {
                           if(err) {
                             return res.status(500).end();
                           } else {
-                            console.log(`${mediaType} updated to db:  ${savedMedia.title}`);
+                            logger.log('debug', `${mediaType} updated to db:  ${savedMedia.title}`);
                             return res.json(savedMedia).end();
                           }
                         });
@@ -132,14 +133,14 @@ let utils = (() => {
                       if(err) {
                         return res.status(500).end();
                       } else {
-                        console.log(`${mediaType} updated to db:  ${savedMedia.title}`);
+                        logger.log('debug', `${mediaType} updated to db:  ${savedMedia.title}`);
                         return res.json(savedMedia).end();
                       }
                     });
                   }
                 })
                 .catch(err => {
-                  console.error(err);
+                  logger.log('error', err);
                   return res.status(500).end();
                 });
             } else {
@@ -147,12 +148,12 @@ let utils = (() => {
             }
           })
           .catch(err => {
-            console.error(err);
+            logger.log('error', err);
             return res.status(500).end();
           });
       } else {
         // Exists already locally
-        console.log('retrieved from mongodb: ', entity.title);
+        logger.log('debug', 'retrieved from mongodb: ', entity.title);
         return res.json(entity).end();
       }
     };
@@ -197,7 +198,7 @@ let utils = (() => {
       Promise.reject(new Error('No results from Guidebox')).then(function() {
         // not called
       }, function(error) {
-        console.log(error); // Stacktrace
+        logger.log('error', error); // Stacktrace
       });
     }
   }
@@ -221,7 +222,7 @@ let utils = (() => {
         }
       })
       .catch(function(e) {
-        console.log(e);
+        logger.log('error', e);
       });
   }
 
@@ -233,7 +234,8 @@ let utils = (() => {
       const request = lib.get(url, response => {
         // handle http errors
         if(response.statusCode < 200 || response.statusCode > 299) {
-          return reject(new Error(`Failed to load page, status code: ${response.statusCode}`));
+          logger.log('error', 'Failed to load %s, status code %s', url, response.statusCode);
+          return reject(new Error(`Failed to load ${url}, status code: ${response.statusCode}`));
         }
         // temporary data holder
         const body = [];
@@ -268,11 +270,11 @@ let utils = (() => {
         mediaItem.tomatoUserRating = parsedOMDBMediaItem.tomatoUserRating;
         mediaItem.tomatoUserReviews = parsedOMDBMediaItem.tomatoUserReviews;
         mediaItem.tomatoUrl = parsedOMDBMediaItem.tomatoURL;
-        console.info('got omdb info for ', mediaItem.title);
+        logger.log('debug', 'got omdb info for ', mediaItem.title);
         return mediaItem;
       })
       .catch(err => {
-        console.error(err);
+        logger.log('error', err);
         return null;
       });
   }
@@ -298,7 +300,7 @@ let utils = (() => {
               if(err) {
                 return reject(err);
               } else {
-                console.log(`${mediaType} saved to db: ${savedMediaItem.title}`);
+                logger.log('debug', `${mediaType} saved to db: ${savedMediaItem.title}`);
                 return resolve(savedMediaItem);
               }
             });
@@ -321,14 +323,14 @@ let utils = (() => {
               if(err) {
                 return reject(err);
               } else {
-                console.log(`${mediaType} saved to db: ${savedMediaItem.title}`);
+                logger.log('debug', `${mediaType} saved to db: ${savedMediaItem.title}`);
                 return resolve(savedMediaItem);
               }
             });
           }
         })
         .catch(function(err) {
-          console.error(err);
+          logger.log('error', err);
           return reject(err);
         });
     });
@@ -366,6 +368,23 @@ let utils = (() => {
     return url;
   }
 
+  let logger = new winston.Logger({
+    level: config.winston.level,
+    transports: [
+      new winston.transports.Console({
+        timestamp() {
+          return Date.now();
+        },
+        formatter(options) {
+          // Return string will be passed to logger.
+          return `${options.timestamp()} ${options.level.toUpperCase()} ${options.message ? options.message : ''
+            }${options.meta && Object.keys(options.meta).length ? `\n\t${JSON.stringify(options.meta)}` : ''}`;
+        }
+      })
+    ]
+  });
+  winston.handleExceptions(new winston.transports.Console({ colorize: true, json: true }));
+
   return {
     normalizeGuideboxFields,
     getGuideboxMedia,
@@ -373,7 +392,8 @@ let utils = (() => {
     handleMediaRequest,
     processGuideboxMediaResults,
     compareArrays,
-    convertToHTTPS
+    convertToHTTPS,
+    logger
   };
 })();
 

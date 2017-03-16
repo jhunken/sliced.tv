@@ -3,6 +3,8 @@
 import config from '../../config/environment';
 import Utils from '../../components/utils';
 import Movie from '../movie/movie.model';
+const logger = require('../../components/utils').logger;
+
 let Guidebox = require('guidebox')(config.guidebox.apiKey);
 
 function search(req, res, type) {
@@ -18,19 +20,20 @@ function search(req, res, type) {
         for(let movieToSave of results) {
           moviesToSave.push(new Movie(movieToSave));
         }
-        Movie.create(moviesToSave)
+        return Movie.create(moviesToSave)
           .then(savedMovies => res.json({results: savedMovies, totalResults: searchRes.total_results}))
           .catch(err => {
-            console.error(err);
+            logger.log('error', err);
             return res.status(500).send();
           });
       } else {
-        res.status(500).end();
+        logger.log('warn', `no search results found: ${query}`);
+        res.status(404).end();
         return null;
       }
     })
     .catch(e => {
-      console.error(e);
+      logger.log('error', e);
       res.status(500).send(e);
       return null;
     });

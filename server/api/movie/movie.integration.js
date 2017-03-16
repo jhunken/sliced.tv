@@ -49,17 +49,17 @@ describe('Movie API:', function() {
         });
     });
 
-    it('should respond with a 500 when "start" param is incorrect', function(done) {
+    it('should respond with a 400 when "start" param is incorrect', function(done) {
       request(app)
         .get('/api/movies/all/999999999/10/all/all')
-        .expect(500)
+        .expect(400)
         .end(done);
     });
 
-    it('should respond with a 500 when using invalid params', function(done) {
+    it('should respond with a 400 when using invalid params', function(done) {
       request(app)
         .get('/api/movies/all/invalid/invalid/invalid/invalid')
-        .expect(500)
+        .expect(400)
         .end(done);
     });
 
@@ -168,7 +168,7 @@ describe('Movie API:', function() {
     it('should respond with an error if an invalid movie guideboxID is used', function(done) {
       request(app)
         .get('/api/movies/ABCDEFGH')
-        .expect(400)
+        .expect(404)
         .end(err => {
           if(err) {
             return done(err);

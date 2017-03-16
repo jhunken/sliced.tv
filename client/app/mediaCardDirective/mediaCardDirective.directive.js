@@ -1,7 +1,7 @@
 'use strict';
 import angular from 'angular';
 
-export default angular.module('easierTvApp.mediaCardDirective', [])
+export default angular.module('slicedTvApp.mediaCardDirective', [])
   .directive('mediaCardDirective', function(watchlistService, $http, $state) {
     'ngInject';
     return {
