@@ -60,7 +60,7 @@ export class MoviesComponent {
   }
 }
 
-export default angular.module('easierTvApp.movies', [uiRouter])
+export default angular.module('slicedTvApp.movies', [uiRouter])
   .config(routes)
   .component('movies', {
     template: require('./movies.html'),

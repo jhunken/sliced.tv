@@ -33,7 +33,7 @@ let all = {
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
-    session: 'easier-tv-secret'
+    session: 'sliced-tv-secret'
   },
 
   // MongoDB connection options

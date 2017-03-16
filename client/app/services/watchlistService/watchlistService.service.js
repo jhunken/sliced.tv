@@ -32,6 +32,6 @@ function watchlistService($http) {
   };
 }
 
-export default angular.module('easierTvApp.watchlistService', [])
+export default angular.module('slicedTvApp.watchlistService', [])
   .service('watchlistService', watchlistService)
   .name;

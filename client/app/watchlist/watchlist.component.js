@@ -47,7 +47,7 @@ export class WatchlistComponent {
   }
 }
 
-export default angular.module('easierTvApp.watchlist', [uiRouter])
+export default angular.module('slicedTvApp.watchlist', [uiRouter])
   .config(routes)
   .component('watchlist', {
     template: require('./watchlist.html'),

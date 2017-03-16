@@ -80,6 +80,6 @@ function Socket(socketFactory) {
   };
 }
 
-export default angular.module('easierTvApp.socket', [])
+export default angular.module('slicedTvApp.socket', [])
   .factory('socket', Socket)
   .name;

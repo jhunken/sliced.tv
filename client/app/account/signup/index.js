@@ -3,6 +3,6 @@
 import angular from 'angular';
 import SignupController from './signup.controller';
 
-export default angular.module('easierTvApp.signup', [])
+export default angular.module('slicedTvApp.signup', [])
   .controller('SignupController', SignupController)
   .name;

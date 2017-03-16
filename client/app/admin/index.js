@@ -4,7 +4,7 @@ import angular from 'angular';
 import routes from './admin.routes';
 import AdminController from './admin.controller';
 
-export default angular.module('easierTvApp.admin', ['easierTvApp.auth', 'ui.router'])
+export default angular.module('slicedTvApp.admin', ['slicedTvApp.auth', 'ui.router'])
   .config(routes)
   .controller('AdminController', AdminController)
   .name;

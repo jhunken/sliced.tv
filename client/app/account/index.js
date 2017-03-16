@@ -10,7 +10,7 @@ import settings from './settings';
 import signup from './signup';
 import oauthButtons from '../../components/oauth-buttons';
 
-export default angular.module('easierTvApp.account', [uiRouter, login, settings, signup,
+export default angular.module('slicedTvApp.account', [uiRouter, login, settings, signup,
   oauthButtons
 ])
   .config(routing)
