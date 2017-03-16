@@ -1,6 +1,6 @@
 {
   "name": "easier-tv",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "main": "server/index.js",
   "dependencies": {
     "angular": "~1.6.1",
