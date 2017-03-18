@@ -10,3 +10,4 @@ dist
 npm-debug.log
 coverage
 reports
+newrelic_agent.log
