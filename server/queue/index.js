@@ -1,9 +1,12 @@
 'use strict';
 import Utils from '../components/utils';
+import config from '../config/environment';
 
 let Queue = (function(logger) {
   let kue = require('kue');
-  let queue = kue.createQueue();
+  let queue = kue.createQueue({
+    redis: config.redis.url
+  });
   const defaultDelay = 60 * 60000 * 4; // 4 hours
   //const defaultDelay = 10 * 60000;
   const limit = 250;
