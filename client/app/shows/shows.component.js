@@ -44,7 +44,8 @@ export class ShowsComponent {
         // Scroll to top on page change
         this.$window.scrollTo(0, 0);
 
-        this.socket.syncUpdates('show', this.shows, (event, show, array) => {
+        this.socket.unsyncUpdates('show');
+        this.socket.syncUpdates('show', this.shows, false, (event, show, array) => {
           // console.log(array);
           this.shows = array;  // item contains the updated array
         });

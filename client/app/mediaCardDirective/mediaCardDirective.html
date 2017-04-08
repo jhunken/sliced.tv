@@ -4,7 +4,7 @@
   </a>
   <div class="caption">
     <p>IMDB: {{media.imdbRating}}</p>
-    <p ng-if="mediaType === 'movie'">Rotten Tomatoes {{media.tomatoMeter}}% fresh</p>
+    <p ng-if="media.tomatoMeter !== 'N/A' && media.tomatoMeter !== 'NA'">Rotten Tomatoes {{media.tomatoMeter}}% fresh</p>
     <p><button ng-click="addToWatchlist(media._id)" class="btn btn-primary">+Watchlist</button>
     </p>
   </div>

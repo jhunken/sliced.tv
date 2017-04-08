@@ -2,6 +2,8 @@
 import config from '../../config/environment';
 import Movie from '../../api/movie/movie.model';
 import Show from '../../api/show/show.model';
+// import Queue from '../../queue';
+
 const winston = require('winston');
 
 let Guidebox = require('guidebox')(config.guidebox.apiKey);
@@ -90,7 +92,7 @@ let utils = (() => {
 
   /***
    * Handle media request
-   * @param res
+   * @param res express response object
    * @param mediaType 'movies' or 'shows'
    * @returns {Function}
    */
@@ -110,7 +112,7 @@ let utils = (() => {
                   guideboxMedia = normalizeGuideboxFields(guideboxMedia);
                   // copy new guideboxMedia properties to entity
                   entity = Object.assign(entity, guideboxMedia);
-                  if(!guideboxMedia.imdbRating) {
+                  if(!entity.imdbRating) {
                     // Retrieve additional omdb api info
                     return getOMDBInfo(guideboxMedia)
                       .then(updatedMedia => {
@@ -215,8 +217,22 @@ let utils = (() => {
       .then(function(res) {
         let media = res.results;
         if(media && media.length) {
+          let promises = [];
+          let mediaToSave;
           media = normalizeGuideboxFields(media);
-          return {results: media, totalResults: res.total_results};
+          for(let i = 0; i < media.length; i++) {
+            mediaToSave = media[i];
+            // capture the order it was received from Guidebox since it returns results based on popularity
+            mediaToSave.popularity = offset + i;
+            promises.push(saveMediaItem(mediaToSave, mediaType));
+          }
+          return Promise.all(promises)
+            .then(savedMedia => ({results: savedMedia, totalResults: res.total_results}))
+            .catch(err => {
+              logger.log('error', err);
+              return {results: media, totalResults: res.total_results};
+            });
+          // return {results: media, totalResults: res.total_results};
         } else {
           return null;
         }
@@ -253,8 +269,8 @@ let utils = (() => {
    *
    * @param mediaItem
    */
-  function getOMDBInfo(mediaItem) {
-    return getContent(`${config.omdbapi.baseURL}i=${mediaItem.imdbId}&tomatoes=true`)
+  function getOMDBInfo(mediaItem, mediaType) {
+    return getContent(`${config.omdbapi.baseURL}i=${mediaItem.imdbId}&tomatoes=true&type=${mediaType === 'movies' ? 'movies' : 'series'}`)
       .then(omdbBody => {
         let parsedOMDBMediaItem = JSON.parse(omdbBody);
         mediaItem.imdbRating = parsedOMDBMediaItem.imdbRating;
@@ -270,6 +286,7 @@ let utils = (() => {
         mediaItem.tomatoUserRating = parsedOMDBMediaItem.tomatoUserRating;
         mediaItem.tomatoUserReviews = parsedOMDBMediaItem.tomatoUserReviews;
         mediaItem.tomatoUrl = parsedOMDBMediaItem.tomatoURL;
+        mediaItem.omdbUpdated = new Date();
         logger.log('debug', 'got omdb info for ', mediaItem.title);
         return mediaItem;
       })
@@ -282,7 +299,6 @@ let utils = (() => {
   function saveMediaItem(mediaItemToSave, mediaType) {
     return new Promise(function(resolve, reject) {
       let Model;
-
       switch (mediaType) {
       case 'movies':
         Model = Movie;
@@ -319,6 +335,7 @@ let utils = (() => {
             entity.tomatoUserRating = mediaItemToSave.tomatoUserRating;
             entity.tomatoUserReviews = mediaItemToSave.tomatoUserReviews;
             entity.tomatoUrl = mediaItemToSave.tomatoUrl;
+            entity.omdbUpdated = mediaItemToSave.omdbUpdated;
             return entity.save(function(err, savedMediaItem) {
               if(err) {
                 return reject(err);
@@ -383,7 +400,7 @@ let utils = (() => {
       })
     ]
   });
-  winston.handleExceptions(new winston.transports.Console({ colorize: true, json: true }));
+  winston.handleExceptions(new winston.transports.Console({colorize: true, json: true}));
 
   return {
     normalizeGuideboxFields,
@@ -391,6 +408,7 @@ let utils = (() => {
     getOMDBInfo,
     handleMediaRequest,
     processGuideboxMediaResults,
+    saveMediaItem,
     compareArrays,
     convertToHTTPS,
     logger

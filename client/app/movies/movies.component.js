@@ -44,7 +44,9 @@ export class MoviesComponent {
         // Scroll to top on page change
         this.$window.scrollTo(0, 0);
 
-        this.socket.syncUpdates('movie', this.movies, (event, movie, array) => {
+        //
+        this.socket.unsyncUpdates('movie');
+        this.socket.syncUpdates('movie', this.movies, false, (event, movie, array) => {
           // console.log(array);
           this.movies = array;  // item contains the updated array
         });

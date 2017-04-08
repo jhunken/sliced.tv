@@ -1,6 +1,8 @@
 'use strict';
 
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
+import {registerEvents} from './movie.events';
 
 let MovieSchema = new mongoose.Schema({
   cast: [{guideboxId: Number, name: String, characterName: String, imdb: String}],
@@ -18,6 +20,7 @@ let MovieSchema = new mongoose.Schema({
   imdbId: String,
   imdbRating: String,
   imdbVotes: String,
+  popularity: {type: Number, index: true},
   preOrder: Boolean,
   inTheaters: Boolean,
   releaseDate: Date,
@@ -75,8 +78,11 @@ let MovieSchema = new mongoose.Schema({
   tags: [
     {guideboxId: Number, tag: String}
   ],
-  writers: [{guideboxId: Number, name: String, imdb: String}]
+  writers: [{guideboxId: Number, name: String, imdb: String}],
+  omdbUpdated: Date,
 
 });
 
+MovieSchema.plugin(mongoosePaginate);
+registerEvents(MovieSchema);
 export default mongoose.model('Movie', MovieSchema);

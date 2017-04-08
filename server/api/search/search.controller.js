@@ -1,37 +1,15 @@
 'use strict';
 
-import config from '../../config/environment';
-import Utils from '../../components/utils';
 import Movie from '../movie/movie.model';
 const logger = require('../../components/utils').logger;
 
-let Guidebox = require('guidebox')(config.guidebox.apiKey);
 
 function search(req, res, type) {
   let todo = type;
   todo;
   let query = req.params.query;
-  return Guidebox.search.movies({query})
-    .then(searchRes => {
-      let results = searchRes.results;
-      if(results && results.length) {
-        let moviesToSave = [];
-        results = Utils.normalizeGuideboxFields(results);
-        for(let movieToSave of results) {
-          moviesToSave.push(new Movie(movieToSave));
-        }
-        return Movie.create(moviesToSave)
-          .then(savedMovies => res.json({results: savedMovies, totalResults: searchRes.total_results}))
-          .catch(err => {
-            logger.log('error', err);
-            return res.status(500).send();
-          });
-      } else {
-        logger.log('warn', `no search results found: ${query}`);
-        res.status(404).end();
-        return null;
-      }
-    })
+  return Movie.find({title: {$regex: new RegExp(query, 'ig')}})
+    .then(results => res.json({results, totalResults: results.length}))
     .catch(e => {
       logger.log('error', e);
       res.status(500).send(e);
