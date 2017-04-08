@@ -5,29 +5,32 @@
 'use strict';
 
 import {EventEmitter} from 'events';
-import Movie from './movie.model';
-var MovieEvents = new EventEmitter();
+let MovieEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
 MovieEvents.setMaxListeners(0);
 
 // Model events
-var events = {
+let events = {
   save: 'save',
   remove: 'remove'
 };
 
 // Register the event emitter to the model events
-for(var e in events) {
-  var event = events[e];
-  Movie.schema.post(e, emitEvent(event));
+function registerEvents(Movie) {
+  for(let e in events) {
+    let event = events[e];
+    Movie.post(e, emitEvent(event));
+  }
 }
 
-function emitEvent(evt) {
+
+function emitEvent(event) {
   return function(doc) {
-    MovieEvents.emit(`${evt}:${doc._id}`, doc);
-    MovieEvents.emit(evt, doc);
+    MovieEvents.emit(`${event}:${doc._id}`, doc);
+    MovieEvents.emit(event, doc);
   };
 }
 
+export {registerEvents};
 export default MovieEvents;

@@ -12,6 +12,8 @@ module.exports = {
     debug: true,
     defaultDuration: 5000
   },
+  // Seed database on startup
+  seedDB: true,
   sequelize: {
     uri: 'sqlite://',
     options: {
