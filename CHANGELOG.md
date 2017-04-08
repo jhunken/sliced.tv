@@ -1,3 +1,9 @@
+<a name="0.0.32"></a>
+## [0.0.32](https://github.com/jhunken/sliced.tv/compare/0.0.31...0.0.32) (2017-03-18)
+
+* new relic agent ([7439d645d](https://github.com/jhunken/sliced.tv/commit/7439d645d8eb081ad36537363e472d4b928e78d9))
+
+
 <a name="0.0.31"></a>
 ## [0.0.31](https://github.com/jhunken/easier.tv/compare/0.0.30...0.0.31) (2017-03-16)
 
