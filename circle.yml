@@ -1,6 +1,11 @@
 machine:
   node:
     version: 6.9.2
+  services:
+    - redis
+dependencies:
+  override:
+    - sudo service redis-server status || sudo service redis-server start
 test:
   post:
     - bash <(curl -s https://codecov.io/bash) -t ${COVERALLS_REPO_TOKEN}
