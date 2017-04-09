@@ -14,3 +14,4 @@ exclude_paths:
   - "**/*.spec.js"
   - "**/*.integration.js"
   - client/assets/
+  - nock.global.js
