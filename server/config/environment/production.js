@@ -22,8 +22,4 @@ module.exports = {
     process.env.OPENSHIFT_APP_NAME ||
     'mongodb://localhost/slicedtv'
   },
-  apiCache: {
-    debug: false,
-    defaultDuration: 600000
-  }
 };

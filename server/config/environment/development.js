@@ -9,10 +9,6 @@ module.exports = {
   mongo: {
     uri: 'mongodb://localhost/slicedtv-dev'
   },
-  apiCache: {
-    debug: true,
-    defaultDuration: 30000
-  },
   // Seed database on startup
   seedDB: true
 
