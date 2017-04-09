@@ -11,6 +11,6 @@ ratings:
     - client/**
     - server/**
 exclude_paths:
-  - **/*.spec.js
-  - **/*.integration.js
+  - "**/*.spec.js"
+  - "**/*.integration.js"
   - client/assets/
