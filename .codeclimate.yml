@@ -1,0 +1,16 @@
+engines:
+  eslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - javascript
+ratings:
+  paths:
+    - client/**
+    - server/**
+exclude_paths:
+  - "**/*.spec.js"
+  - "**/*.integration.js"
+  - client/assets/
