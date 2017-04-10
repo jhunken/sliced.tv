@@ -51,7 +51,8 @@ function removeEntity(res) {
 function handleEntityNotFound(res) {
   return function(entity) {
     if(!entity) {
-      return res.status(404).end();
+      res.status(404).end();
+      return null;
     }
     return entity;
   };
@@ -61,32 +62,34 @@ function checkPermissions(req, res) {
   let userId = req.user.id;
 
   return function(entity) {
-    return User.findOne({_id: userIdObj}, '-salt -password').exec()
-      .then(user => { // don't ever give out the password or salt
-        if(!user) {
-          return res.status(401).end();
-        }
-        if(user.id !== userId) {
-          return res.status(403).end();
-        } else if(!entity.length) {
-          // create default watchlist
-          let watchlist = new Watchlist({name: 'Watchlist', owner: user});
-          return watchlist.save()
-            .then(function(savedWatchlist) {
-              return [savedWatchlist];
-            })
-            .catch(err => {
-              logger.log('error %j', err);
-              return res.status(500).end();
-            });
-        } else {
-          return entity;
-        }
-      })
-      .catch(err => {
-        logger.log('error', err);
-        return res.status(500).end();
-      });
+    if(entity) {
+      return User.findOne({_id: userIdObj}, '-salt -password').exec()
+        .then(user => { // don't ever give out the password or salt
+          if(!user) {
+            return res.status(401).end();
+          }
+          if(user.id !== userId) {
+            return res.status(403).end();
+          } else if(Array.isArray(entity) && !entity.length) {
+            // create default watchlist
+            let watchlist = new Watchlist({name: 'Watchlist', owner: user});
+            return watchlist.save()
+              .then(function(savedWatchlist) {
+                return [savedWatchlist];
+              })
+              .catch(err => {
+                logger.log('error %j', err);
+                return res.status(500).end();
+              });
+          } else {
+            return entity;
+          }
+        })
+        .catch(err => {
+          logger.log('error', err);
+          return res.status(500).end();
+        });
+    }
   };
 }
 
@@ -94,7 +97,7 @@ function checkPermissions(req, res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
-    logger.log('debug', err);
+    logger.log('error', err);
     return res.status(statusCode).send(err);
   };
 }
@@ -123,7 +126,7 @@ export function index(req, res) {
 // Gets a single Watchlist from the DB
 export function show(req, res) {
   if(mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return Watchlist.findOne({_id: req.params.id})
+    return Watchlist.findById(req.params.id)
       .populate('owner', '-salt -password')
       .populate('movies')
       .populate('shows')
@@ -171,7 +174,7 @@ export function upsert(req, res) {
     setDefaultsOnInsert: true,
     runValidators: true
   }).exec()
-
+    .then(checkPermissions(req, res))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -181,8 +184,14 @@ export function patch(req, res) {
   if(req.body._id) {
     delete req.body._id;
   }
-  return Watchlist.findById(req.params.id).exec()
+  return Watchlist.findById(req.params.id)
+    .populate('owner', '-salt -password')
+    .populate('movies')
+    .populate('shows')
+    .populate('collaborators')
+    .exec()
     .then(handleEntityNotFound(res))
+    .then(checkPermissions(req, res))
     .then(patchUpdates(req.body))
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -233,8 +242,14 @@ export function addCollaborator(req, res) {
 
 // Deletes a Watchlist from the DB
 export function destroy(req, res) {
-  return Watchlist.findById(req.params.id).exec()
+  return Watchlist.findById(req.params.id)
+    .populate('owner', '-salt -password')
+    .populate('movies')
+    .populate('shows')
+    .populate('collaborators')
+    .exec()
     .then(handleEntityNotFound(res))
+    .then(checkPermissions(req, res))
     .then(removeEntity(res))
     .catch(handleError(res));
 }
