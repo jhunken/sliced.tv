@@ -17,6 +17,20 @@ import mongoose from 'mongoose';
 import _ from 'lodash';
 const logger = require('../../components/utils').logger;
 
+/***
+ * Gets a watchlist by id with sensitive user info removed, and shows and movies populated.
+ * @param id
+ * @returns {Promise}
+ */
+let getFullWatchlistById = function(id) {
+  return Watchlist.findById(id)
+    .populate('owner', '-salt -password')
+    .populate('movies')
+    .populate('shows')
+    .populate('collaborators')
+    .exec();
+};
+
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
@@ -126,12 +140,7 @@ export function index(req, res) {
 // Gets a single Watchlist from the DB
 export function show(req, res) {
   if(mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return Watchlist.findById(req.params.id)
-      .populate('owner', '-salt -password')
-      .populate('movies')
-      .populate('shows')
-      .populate('collaborators')
-      .exec()
+    return getFullWatchlistById(req.params.id)
       .then(handleEntityNotFound(res))
       .then(checkPermissions(req, res))
       .then(respondWithResult(res))
@@ -184,12 +193,7 @@ export function patch(req, res) {
   if(req.body._id) {
     delete req.body._id;
   }
-  return Watchlist.findById(req.params.id)
-    .populate('owner', '-salt -password')
-    .populate('movies')
-    .populate('shows')
-    .populate('collaborators')
-    .exec()
+  return getFullWatchlistById(req.params.id)
     .then(handleEntityNotFound(res))
     .then(checkPermissions(req, res))
     .then(patchUpdates(req.body))
@@ -242,12 +246,7 @@ export function addCollaborator(req, res) {
 
 // Deletes a Watchlist from the DB
 export function destroy(req, res) {
-  return Watchlist.findById(req.params.id)
-    .populate('owner', '-salt -password')
-    .populate('movies')
-    .populate('shows')
-    .populate('collaborators')
-    .exec()
+  return getFullWatchlistById(req.params.id)
     .then(handleEntityNotFound(res))
     .then(checkPermissions(req, res))
     .then(removeEntity(res))
