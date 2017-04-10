@@ -22,13 +22,15 @@ const logger = require('../../components/utils').logger;
  * @param id
  * @returns {Promise}
  */
-let getFullWatchlistById = function(id) {
+let getFullWatchlistById = function(id, req, res) {
   return Watchlist.findById(id)
     .populate('owner', '-salt -password')
     .populate('movies')
     .populate('shows')
     .populate('collaborators')
-    .exec();
+    .exec()
+    .then(handleEntityNotFound(res))
+    .then(checkPermissions(req, res));
 };
 
 function respondWithResult(res, statusCode) {
@@ -140,9 +142,7 @@ export function index(req, res) {
 // Gets a single Watchlist from the DB
 export function show(req, res) {
   if(mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return getFullWatchlistById(req.params.id)
-      .then(handleEntityNotFound(res))
-      .then(checkPermissions(req, res))
+    return getFullWatchlistById(req.params.id, req, res)
       .then(respondWithResult(res))
       .catch(handleError(res));
   } else {
@@ -193,9 +193,7 @@ export function patch(req, res) {
   if(req.body._id) {
     delete req.body._id;
   }
-  return getFullWatchlistById(req.params.id)
-    .then(handleEntityNotFound(res))
-    .then(checkPermissions(req, res))
+  return getFullWatchlistById(req.params.id, req, res)
     .then(patchUpdates(req.body))
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -246,9 +244,7 @@ export function addCollaborator(req, res) {
 
 // Deletes a Watchlist from the DB
 export function destroy(req, res) {
-  return getFullWatchlistById(req.params.id)
-    .then(handleEntityNotFound(res))
-    .then(checkPermissions(req, res))
+  return getFullWatchlistById(req.params.id, req, res)
     .then(removeEntity(res))
     .catch(handleError(res));
 }
