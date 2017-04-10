@@ -5,7 +5,8 @@ engines:
     enabled: true
     config:
       languages:
-        - javascript
+        javascript:
+          mass_threshold: 45
 ratings:
   paths:
     - client/**
@@ -15,3 +16,4 @@ exclude_paths:
   - "**/*.integration.js"
   - client/assets/
   - nock.global.js
+  - server/config/seed.js
