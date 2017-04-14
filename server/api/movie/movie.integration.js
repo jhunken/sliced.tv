@@ -73,11 +73,8 @@ describe('Movie API:', function() {
     });
 
     // Clears new movie after testing
-    after(function(done) {
-      return Movie.findByIdAndRemove(newMovie.id)
-        .then(function() {
-          done();
-        });
+    after(function() {
+      return Movie.findByIdAndRemove(newMovie.id);
     });
 
     it('should respond with the requested movie', function(done) {
