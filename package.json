@@ -1,5 +1,5 @@
 {
-  "name": "easier-tv",
+  "name": "sliced-tv",
   "version": "0.0.32",
   "main": "server/index.js",
   "dependencies": {
@@ -55,8 +55,6 @@
     "fast-json-patch": "^1.0.0",
     "file-loader": "^0.11.1",
     "font-awesome": ">=4.1.0",
-    "grunt": "^1.0.1",
-    "grunt-build-control": "^0.7.0",
     "guidebox": "^1.1.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",

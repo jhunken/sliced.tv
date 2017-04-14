@@ -4,7 +4,6 @@
 import _ from 'lodash';
 import del from 'del';
 import gulp from 'gulp';
-import grunt from 'grunt';
 import path from 'path';
 import through2 from 'through2';
 import gulpLoadPlugins from 'gulp-load-plugins';
@@ -16,7 +15,8 @@ import {Server as KarmaServer} from 'karma';
 import runSequence from 'run-sequence';
 import {protractor, webdriver_update} from 'gulp-protractor';
 import {Instrumenter} from 'isparta';
-import webpack from 'webpack-stream';
+import webpackStream from 'webpack-stream';
+import webpack from 'webpack';
 import makeWebpackConfig from './webpack.make';
 
 var plugins = gulpLoadPlugins();
@@ -218,14 +218,14 @@ gulp.task('webpack:dev', function() {
   const webpackDevConfig = makeWebpackConfig({DEV: true});
   return gulp.src(webpackDevConfig.entry.app)
     .pipe(plugins.plumber())
-    .pipe(webpack(webpackDevConfig))
+    .pipe(webpackStream(webpackDevConfig, webpack))
     .pipe(gulp.dest('.tmp'));
 });
 
 gulp.task('webpack:dist', function() {
   const webpackDistConfig = makeWebpackConfig({BUILD: true});
   return gulp.src(webpackDistConfig.entry.app)
-    .pipe(webpack(webpackDistConfig))
+    .pipe(webpackStream(webpackDistConfig, webpack))
     .on('error', err => {
       this.emit('end'); // Recover from errors
     })
@@ -235,14 +235,14 @@ gulp.task('webpack:dist', function() {
 gulp.task('webpack:test', function() {
   const webpackTestConfig = makeWebpackConfig({TEST: true});
   return gulp.src(webpackTestConfig.entry.app)
-    .pipe(webpack(webpackTestConfig))
+    .pipe(webpackStream(webpackTestConfig, webpack))
     .pipe(gulp.dest('.tmp'));
 });
 
 gulp.task('webpack:e2e', function() {
   const webpackE2eConfig = makeWebpackConfig({E2E: true});
   return gulp.src(webpackE2eConfig.entry.app)
-    .pipe(webpack(webpackE2eConfig))
+    .pipe(webpackStream(webpackE2eConfig, webpack))
     .pipe(gulp.dest('.tmp'));
 });
 
@@ -387,7 +387,7 @@ gulp.task('test:server:coverage', cb => {
   runSequence('coverage:pre',
     'env:all',
     'env:test',
-    'coverage:unit',
+    //'coverage:unit',
     'coverage:integration',
     cb);
 });
@@ -527,36 +527,6 @@ gulp.task('copy:server', () => gulp.src([
   'package.json'
 ], {cwdbase: true})
   .pipe(gulp.dest(paths.dist)));
-
-/********************
- * Grunt ported tasks
- ********************/
-
-grunt.initConfig({
-  buildcontrol: {
-    options: {
-      dir: paths.dist,
-      commit: true,
-      push: true,
-      connectCommits: false,
-      message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
-    },
-    heroku: {
-      options: {
-        remote: 'heroku',
-        branch: 'master'
-      }
-    },
-    openshift: {
-      options: {
-        remote: 'openshift',
-        branch: 'master'
-      }
-    }
-  }
-});
-
-grunt.loadNpmTasks('grunt-build-control');
 
 gulp.task('buildcontrol:heroku', function(done) {
   grunt.tasks(
