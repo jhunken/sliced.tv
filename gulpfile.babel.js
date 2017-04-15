@@ -387,8 +387,9 @@ gulp.task('test:server:coverage', cb => {
   runSequence('coverage:pre',
     'env:all',
     'env:test',
-    //'coverage:unit',
-    'coverage:integration',
+    // These don't work after upgrading to webpack 2. Coverage is now done in the `npm test` command
+    // 'coverage:unit',
+    // 'coverage:integration',
     cb);
 });
 
