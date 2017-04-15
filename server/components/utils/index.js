@@ -16,6 +16,12 @@ let utils = (() => {
    * @returns {*}
    */
   function normalizeGuideboxFields(guideboxMedia) {
+    let convertBannerURLToHTTPS = function(banner, size) {
+      if(banner[size] && banner[size].url) {
+        banner[size].url = convertToHTTPS(banner[size].url);
+      }
+    };
+
     let mapFields = function(media) {
       media.guideboxId = media.id;
       Reflect.deleteProperty(media, 'id');
@@ -60,18 +66,10 @@ let utils = (() => {
         let banner;
         for(let bIdx in media.banners) {
           banner = media.banners[bIdx];
-          if(banner.small && banner.small.url) {
-            banner.small.url = convertToHTTPS(banner.small.url);
-          }
-          if(banner.medium && banner.medium.url) {
-            banner.medium.url = convertToHTTPS(banner.medium.url);
-          }
-          if(banner.large && banner.large.url) {
-            banner.large.url = convertToHTTPS(banner.large.url);
-          }
-          if(banner.xlarge && banner.xlarge.url) {
-            banner.xlarge.url = convertToHTTPS(banner.xlarge.url);
-          }
+          convertBannerURLToHTTPS(banner, 'small');
+          convertBannerURLToHTTPS(banner, 'medium');
+          convertBannerURLToHTTPS(banner, 'large');
+          convertBannerURLToHTTPS(banner, 'xlarge');
         }
       }
 
@@ -89,6 +87,25 @@ let utils = (() => {
     // single movie
     return mapFields(guideboxMedia);
   }
+
+  let _saveEntity = function(entity, mediaType, res, resolve, reject) {
+    return entity.save(function(err, savedMedia) {
+      if(err) {
+        if(reject) {
+          return reject(err);
+        } else {
+          return res.status(500).end();
+        }
+      } else {
+        logger.log('debug', `${mediaType} saved to db:  ${savedMedia.title}`);
+        if(resolve) {
+          return resolve(savedMedia);
+        } else {
+          return res.json(savedMedia).end();
+        }
+      }
+    });
+  };
 
   /***
    * Handle media request
@@ -119,26 +136,12 @@ let utils = (() => {
                         // copy updatedMovie properties to entity
                         entity = Object.assign(entity, updatedMedia);
                         // Save updated entity
-                        return entity.save(function(err, savedMedia) {
-                          if(err) {
-                            return res.status(500).end();
-                          } else {
-                            logger.log('debug', `${mediaType} updated to db:  ${savedMedia.title}`);
-                            return res.json(savedMedia).end();
-                          }
-                        });
+                        return _saveEntity(entity, mediaType, res);
                       });
                   } else {
                     // Retrieved guidebox info, but not omdb. Nothing else to retrieve at this point.
                     // Save updated entity
-                    return entity.save(function(err, savedMedia) {
-                      if(err) {
-                        return res.status(500).end();
-                      } else {
-                        logger.log('debug', `${mediaType} updated to db:  ${savedMedia.title}`);
-                        return res.json(savedMedia).end();
-                      }
-                    });
+                    return _saveEntity(entity, mediaType, res);
                   }
                 })
                 .catch(err => {
@@ -311,15 +314,7 @@ let utils = (() => {
           if(!entity) {
             // Save new
             let mediaModel = new Model(mediaItemToSave);
-
-            return mediaModel.save(function(err, savedMediaItem) {
-              if(err) {
-                return reject(err);
-              } else {
-                logger.log('debug', `${mediaType} saved to db: ${savedMediaItem.title}`);
-                return resolve(savedMediaItem);
-              }
-            });
+            return _saveEntity(mediaModel, mediaType, null, resolve, reject);
           } else {
             // Update
             entity.imdbRating = mediaItemToSave.imdbRating;
@@ -336,14 +331,7 @@ let utils = (() => {
             entity.tomatoUserReviews = mediaItemToSave.tomatoUserReviews;
             entity.tomatoUrl = mediaItemToSave.tomatoUrl;
             entity.omdbUpdated = mediaItemToSave.omdbUpdated;
-            return entity.save(function(err, savedMediaItem) {
-              if(err) {
-                return reject(err);
-              } else {
-                logger.log('debug', `${mediaType} saved to db: ${savedMediaItem.title}`);
-                return resolve(savedMediaItem);
-              }
-            });
+            return _saveEntity(entity, mediaType, null, resolve, reject);
           }
         })
         .catch(function(err) {
