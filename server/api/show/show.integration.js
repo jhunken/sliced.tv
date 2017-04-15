@@ -73,10 +73,8 @@ describe('Show API:', function() {
     });
 
     // Clears shows after testing
-    after(function(done) {
-      return Show.findByIdAndRemove(newShow.id).then(function() {
-        done();
-      });
+    after(function() {
+      return Show.findByIdAndRemove(newShow.id);
     });
 
     it('should respond with the requested show', function(done) {
