@@ -16,6 +16,11 @@ let utils = (() => {
    * @returns {*}
    */
   function normalizeGuideboxFields(guideboxMedia) {
+    /***
+     * Converts banner URL to https
+     * @param banner
+     * @param size
+     */
     let convertBannerURLToHTTPS = function(banner, size) {
       if(banner[size] && banner[size].url) {
         banner[size].url = convertToHTTPS(banner[size].url);
@@ -70,9 +75,9 @@ let utils = (() => {
           convertBannerURLToHTTPS(banner, 'medium');
           convertBannerURLToHTTPS(banner, 'large');
           convertBannerURLToHTTPS(banner, 'xlarge');
+          media.banners[bIdx] = banner;
         }
       }
-
 
       return media;
     };
