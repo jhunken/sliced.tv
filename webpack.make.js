@@ -9,29 +9,29 @@ var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 var path = require('path');
 
 module.exports = function makeWebpackConfig(options) {
-    /**
-     * Environment type
-     * BUILD is for generating minified builds
-     * TEST is for generating test builds
-     */
+  /**
+   * Environment type
+   * BUILD is for generating minified builds
+   * TEST is for generating test builds
+   */
   var BUILD = !!options.BUILD;
   var TEST = !!options.TEST;
   var E2E = !!options.E2E;
   var DEV = !!options.DEV;
 
-    /**
-     * Config
-     * Reference: http://webpack.github.io/docs/configuration.html
-     * This is the object where all configuration gets set
-     */
+  /**
+   * Config
+   * Reference: http://webpack.github.io/docs/configuration.html
+   * This is the object where all configuration gets set
+   */
   var config = {};
 
-    /**
-     * Entry
-     * Reference: http://webpack.github.io/docs/configuration.html#entry
-     * Should be an empty object if it's generating a test build
-     * Karma will set this when it's a test build
-     */
+  /**
+   * Entry
+   * Reference: http://webpack.github.io/docs/configuration.html#entry
+   * Should be an empty object if it's generating a test build
+   * Karma will set this when it's a test build
+   */
   if(!TEST) {
     config.entry = {
       app: './client/app/app.js',
@@ -52,30 +52,30 @@ module.exports = function makeWebpackConfig(options) {
     };
   }
 
-    /**
-     * Output
-     * Reference: http://webpack.github.io/docs/configuration.html#output
-     * Should be an empty object if it's generating a test build
-     * Karma will handle setting it up for you when it's a test build
-     */
+  /**
+   * Output
+   * Reference: http://webpack.github.io/docs/configuration.html#output
+   * Should be an empty object if it's generating a test build
+   * Karma will handle setting it up for you when it's a test build
+   */
   if(TEST) {
     config.output = {};
   } else {
     config.output = {
-            // Absolute output directory
+      // Absolute output directory
       path: BUILD ? path.join(__dirname, '/dist/client/') : path.join(__dirname, '/.tmp/'),
 
-            // Output path from the view of the page
-            // Uses webpack-dev-server in development
+      // Output path from the view of the page
+      // Uses webpack-dev-server in development
       publicPath: BUILD || DEV || E2E ? '/' : `http://localhost:${8080}/`,
-            //publicPath: BUILD ? '/' : 'http://localhost:' + env.port + '/',
+      //publicPath: BUILD ? '/' : 'http://localhost:' + env.port + '/',
 
-            // Filename for entry points
-            // Only adds hash in build mode
+      // Filename for entry points
+      // Only adds hash in build mode
       filename: BUILD ? '[name].[hash].js' : '[name].bundle.js',
 
-            // Filename for non-entry points
-            // Only adds hash in build mode
+      // Filename for non-entry points
+      // Only adds hash in build mode
       chunkFilename: BUILD ? '[name].[hash].js' : '[name].bundle.js'
     };
   }
@@ -90,11 +90,11 @@ module.exports = function makeWebpackConfig(options) {
     };
   }
 
-    /**
-     * Devtool
-     * Reference: http://webpack.github.io/docs/configuration.html#devtool
-     * Type of sourcemap to use per build type
-     */
+  /**
+   * Devtool
+   * Reference: http://webpack.github.io/docs/configuration.html#devtool
+   * Type of sourcemap to use per build type
+   */
   if(TEST) {
     config.devtool = 'inline-source-map';
   } else if(BUILD || DEV) {
@@ -103,14 +103,14 @@ module.exports = function makeWebpackConfig(options) {
     config.devtool = 'eval';
   }
 
-    /**
-     * Loaders
-     * Reference: http://webpack.github.io/docs/configuration.html#module-loaders
-     * List: http://webpack.github.io/docs/list-of-loaders.html
-     * This handles most of the magic responsible for converting modules
-     */
+  /**
+   * Loaders
+   * Reference: http://webpack.github.io/docs/configuration.html#module-loaders
+   * List: http://webpack.github.io/docs/list-of-loaders.html
+   * This handles most of the magic responsible for converting modules
+   */
 
-    // Initialize module
+  // Initialize module
   config.module = {
     rules: [
       {
@@ -118,11 +118,11 @@ module.exports = function makeWebpackConfig(options) {
         // Reference: https://github.com/webpack-contrib/sass-loader
         test: /\.(scss|sass)$/,
         use: [{
-          loader: "style-loader"
+          loader: 'style-loader'
         }, {
-          loader: "css-loader"
+          loader: 'css-loader'
         }, {
-          loader: "sass-loader", options: {
+          loader: 'sass-loader', options: {
             outputStyle: 'compressed',
             precision: 10,
             sourceComments: false
@@ -142,7 +142,7 @@ module.exports = function makeWebpackConfig(options) {
         use: [
           {loader: 'ng-annotate-loader'},
           {loader: 'babel-loader'}
-          ],
+        ],
         include: [
           path.resolve(__dirname, 'client/'),
           path.resolve(__dirname, 'node_modules/lodash-es/')
@@ -181,13 +181,15 @@ module.exports = function makeWebpackConfig(options) {
           ? ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [
-              {loader: 'css?sourceMap!postcss-loader', options: {
-                plugins: function() {
+              {
+                loader: 'css?sourceMap!postcss-loader', options: {
+                plugins() {
                   return [
                     autoprefixer({browsers: ['last 2 version']})
                   ];
                 }
-              }}
+              }
+              }
             ]
           })
           // Reference: https://github.com/webpack/null-loader
@@ -202,33 +204,33 @@ module.exports = function makeWebpackConfig(options) {
     ],
   };
 
-    // ISPARTA INSTRUMENTER LOADER
-    // Reference: https://github.com/ColCh/isparta-instrumenter-loader
-    // Instrument JS files with Isparta for subsequent code coverage reporting
-    // Skips node_modules and spec files
+  // ISPARTA INSTRUMENTER LOADER
+  // Reference: https://github.com/ColCh/isparta-instrumenter-loader
+  // Instrument JS files with Isparta for subsequent code coverage reporting
+  // Skips node_modules and spec files
   if(TEST) {
     config.module.rules.push({
-            //delays coverage til after tests are run, fixing transpiled source coverage error
+      //delays coverage til after tests are run, fixing transpiled source coverage error
       enforce: 'pre',
       test: /\.js$/,
       exclude: /(node_modules|spec\.js|mock\.js)/,
       loader: 'isparta-instrumenter-loader',
       query: {
         babel: {
-                    // optional: ['runtime', 'es7.classProperties', 'es7.decorators']
+          // optional: ['runtime', 'es7.classProperties', 'es7.decorators']
         }
       }
     });
   }
-    /**
-     * Plugins
-     * Reference: http://webpack.github.io/docs/configuration.html#plugins
-     * List: http://webpack.github.io/docs/list-of-plugins.html
-     */
+  /**
+   * Plugins
+   * Reference: http://webpack.github.io/docs/configuration.html#plugins
+   * List: http://webpack.github.io/docs/list-of-plugins.html
+   */
   config.plugins = [
-        // Reference: https://github.com/webpack/extract-text-webpack-plugin
-        // Extract css files
-        // Disabled when in test mode or not in build mode
+    // Reference: https://github.com/webpack/extract-text-webpack-plugin
+    // Extract css files
+    // Disabled when in test mode or not in build mode
     new ExtractTextPlugin({filename: '[name].[hash].css', disable: !BUILD || TEST})
   ];
 
@@ -236,12 +238,12 @@ module.exports = function makeWebpackConfig(options) {
     config.plugins.push(new CommonsChunkPlugin({
       name: 'vendor',
 
-            // filename: "vendor.js"
-            // (Give the chunk a different name)
+      // filename: "vendor.js"
+      // (Give the chunk a different name)
 
       minChunks: Infinity
-            // (with more entries, this ensures that no other module
-            //  goes into the vendor chunk)
+      // (with more entries, this ensures that no other module
+      //  goes into the vendor chunk)
     }));
   }
 
@@ -259,41 +261,41 @@ module.exports = function makeWebpackConfig(options) {
       new HtmlWebpackHarddiskPlugin()
     );
   }
-    // Add build specific plugins
+  // Add build specific plugins
   if(BUILD) {
     config.plugins.push(
-            // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
-            // Minify all javascript, switch loaders to minimizing mode
-            new webpack.optimize.UglifyJsPlugin({
-              mangle: false,
-              output: {
-                comments: false
-              },
-              compress: {
-                warnings: false
-              }
-            }),
+      // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
+      // Minify all javascript, switch loaders to minimizing mode
+      new webpack.optimize.UglifyJsPlugin({
+        mangle: false,
+        output: {
+          comments: false
+        },
+        compress: {
+          warnings: false
+        }
+      }),
 
-            // Reference: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-            // Define free global variables
-            new webpack.DefinePlugin({
-              'process.env': {
-                NODE_ENV: '"production"'
-              }
-            })
-        );
+      // Reference: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
+      // Define free global variables
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: '"production"'
+        }
+      })
+    );
   }
 
   if(DEV) {
     config.plugins.push(
-            // Reference: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-            // Define free global variables
-            new webpack.DefinePlugin({
-              'process.env': {
-                NODE_ENV: '"development"'
-              }
-            })
-        );
+      // Reference: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
+      // Define free global variables
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: '"development"'
+        }
+      })
+    );
   }
 
   config.cache = DEV;
@@ -305,11 +307,11 @@ module.exports = function makeWebpackConfig(options) {
     };
   }
 
-    /**
-     * Dev server configuration
-     * Reference: http://webpack.github.io/docs/configuration.html#devserver
-     * Reference: http://webpack.github.io/docs/webpack-dev-server.html
-     */
+  /**
+   * Dev server configuration
+   * Reference: http://webpack.github.io/docs/configuration.html#devserver
+   * Reference: http://webpack.github.io/docs/webpack-dev-server.html
+   */
   config.devServer = {
     contentBase: './client/',
     stats: {
