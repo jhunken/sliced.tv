@@ -93,6 +93,15 @@ let utils = (() => {
     return mapFields(guideboxMedia);
   }
 
+  /***
+   * Save given entity to database. If resolve/reject are present will use promises, otherwise will return res
+   * @param entity
+   * @param mediaType
+   * @param res
+   * @param resolve
+   * @param reject
+   * @private
+   */
   let _saveEntity = function(entity, mediaType, res, resolve, reject) {
     return entity.save(function(err, savedMedia) {
       if(err) {
@@ -169,49 +178,6 @@ let utils = (() => {
     };
   }
 
-  function processGuideboxMediaResults(guideboxMediaItems, mediaType) {
-    if(guideboxMediaItems && guideboxMediaItems.results && guideboxMediaItems.results.length) {
-      let guideboxMediaItem;
-      let promises = [];
-      let guideboxIds = [];
-      let previouslySavedMediaItems = [];
-      for(let i = 0; i < guideboxMediaItems.results.length; i++) {
-        guideboxIds.push(guideboxMediaItems.results[i].guideboxId);
-      }
-      let Model;
-
-      switch (mediaType) {
-      case 'movies':
-        Model = Movie;
-        break;
-      case 'shows':
-        Model = Show;
-      }
-
-      return Model.find({
-        guideboxId: {
-          $in: guideboxIds
-        }
-      }).exec()
-        .then(entities => {
-          for(let j = 0; j < entities.length; j++) {
-            previouslySavedMediaItems.push(entities[j]);
-          }
-          // Compare the two arrays for any that haven't been saved
-          for(let k = 0; k < guideboxMediaItems.results.length; k++) {
-            guideboxMediaItem = guideboxMediaItems.results[k];
-            promises.push(compareArrays(guideboxMediaItem, previouslySavedMediaItems, mediaType));
-          }
-          return Promise.all(promises);
-        });
-    } else {
-      Promise.reject(new Error('No results from Guidebox')).then(function() {
-        // not called
-      }, function(error) {
-        logger.log('error', error); // Stacktrace
-      });
-    }
-  }
 
   function getGuideboxMedia(mediaType, offset, limit, sources, platform, includePreorders, includeInTheaters) {
     return Guidebox[mediaType].list({
@@ -346,31 +312,6 @@ let utils = (() => {
     });
   }
 
-
-  /***
-   * Checks if given media is in the savedMedia array. If so just returns the saved entity. Otherwise returns a promise
-   * that will retrieve the additional info from the other api providers.
-   * @param guideboxMedia
-   * @param savedMedia
-   * @param mediaType 'movies' or 'shows'
-   * @returns {Promise<R>|Promise<void>}
-   */
-  function compareArrays(guideboxMedia, savedMedia, mediaType) {
-    for(let element of savedMedia) {
-      if(guideboxMedia.guideboxId === element.guideboxId) {
-        return Promise.resolve(element);
-      }
-    }
-    return getOMDBInfo(guideboxMedia, mediaType)
-      .then(function(omdbMedia) {
-        if(omdbMedia) {
-          return saveMediaItem(omdbMedia, mediaType);
-        } else {
-          return guideboxMedia;
-        }
-      });
-  }
-
   function convertToHTTPS(url) {
     if(url.match('^http://')) {
       return url.replace(/^http:\/\//i, 'https://');
@@ -400,9 +341,7 @@ let utils = (() => {
     getGuideboxMedia,
     getOMDBInfo,
     handleMediaRequest,
-    processGuideboxMediaResults,
     saveMediaItem,
-    compareArrays,
     convertToHTTPS,
     logger
   };
