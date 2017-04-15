@@ -232,18 +232,19 @@ gulp.task('webpack:dist', function() {
     .pipe(gulp.dest(`${paths.dist}/client`));
 });
 
-gulp.task('webpack:test', function() {
-  const webpackTestConfig = makeWebpackConfig({TEST: true});
-  return gulp.src(webpackTestConfig.entry.app)
-    .pipe(webpackStream(webpackTestConfig, webpack))
+let webpackConfigSetup = function(opt) {
+  const webpackConfig = makeWebpackConfig(opt);
+  return gulp.src(webpackConfig.entry.app)
+    .pipe(webpackStream(webpackConfig, webpack))
     .pipe(gulp.dest('.tmp'));
+};
+
+gulp.task('webpack:test', function() {
+  return webpackConfigSetup({TEST: true});
 });
 
 gulp.task('webpack:e2e', function() {
-  const webpackE2eConfig = makeWebpackConfig({E2E: true});
-  return gulp.src(webpackE2eConfig.entry.app)
-    .pipe(webpackStream(webpackE2eConfig, webpack))
-    .pipe(gulp.dest('.tmp'));
+  return webpackConfigSetup({E2E: true});
 });
 
 gulp.task('styles', () => gulp.src(paths.client.mainStyle)
@@ -529,21 +530,3 @@ gulp.task('copy:server', () => gulp.src([
 ], {cwdbase: true})
   .pipe(gulp.dest(paths.dist)));
 
-gulp.task('buildcontrol:heroku', function(done) {
-  grunt.tasks(
-    ['buildcontrol:heroku'],    //you can add more grunt tasks in this array
-    {gruntfile: false}, //don't look for a Gruntfile - there is none. :-)
-    function() {
-      done();
-    }
-  );
-});
-gulp.task('buildcontrol:openshift', function(done) {
-  grunt.tasks(
-    ['buildcontrol:openshift'],    //you can add more grunt tasks in this array
-    {gruntfile: false}, //don't look for a Gruntfile - there is none. :-)
-    function() {
-      done();
-    }
-  );
-});

@@ -183,12 +183,12 @@ module.exports = function makeWebpackConfig(options) {
             use: [
               {
                 loader: 'css?sourceMap!postcss-loader', options: {
-                plugins() {
-                  return [
-                    autoprefixer({browsers: ['last 2 version']})
-                  ];
+                  plugins() {
+                    return [
+                      autoprefixer({browsers: ['last 2 version']})
+                    ];
+                  }
                 }
-              }
               }
             ]
           })
