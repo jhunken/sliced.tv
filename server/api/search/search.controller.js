@@ -11,14 +11,15 @@ const logger = require('../../components/utils').logger;
  * @private
  */
 let _createSearchPromise = function(mediaType, query) {
+  let model;
   if(mediaType === 'movies') {
-    return Movie.find({title: {$regex: new RegExp(query, 'ig')}})
-      .then(results => ({results, totalResults: results.length, mediaType: 'movies'}));
+    model = Movie;
   }
   if(mediaType === 'shows') {
-    return Show.find({title: {$regex: new RegExp(query, 'ig')}})
-      .then(results => ({results, totalResults: results.length, mediaType: 'shows'}));
+    model = Show;
   }
+  return model.find({title: {$regex: new RegExp(query, 'ig')}})
+    .then(results => ({results, totalResults: results.length, mediaType}));
 };
 
 /***
