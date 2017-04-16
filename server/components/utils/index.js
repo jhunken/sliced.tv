@@ -178,7 +178,16 @@ let utils = (() => {
     };
   }
 
-
+  /***
+   * Use Guidebox Client
+   * @param mediaType
+   * @param offset
+   * @param limit
+   * @param sources
+   * @param platform
+   * @param includePreorders
+   * @param includeInTheaters
+   */
   function getGuideboxMedia(mediaType, offset, limit, sources, platform, includePreorders, includeInTheaters) {
     return Guidebox[mediaType].list({
       offset,
