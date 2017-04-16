@@ -3719,5 +3719,146 @@ nock('https://www.omdbapi.com:443', {encodedQueryParams: true})
     'CF-RAY',
     '3081ecb80cfa28b8-SJC']);
 
+nock('https://www.omdbapi.com')
+  .get('/?i=tt1649419&tomatoes=true&type=movies')
+  .reply(200, {
+    Title: 'Mock Movie',
+    Year: '2012',
+    Rated: 'PG-13',
+    Released: '04 Jan 2013',
+    Runtime: '114 min',
+    Genre: 'Drama, Thriller',
+    Director: 'J.A. Bayona',
+    Writer: 'Sergio G. Sánchez, María Belón (story)',
+    Actors: 'Naomi Watts, Ewan McGregor, Tom Holland, Samuel Joslin',
+    Plot: 'The story of a tourist family in Thailand caught in the destruction and chaotic aftermath of the 2004 Indian Ocean tsunami.',
+    Language: 'English, Thai, Swedish',
+    Country: 'Spain, USA',
+    Awards: 'Nominated for 1 Oscar. Another 27 wins & 65 nominations.',
+    Poster: 'https://images-na.ssl-images-amazon.com/images/M/MV5BMjA5NTA3NzQ5Nl5BMl5BanBnXkFtZTcwOTYxNjY0OA@@._V1_SX300.jpg',
+    Ratings: [
+      {
+        Source: 'Internet Movie Database',
+        Value: '7.6/10'
+      },
+      {
+        Source: 'Rotten Tomatoes',
+        Value: '81%'
+      },
+      {
+        Source: 'Metacritic',
+        Value: '73/100'
+      }
+    ],
+    Metascore: '73',
+    imdbRating: '9.9',
+    imdbVotes: '154,557',
+    imdbID: 'tt1649419',
+    Type: 'movie',
+    tomatoMeter: 'N/A',
+    tomatoImage: 'N/A',
+    tomatoRating: 'N/A',
+    tomatoReviews: 'N/A',
+    tomatoFresh: 'N/A',
+    tomatoRotten: 'N/A',
+    tomatoConsensus: 'N/A',
+    tomatoUserMeter: 'N/A',
+    tomatoUserRating: 'N/A',
+    tomatoUserReviews: 'N/A',
+    tomatoURL: 'http://www.rottentomatoes.com/m/the_impossible_2012/',
+    DVD: '23 Apr 2013',
+    BoxOffice: '$18,996,755.00',
+    Production: 'Lionsgate Films',
+    Website: 'http://theimpossible-movie.com/',
+    Response: 'True'
+  });
+
+nock('https://api-public.guidebox.com')
+  .get('/v2/movies?offset=90&limit=4&sources=all&platform=all&include_preorders=true&include_in_theaters=true')
+  .reply(200, {
+    total_results: 73113,
+    total_returned: 4,
+    results: [{
+      id: 150431,
+      title: 'Split',
+      release_year: 2017,
+      themoviedb: 381288,
+      original_title: 'Split',
+      alternate_titles: ['Split (2017)', 'Untitled M. Night Shyamalan Project', 'Split (plus Bonus Features)', 'Split - Alternate Ending with Introduction by Writer\/Director M. Night Shyamalan'],
+      imdb: 'tt4972582',
+      pre_order: false,
+      in_theaters: true,
+      release_date: '2017-01-19',
+      rating: 'PG-13',
+      rottentomatoes: 771432610,
+      freebase: '',
+      wikipedia_id: 48764126,
+      metacritic: 'http:\/\/www.metacritic.com\/movie\/split',
+      common_sense_media: 'https:\/\/www.commonsensemedia.org\/movie-reviews\/split',
+      poster_120x171: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies_small\/150431-8385831802-198456990-2880453305-small-120x171-alt-.jpg',
+      poster_240x342: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies_medium\/150431-989443558-7370135900-4013909730-medium-240x342-alt-.jpg',
+      poster_400x570: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies\/-alt--150431-3274878981-1836863086-3055998078-large-400x570-alt-.jpg'
+    }, {
+      id: 148312,
+      title: 'Nocturnal Animals',
+      release_year: 2016,
+      themoviedb: 340666,
+      original_title: 'Nocturnal Animals',
+      alternate_titles: ['Tony and Susan'],
+      imdb: 'tt4550098',
+      pre_order: false,
+      in_theaters: false,
+      release_date: '2016-11-04',
+      rating: 'R',
+      rottentomatoes: 771444212,
+      freebase: '',
+      wikipedia_id: 46264503,
+      metacritic: 'http:\/\/www.metacritic.com\/movie\/nocturnal-animals',
+      common_sense_media: 'https:\/\/www.commonsensemedia.org\/movie-reviews\/nocturnal-animals',
+      poster_120x171: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies_small\/148312-881924606-9090312570-2148204092-small-120x171-alt-.jpg',
+      poster_240x342: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies_medium\/148312-9244624003-3027645038-2355943276-medium-240x342-alt-.jpg',
+      poster_400x570: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies\/-alt--148312-5868190648-3871662254-8756537828-large-400x570-alt-.jpg'
+    }, {
+      id: 143443,
+      title: 'Moonlight',
+      release_year: 2016,
+      themoviedb: 376867,
+      original_title: 'Moonlight',
+      alternate_titles: ['Moonlight (2016)'],
+      imdb: 'tt4975722',
+      pre_order: false,
+      in_theaters: false,
+      release_date: '2016-10-21',
+      rating: 'R',
+      rottentomatoes: 771446056,
+      freebase: '',
+      wikipedia_id: 48320630,
+      metacritic: 'http:\/\/www.metacritic.com\/movie\/moonlight-2016',
+      common_sense_media: 'https:\/\/www.commonsensemedia.org\/movie-reviews\/moonlight',
+      poster_120x171: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies_small\/143443-3667553812-1288839551-9289065841-small-120x171-alt-.jpg',
+      poster_240x342: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies_medium\/143443-2835950838-6036519771-420887424-medium-240x342-alt-.jpg',
+      poster_400x570: 'http:\/\/static-api.guidebox.com\/091716\/thumbnails_movies\/-alt--143443-5947921895-5234823059-6793443630-large-400x570-alt-.jpg'
+    }, {
+      id: 137176,
+      title: 'Suicide Squad',
+      release_year: 2016,
+      themoviedb: 297761,
+      original_title: 'Suicide Squad',
+      alternate_titles: ['Suicide Squad (2016)', 'Suicide Squad (plus bonus features)', 'Suicide Squad - Theatrical Version', 'Suicide Squad - Extended Cut', 'Suicide Squad Extended Cut + Bonus', 'Suicide Squad: Extended Cut', 'Suicide Squad: Extended Cut (2016)', 'Suicide Squad Extended Cut', 'Suicide Squad:  Extended + Theatrical Cut', 'Suicide Squad (Extended Cut)', 'Suicide Squad (PS Plus Exclusive Discount)', 'Suicide Squad: Extended Cut (Rental)'],
+      imdb: 'tt1386697',
+      pre_order: false,
+      in_theaters: false,
+      release_date: '2016-08-02',
+      rating: 'NR',
+      rottentomatoes: 771400429,
+      freebase: '',
+      wikipedia_id: 43884887,
+      metacritic: 'http:\/\/www.metacritic.com\/movie\/suicide-squad',
+      common_sense_media: 'https:\/\/www.commonsensemedia.org\/movie-reviews\/suicide-squad',
+      poster_120x171: 'http:\/\/static-api.guidebox.com\/111615\/thumbnails_movies_small\/137176-4020417575-227776249-3657965833-small-120x171-alt-.jpg',
+      poster_240x342: 'http:\/\/static-api.guidebox.com\/111615\/thumbnails_movies_medium\/137176-7158916946-4013497001-6251401533-medium-240x342-alt-.jpg',
+      poster_400x570: 'http:\/\/static-api.guidebox.com\/111615\/thumbnails_movies\/-alt--137176-1914165942-1025955799-3376706676-large-400x570-alt-.jpg'
+    }]
+  });
 // Used for recording network requests
 //nock.recorder.rec();

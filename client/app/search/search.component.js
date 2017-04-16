@@ -10,7 +10,8 @@ export class SearchComponent {
   constructor(movieService, $stateParams) {
     this._movieService = movieService;
     this._$stateParams = $stateParams;
-    this.results = [];
+    this.movies = [];
+    this.shows = [];
     this.totalResults = 0;
     this.resultsPerPage = 50;
     this.loading = true;
@@ -18,10 +19,10 @@ export class SearchComponent {
 
   $onInit() {
     if(this._$stateParams.query) {
-      this._movieService.search(this._$stateParams.query, 'movies')
+      this._movieService.search(this._$stateParams.query)
         .then(response => {
-          this.results = response.data.results;
-          this.totalResults = response.data.totalResults;
+          this.movies = response.data.movies.results;
+          this.shows = response.data.shows.results;
           this.loading = false;
         })
         .catch(err => {

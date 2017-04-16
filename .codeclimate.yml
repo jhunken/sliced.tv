@@ -1,0 +1,19 @@
+engines:
+  eslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+        javascript:
+          mass_threshold: 45
+ratings:
+  paths:
+    - client/**
+    - server/**
+exclude_paths:
+  - "**/*.spec.js"
+  - "**/*.integration.js"
+  - client/assets/
+  - nock.global.js
+  - server/config/seed.js

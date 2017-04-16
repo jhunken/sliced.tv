@@ -3,9 +3,7 @@
 let proxyquire = require('proxyquire').noPreserveCache();
 
 let searchCtrlStub = {
-  searchAll: 'searchCtrl.searchAll',
-  searchMovies: 'searchCtrl.searchMovies',
-  searchShows: 'searchCtrl.searchShows'
+  search: 'searchCtrl.search',
 };
 
 
@@ -29,24 +27,9 @@ describe('Search API Router:', function() {
   });
 
   describe('GET /api/search/:query', function() {
-    it('should route to search.controller.searchAll', function() {
+    it('should route to search.controller.search', function() {
       expect(routerStub.get
-        .withArgs('/:query', 'searchCtrl.searchAll')
-      ).to.have.been.calledOnce;
-    });
-  });
-  describe('GET /api/search/movies/:query', function() {
-    it('should route to search.controller.searchMovies', function() {
-      expect(routerStub.get
-        .withArgs('/movies/:query', 'searchCtrl.searchMovies')
-      ).to.have.been.calledOnce;
-    });
-  });
-
-  describe('GET /api/search/shows/:query', function() {
-    it('should route to search.controller.searchMovies', function() {
-      expect(routerStub.get
-        .withArgs('/shows/:query', 'searchCtrl.searchShows')
+        .withArgs('/:query', 'searchCtrl.search')
       ).to.have.been.calledOnce;
     });
   });

@@ -58,6 +58,9 @@ let all = {
   },
   winston: {
     level: process.env.LOG_LEVEL || 'warn'
+  },
+  redis: {
+    url: process.env.REDIS_URL || 'redis://127.0.0.1:6379'
   }
 };
 

@@ -64,17 +64,29 @@ describe('Service: movieService', () => {
     });
 
     it('should accept parameters', () => {
-      $httpBackend.expectGET('/api/search/movies/query')
-        .respond([{_id: 1111, guidebox_id: 2222, title: 'fake movie'}, {
-          _id: 3333,
-          guidebox_id: 4444,
-          title: 'another fake movie'
-        }]);
+      $httpBackend.expectGET('/api/search/query')
+        .respond({
+          movies: {
+            results: [
+              {_id: 1111, guidebox_id: 1111, title: 'fake movie 1111'},
+              {_id: 2222, guidebox_id: 2222, title: 'fake movie 2222'},
+            ],
+            totalResults: 2
+          },
+          shows: {
+            results: [
+              {_id: 6666, guidebox_id: 6666, title: 'fake show 6666'},
+            ],
+            totalResults: 1
+          }
+        });
 
-      movieService.search('query', 'movies')
+      movieService.search('query')
         .then(response => {
-          expect(response.data).to.be.instanceOf(Array);
-          expect(response.data.length).to.equal(2);
+          expect(response.data.movies.results).to.be.instanceOf(Array);
+          expect(response.data.movies.results.length).to.equal(2);
+          expect(response.data.shows.results).to.be.instanceOf(Array);
+          expect(response.data.shows.results.length).to.equal(1);
         });
       $httpBackend.flush();
     });

@@ -1,54 +1,55 @@
 'use strict';
 
-import config from '../../config/environment';
-import Utils from '../../components/utils';
 import Movie from '../movie/movie.model';
+import Show from '../show/show.model';
 const logger = require('../../components/utils').logger;
 
-let Guidebox = require('guidebox')(config.guidebox.apiKey);
+/***
+ * Search database for query. Returns a promise
+ * @param mediaType
+ * @param query
+ * @private
+ */
+let _createSearchPromise = function(mediaType, query) {
+  let model;
+  if(mediaType === 'movies') {
+    model = Movie;
+  }
+  if(mediaType === 'shows') {
+    model = Show;
+  }
+  return model.find({title: {$regex: new RegExp(query, 'ig')}})
+    .then(results => ({results, totalResults: results.length, mediaType}));
+};
 
-function search(req, res, type) {
-  let todo = type;
-  todo;
+/***
+ * Search database
+ * @param req
+ * @param res
+ */
+export function search(req, res) {
   let query = req.params.query;
-  return Guidebox.search.movies({query})
-    .then(searchRes => {
-      let results = searchRes.results;
-      if(results && results.length) {
-        let moviesToSave = [];
-        results = Utils.normalizeGuideboxFields(results);
-        for(let movieToSave of results) {
-          moviesToSave.push(new Movie(movieToSave));
+  let movies;
+  let shows;
+  let moviePromise = _createSearchPromise('movies', query);
+  let showPromise = _createSearchPromise('shows', query);
+  let promises = [moviePromise, showPromise];
+  Promise.all(promises)
+    .then(results => {
+      logger.log('debug', results);
+      for(let result of results) {
+        if(result.mediaType === 'movies') {
+          movies = result;
         }
-        return Movie.create(moviesToSave)
-          .then(savedMovies => res.json({results: savedMovies, totalResults: searchRes.total_results}))
-          .catch(err => {
-            logger.log('error', err);
-            return res.status(500).send();
-          });
-      } else {
-        logger.log('warn', `no search results found: ${query}`);
-        res.status(404).end();
-        return null;
+        if(result.mediaType === 'shows') {
+          shows = result;
+        }
       }
+      return res.json({movies, shows});
     })
-    .catch(e => {
-      logger.log('error', e);
-      res.status(500).send(e);
+    .catch(err => {
+      logger.log('error', err);
+      res.status(500).send(err);
       return null;
     });
-}
-
-export function searchAll(req, res) {
-  // TODO
-  // return search(req, res, 'all');
-  return res.status(500).send('not implemented');
-}
-//
-export function searchMovies(req, res) {
-  return search(req, res, 'movie');
-}
-
-export function searchShows(req, res) {
-  return search(req, res, 'show');
 }

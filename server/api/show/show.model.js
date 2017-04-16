@@ -1,6 +1,8 @@
 'use strict';
 
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
+import {registerEvents} from './show.events';
 
 let ShowSchema = new mongoose.Schema({
   guideboxId: Number,
@@ -9,6 +11,7 @@ let ShowSchema = new mongoose.Schema({
   status: String,
   type: String,
   network: String,
+  popularity: {type: Number, index: true},
   channels: [
     {
       id: Number,
@@ -100,4 +103,6 @@ let ShowSchema = new mongoose.Schema({
   artwork608X342: String
 });
 
+ShowSchema.plugin(mongoosePaginate);
+registerEvents(ShowSchema);
 export default mongoose.model('Show', ShowSchema);

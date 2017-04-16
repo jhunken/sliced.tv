@@ -5,37 +5,18 @@ import Movie from './movie.model';
 import request from 'supertest';
 
 describe('Movie API:', function() {
-  // Cleanup movies before testing
-  before(function() {
-    return Movie.remove();
-  });
-
-  // Clears movies after testing
-  after(function() {
-    return Movie.remove();
-  });
-
   describe('GET /api/movies', function() {
-    it('should respond with an array of movies', done => {
-      let movies;
+    it('should respond with a 400 if missing params', done => {
       request(app)
         .get('/api/movies')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if(err) {
-            done(err);
-          }
-          movies = res.body.results;
-          expect(movies).to.be.instanceOf(Array);
-          done();
-        });
+        .expect(400)
+        .end(done);
     });
 
     it('should respond with an array of movies using params', function(done) {
       let movies;
       request(app)
-        .get('/api/movies/all/50/10/all/all')
+        .get('/api/movies/all/10/10/all/all')
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -49,11 +30,21 @@ describe('Movie API:', function() {
         });
     });
 
-    it('should respond with a 400 when "start" param is incorrect', function(done) {
+    it('should respond with an empty array when "start" param is incorrect', function(done) {
+      let movies;
       request(app)
         .get('/api/movies/all/999999999/10/all/all')
-        .expect(400)
-        .end(done);
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if(err) {
+            done(err);
+          }
+          movies = res.body.results;
+          expect(movies).to.be.instanceOf(Array);
+          expect(movies.length).to.equal(0);
+          done();
+        });
     });
 
     it('should respond with a 400 when using invalid params', function(done) {
@@ -61,55 +52,6 @@ describe('Movie API:', function() {
         .get('/api/movies/all/invalid/invalid/invalid/invalid')
         .expect(400)
         .end(done);
-    });
-
-
-    it('should properly handle a mixture of new and previously saved movies', function(done) {
-      // Create newMovie
-      let previouslySavedMovie = new Movie({
-        guideboxID: 134422,
-        title: 'Dirty Grandpa',
-        releaseYear: 2016,
-        themoviedb: 291870,
-        originalTitle: 'Dirty Grandpa (previously saved)',
-        alternateTitles: ['Dirty Grandpa (Unrated)', 'Dirty Grandpa (Unrated Version)', 'Dirty Grandpa Unrated'],
-        imdb: 'tt1860213',
-        preOrder: false,
-        inTheaters: false,
-        releaseDate: '2016-01-21',
-        rating: 'R',
-        rottentomatoes: 771388387,
-        freebase: '',
-        wikipediaID: 0,
-        metacritic: 'http://www.metacritic.com/movie/dirty-grandpa',
-        commonSenseMedia: 'https://www.commonsensemedia.org/movie-reviews/dirty-grandpa',
-        poster120x171: 'http://static-api.guidebox.com/111615/thumbnails_movies_small/134422-6324042329-7119411346-5142547209-small-120x171-alt-.jpg',
-        poster240x342: 'http://static-api.guidebox.com/111615/thumbnails_movies_medium/134422-151683060-177236004-8937469679-medium-240x342-alt-.jpg',
-        poster400x570: 'http://static-api.guidebox.com/111615/thumbnails_movies/-alt--134422-6996994163-7736085253-8175344849-large-400x570-alt-.jpg'
-      });
-      previouslySavedMovie.save().then(function() {
-        let movies;
-        let foundPreviouslySavedMovie = false;
-        request(app)
-          .get('/api/movies/all/99/10/all/all')
-          .expect(200)
-          .expect('Content-Type', /json/)
-          .end((err, res) => {
-            if(err) {
-              done(err);
-            }
-            movies = res.body.results;
-            expect(movies).to.be.instanceOf(Array);
-            expect(movies.length).to.equal(10);
-            for(let movie of movies) {
-              if(movie.title === previouslySavedMovie.title) {
-                foundPreviouslySavedMovie = true;
-              }
-            }
-            expect(foundPreviouslySavedMovie).to.be.true;
-            done();
-          });
-      });
     });
   });
 
@@ -130,11 +72,9 @@ describe('Movie API:', function() {
       });
     });
 
-    // Clears movies after testing
-    after(function(done) {
-      return Movie.remove().then(function() {
-        done();
-      });
+    // Clears new movie after testing
+    after(function() {
+      return Movie.findByIdAndRemove(newMovie.id);
     });
 
     it('should respond with the requested movie', function(done) {
@@ -165,17 +105,6 @@ describe('Movie API:', function() {
         });
     });
 
-    it('should respond with an error if an invalid movie guideboxID is used', function(done) {
-      request(app)
-        .get('/api/movies/ABCDEFGH')
-        .expect(404)
-        .end(err => {
-          if(err) {
-            return done(err);
-          }
-          done();
-        });
-    });
   });
 })
 ;

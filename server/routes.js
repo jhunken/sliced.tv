@@ -6,19 +6,12 @@
 
 import errors from './components/errors';
 import path from 'path';
-import config from './config/environment';
-import apicache from 'apicache';
-
-let cache = apicache.options({
-  debug: config.apiCache.debug,
-  defaultDuration: config.apiCache.defaultDuration
-}).middleware;
 
 export default function(app) {
   // Insert routes below
   app.use('/api/shows', require('./api/show'));
   app.use('/api/watchlists', require('./api/watchlist'));
-  app.use('/api/search', cache(), require('./api/search'));
+  app.use('/api/search', require('./api/search'));
   app.use('/api/movies', require('./api/movie'));
   app.use('/api/users', require('./api/user'));
 

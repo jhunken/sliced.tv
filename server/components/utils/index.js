@@ -2,6 +2,8 @@
 import config from '../../config/environment';
 import Movie from '../../api/movie/movie.model';
 import Show from '../../api/show/show.model';
+// import Queue from '../../queue';
+
 const winston = require('winston');
 
 let Guidebox = require('guidebox')(config.guidebox.apiKey);
@@ -14,6 +16,17 @@ let utils = (() => {
    * @returns {*}
    */
   function normalizeGuideboxFields(guideboxMedia) {
+    /***
+     * Converts banner URL to https
+     * @param banner
+     * @param size
+     */
+    let convertBannerURLToHTTPS = function(banner, size) {
+      if(banner[size] && banner[size].url) {
+        banner[size].url = convertToHTTPS(banner[size].url);
+      }
+    };
+
     let mapFields = function(media) {
       media.guideboxId = media.id;
       Reflect.deleteProperty(media, 'id');
@@ -58,21 +71,13 @@ let utils = (() => {
         let banner;
         for(let bIdx in media.banners) {
           banner = media.banners[bIdx];
-          if(banner.small && banner.small.url) {
-            banner.small.url = convertToHTTPS(banner.small.url);
-          }
-          if(banner.medium && banner.medium.url) {
-            banner.medium.url = convertToHTTPS(banner.medium.url);
-          }
-          if(banner.large && banner.large.url) {
-            banner.large.url = convertToHTTPS(banner.large.url);
-          }
-          if(banner.xlarge && banner.xlarge.url) {
-            banner.xlarge.url = convertToHTTPS(banner.xlarge.url);
-          }
+          convertBannerURLToHTTPS(banner, 'small');
+          convertBannerURLToHTTPS(banner, 'medium');
+          convertBannerURLToHTTPS(banner, 'large');
+          convertBannerURLToHTTPS(banner, 'xlarge');
+          media.banners[bIdx] = banner;
         }
       }
-
 
       return media;
     };
@@ -89,8 +94,36 @@ let utils = (() => {
   }
 
   /***
-   * Handle media request
+   * Save given entity to database. If resolve/reject are present will use promises, otherwise will return res
+   * @param entity
+   * @param mediaType
    * @param res
+   * @param resolve
+   * @param reject
+   * @private
+   */
+  let _saveEntity = function(entity, mediaType, res, resolve, reject) {
+    return entity.save(function(err, savedMedia) {
+      if(err) {
+        if(reject) {
+          return reject(err);
+        } else {
+          return res.status(500).end();
+        }
+      } else {
+        logger.log('debug', `${mediaType} saved to db:  ${savedMedia.title}`);
+        if(resolve) {
+          return resolve(savedMedia);
+        } else {
+          return res.json(savedMedia).end();
+        }
+      }
+    });
+  };
+
+  /***
+   * Handle media request
+   * @param res express response object
    * @param mediaType 'movies' or 'shows'
    * @returns {Function}
    */
@@ -110,33 +143,19 @@ let utils = (() => {
                   guideboxMedia = normalizeGuideboxFields(guideboxMedia);
                   // copy new guideboxMedia properties to entity
                   entity = Object.assign(entity, guideboxMedia);
-                  if(!guideboxMedia.imdbRating) {
+                  if(!entity.imdbRating) {
                     // Retrieve additional omdb api info
                     return getOMDBInfo(guideboxMedia)
                       .then(updatedMedia => {
                         // copy updatedMovie properties to entity
                         entity = Object.assign(entity, updatedMedia);
                         // Save updated entity
-                        return entity.save(function(err, savedMedia) {
-                          if(err) {
-                            return res.status(500).end();
-                          } else {
-                            logger.log('debug', `${mediaType} updated to db:  ${savedMedia.title}`);
-                            return res.json(savedMedia).end();
-                          }
-                        });
+                        return _saveEntity(entity, mediaType, res);
                       });
                   } else {
                     // Retrieved guidebox info, but not omdb. Nothing else to retrieve at this point.
                     // Save updated entity
-                    return entity.save(function(err, savedMedia) {
-                      if(err) {
-                        return res.status(500).end();
-                      } else {
-                        logger.log('debug', `${mediaType} updated to db:  ${savedMedia.title}`);
-                        return res.json(savedMedia).end();
-                      }
-                    });
+                    return _saveEntity(entity, mediaType, res);
                   }
                 })
                 .catch(err => {
@@ -159,50 +178,16 @@ let utils = (() => {
     };
   }
 
-  function processGuideboxMediaResults(guideboxMediaItems, mediaType) {
-    if(guideboxMediaItems && guideboxMediaItems.results && guideboxMediaItems.results.length) {
-      let guideboxMediaItem;
-      let promises = [];
-      let guideboxIds = [];
-      let previouslySavedMediaItems = [];
-      for(let i = 0; i < guideboxMediaItems.results.length; i++) {
-        guideboxIds.push(guideboxMediaItems.results[i].guideboxId);
-      }
-      let Model;
-
-      switch (mediaType) {
-      case 'movies':
-        Model = Movie;
-        break;
-      case 'shows':
-        Model = Show;
-      }
-
-      return Model.find({
-        guideboxId: {
-          $in: guideboxIds
-        }
-      }).exec()
-        .then(entities => {
-          for(let j = 0; j < entities.length; j++) {
-            previouslySavedMediaItems.push(entities[j]);
-          }
-          // Compare the two arrays for any that haven't been saved
-          for(let k = 0; k < guideboxMediaItems.results.length; k++) {
-            guideboxMediaItem = guideboxMediaItems.results[k];
-            promises.push(compareArrays(guideboxMediaItem, previouslySavedMediaItems, mediaType));
-          }
-          return Promise.all(promises);
-        });
-    } else {
-      Promise.reject(new Error('No results from Guidebox')).then(function() {
-        // not called
-      }, function(error) {
-        logger.log('error', error); // Stacktrace
-      });
-    }
-  }
-
+  /***
+   * Use Guidebox Client
+   * @param mediaType
+   * @param offset
+   * @param limit
+   * @param sources
+   * @param platform
+   * @param includePreorders
+   * @param includeInTheaters
+   */
   function getGuideboxMedia(mediaType, offset, limit, sources, platform, includePreorders, includeInTheaters) {
     return Guidebox[mediaType].list({
       offset,
@@ -215,8 +200,22 @@ let utils = (() => {
       .then(function(res) {
         let media = res.results;
         if(media && media.length) {
+          let promises = [];
+          let mediaToSave;
           media = normalizeGuideboxFields(media);
-          return {results: media, totalResults: res.total_results};
+          for(let i = 0; i < media.length; i++) {
+            mediaToSave = media[i];
+            // capture the order it was received from Guidebox since it returns results based on popularity
+            mediaToSave.popularity = offset + i;
+            promises.push(saveMediaItem(mediaToSave, mediaType));
+          }
+          return Promise.all(promises)
+            .then(savedMedia => ({results: savedMedia, totalResults: res.total_results}))
+            .catch(err => {
+              logger.log('error', err);
+              return {results: media, totalResults: res.total_results};
+            });
+          // return {results: media, totalResults: res.total_results};
         } else {
           return null;
         }
@@ -253,8 +252,8 @@ let utils = (() => {
    *
    * @param mediaItem
    */
-  function getOMDBInfo(mediaItem) {
-    return getContent(`${config.omdbapi.baseURL}i=${mediaItem.imdbId}&tomatoes=true`)
+  function getOMDBInfo(mediaItem, mediaType) {
+    return getContent(`${config.omdbapi.baseURL}i=${mediaItem.imdbId}&tomatoes=true&type=${mediaType === 'movies' ? 'movies' : 'series'}`)
       .then(omdbBody => {
         let parsedOMDBMediaItem = JSON.parse(omdbBody);
         mediaItem.imdbRating = parsedOMDBMediaItem.imdbRating;
@@ -270,6 +269,7 @@ let utils = (() => {
         mediaItem.tomatoUserRating = parsedOMDBMediaItem.tomatoUserRating;
         mediaItem.tomatoUserReviews = parsedOMDBMediaItem.tomatoUserReviews;
         mediaItem.tomatoUrl = parsedOMDBMediaItem.tomatoURL;
+        mediaItem.omdbUpdated = new Date();
         logger.log('debug', 'got omdb info for ', mediaItem.title);
         return mediaItem;
       })
@@ -282,7 +282,6 @@ let utils = (() => {
   function saveMediaItem(mediaItemToSave, mediaType) {
     return new Promise(function(resolve, reject) {
       let Model;
-
       switch (mediaType) {
       case 'movies':
         Model = Movie;
@@ -295,15 +294,7 @@ let utils = (() => {
           if(!entity) {
             // Save new
             let mediaModel = new Model(mediaItemToSave);
-
-            return mediaModel.save(function(err, savedMediaItem) {
-              if(err) {
-                return reject(err);
-              } else {
-                logger.log('debug', `${mediaType} saved to db: ${savedMediaItem.title}`);
-                return resolve(savedMediaItem);
-              }
-            });
+            return _saveEntity(mediaModel, mediaType, null, resolve, reject);
           } else {
             // Update
             entity.imdbRating = mediaItemToSave.imdbRating;
@@ -319,14 +310,8 @@ let utils = (() => {
             entity.tomatoUserRating = mediaItemToSave.tomatoUserRating;
             entity.tomatoUserReviews = mediaItemToSave.tomatoUserReviews;
             entity.tomatoUrl = mediaItemToSave.tomatoUrl;
-            return entity.save(function(err, savedMediaItem) {
-              if(err) {
-                return reject(err);
-              } else {
-                logger.log('debug', `${mediaType} saved to db: ${savedMediaItem.title}`);
-                return resolve(savedMediaItem);
-              }
-            });
+            entity.omdbUpdated = mediaItemToSave.omdbUpdated;
+            return _saveEntity(entity, mediaType, null, resolve, reject);
           }
         })
         .catch(function(err) {
@@ -336,33 +321,8 @@ let utils = (() => {
     });
   }
 
-
-  /***
-   * Checks if given media is in the savedMedia array. If so just returns the saved entity. Otherwise returns a promise
-   * that will retrieve the additional info from the other api providers.
-   * @param guideboxMedia
-   * @param savedMedia
-   * @param mediaType 'movies' or 'shows'
-   * @returns {Promise<R>|Promise<void>}
-   */
-  function compareArrays(guideboxMedia, savedMedia, mediaType) {
-    for(let element of savedMedia) {
-      if(guideboxMedia.guideboxId === element.guideboxId) {
-        return Promise.resolve(element);
-      }
-    }
-    return getOMDBInfo(guideboxMedia, mediaType)
-      .then(function(omdbMedia) {
-        if(omdbMedia) {
-          return saveMediaItem(omdbMedia, mediaType);
-        } else {
-          return guideboxMedia;
-        }
-      });
-  }
-
   function convertToHTTPS(url) {
-    if(url.match('^http://')) {
+    if(typeof url === 'string' && url.match('^http://')) {
       return url.replace(/^http:\/\//i, 'https://');
     }
     return url;
@@ -383,15 +343,14 @@ let utils = (() => {
       })
     ]
   });
-  winston.handleExceptions(new winston.transports.Console({ colorize: true, json: true }));
+  winston.handleExceptions(new winston.transports.Console({colorize: true, json: true}));
 
   return {
     normalizeGuideboxFields,
     getGuideboxMedia,
     getOMDBInfo,
     handleMediaRequest,
-    processGuideboxMediaResults,
-    compareArrays,
+    saveMediaItem,
     convertToHTTPS,
     logger
   };

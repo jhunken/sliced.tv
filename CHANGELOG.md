@@ -1,3 +1,13 @@
+<a name="0.0.33"></a>
+## [0.0.33](https://github.com/jhunken/sliced.tv/compare/0.0.32...0.0.33) (2017-04-16)
+
+
+### Features
+
+* **search:** search now includes shows ([0a5aaf7](https://github.com/jhunken/sliced.tv/commit/0a5aaf7))
+
+
+
 <a name="0.0.32"></a>
 ## [0.0.32](https://github.com/jhunken/sliced.tv/compare/0.0.31...0.0.32) (2017-03-18)
 

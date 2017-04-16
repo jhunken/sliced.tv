@@ -8,10 +8,8 @@ module.exports = {
   mongo: {
     uri: 'mongodb://localhost/slicedtv-test'
   },
-  apiCache: {
-    debug: true,
-    defaultDuration: 5000
-  },
+  // Seed database on startup
+  seedDB: true,
   sequelize: {
     uri: 'sqlite://',
     options: {
