@@ -1,32 +1,35 @@
 'use strict';
 
 import Movie from '../movie/movie.model';
+import Show from '../show/show.model';
 const logger = require('../../components/utils').logger;
 
 
-function search(req, res, type) {
-  let todo = type;
-  todo;
+export function search(req, res) {
   let query = req.params.query;
-  return Movie.find({title: {$regex: new RegExp(query, 'ig')}})
-    .then(results => res.json({results, totalResults: results.length}))
-    .catch(e => {
-      logger.log('error', e);
-      res.status(500).send(e);
+  let movies;
+  let shows;
+  let moviePromise = Movie.find({title: {$regex: new RegExp(query, 'ig')}})
+    .then(results => ({results, totalResults: results.length, mediaType: 'movies'}));
+  let showPromise = Show.find({title: {$regex: new RegExp(query, 'ig')}})
+    .then(results => ({results, totalResults: results.length, mediaType: 'shows'}));
+  let promises = [moviePromise, showPromise];
+  Promise.all(promises)
+    .then(results => {
+      logger.log('debug', results);
+      for(let result of results) {
+        if(result.mediaType === 'movies') {
+          movies = result;
+        }
+        if(result.mediaType === 'shows') {
+          shows = result;
+        }
+      }
+      return res.json({movies, shows});
+    })
+    .catch(err => {
+      logger.log('error', err);
+      res.status(500).send(err);
       return null;
     });
-}
-
-export function searchAll(req, res) {
-  // TODO
-  // return search(req, res, 'all');
-  return res.status(500).send('not implemented');
-}
-//
-export function searchMovies(req, res) {
-  return search(req, res, 'movie');
-}
-
-export function searchShows(req, res) {
-  return search(req, res, 'show');
 }
