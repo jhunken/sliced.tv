@@ -2,12 +2,15 @@
     "parser": "babel-eslint",
     "env": {
         "es6": true,
-        "mocha" :true
+        "mocha": true,
+        "jasmine": true
     },
     "globals": {},
     "plugins": [
-      "mocha"
+      "mocha",
+      "jasmine"
     ],
+    "extends": "plugin:jasmine/recommended",
     "rules": {
         //Possible Errors
         "comma-dangle": 0,                                          //disallow or enforce trailing commas

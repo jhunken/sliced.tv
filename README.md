@@ -1,5 +1,5 @@
 [![CircleCI](https://circleci.com/gh/jhunken/sliced.tv.svg?style=svg&circle-token=b8f3d32891a3cd47d8e77921057a7e3399ac2255)](https://circleci.com/gh/jhunken/sliced.tv)[![codecov](https://codecov.io/gh/jhunken/sliced.tv/branch/develop/graph/badge.svg)](https://codecov.io/gh/jhunken/sliced.tv)[![Code Climate](https://codeclimate.com/github/jhunken/sliced.tv/badges/gpa.svg)](https://codeclimate.com/github/jhunken/sliced.tv)
-# easier-tv
+# sliced-tv
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/jhunken/sliced.tv.svg)](https://greenkeeper.io/)
 
@@ -8,7 +8,7 @@
 ### Prerequisites
 
 - [Git](https://git-scm.com/)
-- [Node.js and npm](nodejs.org) Node ^4.4.6, npm ^2.15.5
+- [Node.js and npm](nodejs.org)
 - [Gulp](http://gulpjs.com/) (`npm install --global gulp`)
 - [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
 
