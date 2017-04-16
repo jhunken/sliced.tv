@@ -3719,5 +3719,59 @@ nock('https://www.omdbapi.com:443', {encodedQueryParams: true})
     'CF-RAY',
     '3081ecb80cfa28b8-SJC']);
 
+nock('https://www.omdbapi.com')
+  .get('/?i=tt1649419&tomatoes=true&type=movies')
+  .reply(200, {
+    Title: 'Mock Movie',
+    Year: '2012',
+    Rated: 'PG-13',
+    Released: '04 Jan 2013',
+    Runtime: '114 min',
+    Genre: 'Drama, Thriller',
+    Director: 'J.A. Bayona',
+    Writer: 'Sergio G. Sánchez, María Belón (story)',
+    Actors: 'Naomi Watts, Ewan McGregor, Tom Holland, Samuel Joslin',
+    Plot: 'The story of a tourist family in Thailand caught in the destruction and chaotic aftermath of the 2004 Indian Ocean tsunami.',
+    Language: 'English, Thai, Swedish',
+    Country: 'Spain, USA',
+    Awards: 'Nominated for 1 Oscar. Another 27 wins & 65 nominations.',
+    Poster: 'https://images-na.ssl-images-amazon.com/images/M/MV5BMjA5NTA3NzQ5Nl5BMl5BanBnXkFtZTcwOTYxNjY0OA@@._V1_SX300.jpg',
+    Ratings: [
+      {
+        Source: 'Internet Movie Database',
+        Value: '7.6/10'
+      },
+      {
+        Source: 'Rotten Tomatoes',
+        Value: '81%'
+      },
+      {
+        Source: 'Metacritic',
+        Value: '73/100'
+      }
+    ],
+    Metascore: '73',
+    imdbRating: '9.9',
+    imdbVotes: '154,557',
+    imdbID: 'tt1649419',
+    Type: 'movie',
+    tomatoMeter: 'N/A',
+    tomatoImage: 'N/A',
+    tomatoRating: 'N/A',
+    tomatoReviews: 'N/A',
+    tomatoFresh: 'N/A',
+    tomatoRotten: 'N/A',
+    tomatoConsensus: 'N/A',
+    tomatoUserMeter: 'N/A',
+    tomatoUserRating: 'N/A',
+    tomatoUserReviews: 'N/A',
+    tomatoURL: 'http://www.rottentomatoes.com/m/the_impossible_2012/',
+    DVD: '23 Apr 2013',
+    BoxOffice: '$18,996,755.00',
+    Production: 'Lionsgate Films',
+    Website: 'http://theimpossible-movie.com/',
+    Response: 'True'
+  });
+
 // Used for recording network requests
 //nock.recorder.rec();

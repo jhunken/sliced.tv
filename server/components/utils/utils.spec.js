@@ -282,7 +282,7 @@ describe('Utils: ', () => {
   });
 
   describe('logger', () => {
-    it('should have a logger object', () => {
+    it('should be defined', () => {
       expect(Utils.logger).to.respondTo('log');
       let logMsg = Utils.logger.log('error', 'foo');
       expect(logMsg).to.not.be.undefined;
@@ -303,5 +303,17 @@ describe('Utils: ', () => {
       url = '';
       expect(Utils.convertToHTTPS(url)).to.equal('');
     });
+  });
+
+  describe('getOMDBInfo', () => {
+    it('should make a GET request to OMDB', () => Utils.getOMDBInfo({
+      title: 'The Impossible',
+      release_year: 2012,
+      themoviedb: 80278,
+      imdbId: 'tt1649419'
+    }, 'movies')
+      .then(result => {
+        expect(result.imdbRating).to.equal('9.9');
+      }));
   });
 });
