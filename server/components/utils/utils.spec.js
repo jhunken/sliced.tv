@@ -280,4 +280,28 @@ describe('Utils: ', () => {
       expect(normalized.banners[2]).to.eql({foo: {}});
     });
   });
+
+  describe('logger', () => {
+    it('should have a logger object', () => {
+      expect(Utils.logger).to.respondTo('log');
+      let logMsg = Utils.logger.log('error', 'foo');
+      expect(logMsg).to.not.be.undefined;
+    });
+  });
+
+  describe('convertToHTTPS', () => {
+    it('should convert a URL to https', () => {
+      let url = 'http://foo.bar';
+      expect(Utils.convertToHTTPS(url)).to.equal('https://foo.bar');
+
+      url = {};
+      expect(Utils.convertToHTTPS(url)).to.eql({});
+
+      url = 'http://fooo/https.com';
+      expect(Utils.convertToHTTPS(url)).to.equal('https://fooo/https.com');
+
+      url = '';
+      expect(Utils.convertToHTTPS(url)).to.equal('');
+    });
+  });
 });

@@ -313,7 +313,7 @@ let utils = (() => {
   }
 
   function convertToHTTPS(url) {
-    if(url.match('^http://')) {
+    if(typeof url === 'string' && url.match('^http://')) {
       return url.replace(/^http:\/\//i, 'https://');
     }
     return url;
