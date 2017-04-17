@@ -1,3 +1,18 @@
+<a name="0.0.34"></a>
+## [0.0.34](https://github.com/jhunken/sliced.tv/compare/0.0.33...0.0.34) (2017-04-17)
+
+
+### Bug Fixes
+
+* add kue cleanup scripts to prevent OOM issues ([8acacf2](https://github.com/jhunken/sliced.tv/commit/8acacf2))
+
+
+### Features
+
+* **search:** sort results by popularity ([b455f52](https://github.com/jhunken/sliced.tv/commit/b455f52))
+
+
+
 <a name="0.0.33"></a>
 ## [0.0.33](https://github.com/jhunken/sliced.tv/compare/0.0.32...0.0.33) (2017-04-16)
 
