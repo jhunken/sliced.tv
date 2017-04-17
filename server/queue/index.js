@@ -8,7 +8,6 @@ let Queue = (function(logger) {
     redis: config.redis.url
   });
   const defaultDelay = 60 * 60000 * 4; // 4 hours
-  //const defaultDelay = 10 * 60000;
   const limit = 250;
   /*
    Currently will run sequentially, first running through all 'movies', then 'shows'. When movies completes, it will set another
@@ -53,6 +52,7 @@ let Queue = (function(logger) {
       .attempts(10)
       .backoff({type: 'exponential'})
       .save();
+    return job;
   };
 
   let process = () => {
@@ -73,7 +73,8 @@ let Queue = (function(logger) {
             includeInTheaters: true,
             delay: 100
           }, function() {
-            console.log('done');
+            // Done with Movies and Shows
+            logger.log('debug', `${j.id} done`);
           });
           getGuideboxMediaJob({
             mediaType: 'movies',
@@ -85,7 +86,7 @@ let Queue = (function(logger) {
             includeInTheaters: true,
             delay: new Date(Date.now() + defaultDelay)
           }, function() {
-            console.log('done');
+            logger.log('debug', `${j.id} done`);
           });
         }
       } else {
@@ -131,15 +132,13 @@ let Queue = (function(logger) {
     });
   };
 
-  let addOMDBJob = (mediaItem, mediaType) => {
-    getOMDBRatingsJob({
-      mediaItem,
-      mediaType,
-      delay: 250
-    }, function() {
-      logger.log('debug', 'done retrieving OMDB Ratings for %s', mediaItem);
-    });
-  };
+  let addOMDBJob = (mediaItem, mediaType) => getOMDBRatingsJob({
+    mediaItem,
+    mediaType,
+    delay: 250
+  }, function() {
+    logger.log('debug', 'done retrieving OMDB Ratings for %s', mediaItem);
+  });
 
   // Check if nothing is queued up, and if not start up an initial job
   // TODO: There might be a small chance one of the jobs with a small delay throws this off

@@ -1,7 +1,7 @@
 <div class="container">
   <h2>Movies</h2>
   <div class="row">
-    <div ng-repeat="media in searchCtrl.movies" class="col-md-4">
+    <div ng-repeat="media in searchCtrl.movies" class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
       <media-card-directive media-type="movie"></media-card-directive>
     </div>
     <p ng-if="searchCtrl.loading">Loading...</p>
@@ -9,7 +9,7 @@
   </div>
   <h2>Shows</h2>
   <div class="row">
-    <div ng-repeat="media in searchCtrl.shows" class="col-md-4">
+    <div ng-repeat="media in searchCtrl.shows" class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
       <media-card-directive media-type="show"></media-card-directive>
     </div>
     <p ng-if="searchCtrl.loading">Loading...</p>

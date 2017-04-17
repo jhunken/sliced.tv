@@ -3,6 +3,15 @@ import kue from 'kue';
 import kueUIExpress from 'kue-ui-express';
 import Queue from './index';
 import config from '../config/environment';
+import {KueCleanup} from './cleanup';
+
+// Kue Cleanup
+// const CLEANUP_MAX_COMPLETE_TIME = 24 * 60 * 60 * 1000; // 1 day
+const CLEANUP_MAX_COMPLETE_TIME = 1 * 60 * 1000; // 1 mins
+const PERIODIC_CLEANUP_INTERVAL = 1 * 60 * 1000; // 5 mins
+
+let kueCleanup = new KueCleanup({redis: config.redis.url, cleanupMaxCompleteTime: CLEANUP_MAX_COMPLETE_TIME});
+kueCleanup.periodicCleanup(PERIODIC_CLEANUP_INTERVAL);
 
 // Kue
 export default function(app) {

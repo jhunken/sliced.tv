@@ -2,11 +2,9 @@
 
   <div class="row">
     <div dir-paginate="media in moviesCtrl.movies | itemsPerPage: moviesCtrl.moviesPerPage" total-items="moviesCtrl.totalMovies"
-         current-page="moviesCtrl.pagination.current" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+         current-page="moviesCtrl.pagination.current" class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
       <media-card-directive media-type="movie"></media-card-directive>
     </div>
-
-
   </div>
   <div class="text-center">
     <dir-pagination-controls on-page-change="moviesCtrl.pageChanged(newPageNumber)"></dir-pagination-controls>
