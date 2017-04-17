@@ -8,23 +8,16 @@ const CLEANUP_MAX_ACTIVE_TIME = 5 * 60 * 1000; // 5 minutes
 const CLEANUP_MAX_COMPLETE_TIME = 5 * 24 * 60 * 60 * 1000; // 5 days
 const CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-let KueCleanup = {
-  /**
-   * Initialization method
-   * @author Dariel Noel <darielnoel@gmail.com>
-   * @since  2014-09-29
-   * @param  {object}   config Config object
-   * @return {undefined}
-   */
-  init(config) {
-    let instance = KueCleanup;
+export class KueCleanup {
+  constructor(config) {
+    this.intervalHandle = {};
 
-    instance.config = config || {};
+    this.config = config || {};
 
-    jobs = kue.createQueue(instance.config);
+    jobs = kue.createQueue(this.config);
 
-    instance.setupJobs(instance.config);
-  },
+    KueCleanup.setupJobs(this.config);
+  }
 
   /**
    * Basic configurations
@@ -33,7 +26,7 @@ let KueCleanup = {
    * @param  {object}   config Basic config
    * @return {undefined}
    */
-  setupJobs(config) {
+  static setupJobs(config) {
     jobs.maxFailedTime = config.maxFailedTime
       || CLEANUP_MAX_FAILED_TIME;
     jobs.cleanupMaxActiveTime = config.cleanupMaxActiveTime
@@ -42,7 +35,7 @@ let KueCleanup = {
       || CLEANUP_MAX_COMPLETE_TIME;
     jobs.cleanupInterval = config.cleanupInterval
       || CLEANUP_INTERVAL;
-  },
+  }
 
   /**
    * Clear all Kue jobs
@@ -53,7 +46,7 @@ let KueCleanup = {
    */
   cleanupAll(callback) {
     performCleanup(callback);
-  },
+  }
 
   /**
    * Clear al jobs periodically
@@ -62,11 +55,10 @@ let KueCleanup = {
    * @param  {[type]}   cleanupInterval The interval amount
    */
   periodicCleanup(cleanupInterval) {
-    let instance = KueCleanup;
     let currentCleanupInterval = cleanupInterval || jobs.cleanupInterval;
-    instance.stopCleanup();
-    instance.intervalHandle = setInterval(performCleanup, currentCleanupInterval);
-  },
+    this.stopCleanup();
+    this.intervalHandle = setInterval(performCleanup, currentCleanupInterval);
+  }
 
   /**
    * Stop de periodically cleanup
@@ -74,23 +66,9 @@ let KueCleanup = {
    * @since  2014-09-29
    */
   stopCleanup() {
-    let instance = KueCleanup;
-    clearInterval(instance.intervalHandle);
-  },
-
-  config: {},
-
-  intervalHandle: {}
-
-};
-
-
-module.exports = {
-  init: KueCleanup.init,
-  cleanupAll: KueCleanup.cleanupAll,
-  periodicCleanup: KueCleanup.periodicCleanup,
-  stopCleanup: KueCleanup.stopCleanup
-};
+    clearInterval(this.intervalHandle);
+  }
+}
 
 /**
  * Simple log action
@@ -98,7 +76,7 @@ module.exports = {
  * @since  2014-09-29
  * @param  {string}   message Message to print
  */
-function queueActionLog(message) {
+function QueueActionLog(message) {
   this.message = message || 'queueActionLog :: got an action for job id(%s)';
 
   this.apply = function(job) {
@@ -111,11 +89,8 @@ function queueActionLog(message) {
  * Simple log action
  * @author Dariel Noel <darielnoel@gmail.com>
  * @since  2014-09-29
- * @param  {int}   age
  */
-function queueActionRemove(age) {
-  this.age = age;
-
+function QueueActionRemove() {
   this.apply = function(job) {
     job.remove(noop);
     return true;
@@ -128,7 +103,7 @@ function queueActionRemove(age) {
  * @since  2014-09-29
  * @param  {[type]}   age Milleseconds
  */
-function queueFilterAge(age) {
+function QueueFilterAge(age) {
   this.now = new Date();
   this.age = age;
 
@@ -214,10 +189,10 @@ function clearState(state, ki, callback) {
     } else {
       queueIterator(
         ids,
-        [new queueFilterAge(jobs.cleanupMaxActiveTime)],
+        [new QueueFilterAge(jobs.cleanupMaxActiveTime)],
         [
-          new queueActionLog('Going to remove job id(%s) for being active too long'),
-          new queueActionRemove()
+          new QueueActionLog('Going to remove job id(%s) for being active too long'),
+          new QueueActionRemove()
         ],
         function() {
           callback();
