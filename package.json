@@ -146,7 +146,9 @@
     "npm": "^3.10.10"
   },
   "scripts": {
-    "test": "gulp test && NODE_ENV=test ./node_modules/.bin/nyc --reporter=lcov --reporter=html --report-dir=coverage/server/integration -x 'server/**/*.integration.js' ./node_modules/.bin/_mocha -- mocha.conf.js 'server/**/*.integration.js' 'mocha.global.js' && NODE_ENV=test ./node_modules/.bin/nyc --reporter=lcov --reporter=html --report-dir=coverage/server/unit -x 'server/**/*.spec.js' ./node_modules/.bin/_mocha -- mocha.conf.js 'server/**/*.spec.js' 'mocha.global.js'",
+    "test": "gulp test && npm run test-integration && npm run test-unit",
+    "test-integration": "./scripts/run-server-integration-test.sh",
+    "test-unit": "./scripts/run-server-unit-test.sh",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "postinstall": "gulp build",
     "start": "./node_modules/.bin/babel-node dist/server",
