@@ -18,7 +18,7 @@ let _createSearchPromise = function(mediaType, query) {
   if(mediaType === 'shows') {
     model = Show;
   }
-  return model.find({title: {$regex: new RegExp(query, 'ig')}})
+  return model.find({title: {$regex: new RegExp(query, 'ig')}}).sort({popularity: 1})
     .then(results => ({results, totalResults: results.length, mediaType}));
 };
 
