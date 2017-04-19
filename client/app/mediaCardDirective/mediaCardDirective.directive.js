@@ -2,7 +2,7 @@
 import angular from 'angular';
 
 export default angular.module('slicedTvApp.mediaCardDirective', [])
-  .directive('mediaCardDirective', function(watchlistService, $http, $state) {
+  .directive('mediaCardDirective', function(watchlistService, $http, $state, Notification) {
     'ngInject';
     return {
       template: require('./mediaCardDirective.html'),
@@ -19,11 +19,20 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
             watchlistService.get()
               .then(watchlistResponse => {
                 let watchlists = watchlistResponse.data;
-                let mediaType = attributes.mediaType + 's';
-                // TODO: This needs to be more thoughtful than assuming the watchlist we want to add to is the first index the
-                // array.
+                let mediaType = `${attributes.mediaType}s`;
                 let watchlist = watchlists[0];
-                watchlistService.add(watchlist._id, mediaID, mediaType);
+                watchlistService.add(watchlist._id, mediaID, mediaType)
+                  .then(res => {
+                    if(res.status === 409) {
+                      Notification.error(`${scope.media.title} already in your watchlist`);
+                    } else if(res.status > 299) {
+                      Notification.error(JSON.stringify(res.statusText));
+                    } else {
+                      Notification.primary(`${scope.media.title} added to watchlist`);
+                    }
+                  });
+              }, function(err) {
+                Notification.error(JSON.stringify(err));
               });
           } else {
             console.error('No id provided');
