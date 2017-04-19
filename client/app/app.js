@@ -2,6 +2,7 @@
 
 import angular from 'angular';
 import 'angular-utils-pagination';
+import 'angular-ui-notification';
 // import ngAnimate from 'angular-animate';
 import ngCookies from 'angular-cookies';
 import ngResource from 'angular-resource';
@@ -10,9 +11,6 @@ import 'angular-socket-io';
 
 import uiRouter from 'angular-ui-router';
 import uiBootstrap from 'angular-ui-bootstrap';
-// import ngMessages from 'angular-messages';
-// import ngValidationMatch from 'angular-validation-match';
-
 
 import {
   routeConfig
@@ -43,7 +41,7 @@ angular.module('slicedTvApp', [
   ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar,
   footer, search, movieService, movie, constants, socket, util, 'angularUtils.directives.dirPagination',
   WatchlistComponent, watchlistService, MediaCardDirective, AngularLoadingBar, MoviesComponent, ShowsComponent,
-  ShowComponent
+  ShowComponent, 'ui-notification'
 ])
   .config(routeConfig)
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
