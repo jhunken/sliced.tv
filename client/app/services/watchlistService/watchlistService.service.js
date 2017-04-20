@@ -1,23 +1,29 @@
 'use strict';
 
-let _handleResponse = function(res) {
-  return res;
-};
+function watchlistService($http, $q) {
+  let _handleResponse = function(res) {
+    return res;
+  };
 
-let _handleError = function(err) {
-  console.error(err);
-  return err;
-};
+  let _handleError = function(err) {
+    console.error(err);
+    return $q.reject(err);
+  };
 
-function watchlistService($http) {
   let get = function() {
     return $http.get('/api/watchlists/')
       .then(_handleResponse, _handleError);
   };
 
-  let add = function(watchlistID, mediaID, mediaType) {
-    return $http.patch(`/api/watchlists/${watchlistID}/${mediaType}/${mediaID}`)
-      .then(_handleResponse, _handleError);
+  let add = function(media, mediaType) {
+    // get watchlist
+    return get()
+      .then(watchlistResponse => {
+        let watchlists = watchlistResponse.data;
+        let watchlist = watchlists[0];
+        return $http.patch(`/api/watchlists/${watchlist._id}/${mediaType}/${media._id}`)
+          .then(_handleResponse, _handleError);
+      }, _handleError);
   };
 
   let removeMedia = function(watchlistID, mediaID, mediaType) {

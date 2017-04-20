@@ -5,36 +5,33 @@ import routes from './show.routes';
 
 export class ShowComponent {
   /*@ngInject*/
-  constructor($http, $stateParams, watchlistService) {
+  constructor($http, $stateParams, watchlistService, Notification) {
     this.$http = $http;
     this.$stateParams = $stateParams;
     this.watchlistService = watchlistService;
+    this.Notification = Notification;
   }
 
   $onInit() {
     this.$http.get(`/api/shows/${this.$stateParams.id}`)
       .then(response => {
         this.show = response.data;
-      })
-      .catch(err => {
-        console.error(err);
+      }, err => {
+        this.Notification.error(err.statusText || err.status.toString());
       });
   }
 
-  addToWatchlist(mediaID) {
-    if(mediaID) {
-      // get watchlist
-      this.watchlistService.get()
-        .then(watchlistResponse => {
-          let watchlists = watchlistResponse.data;
-          let mediaType = 'shows';
-          // TODO: This needs to be more thoughtful than assuming the watchlist we want to add to is the first index the
-          // array.
-          let watchlist = watchlists[0];
-          this.watchlistService.add(watchlist._id, mediaID, mediaType);
+  addToWatchlist(media) {
+    if(media) {
+      this.watchlistService.add(media, 'shows')
+        .then(() => {
+          this.Notification.primary(`${this.show.title} added to watchlist`);
+        }, err => {
+          this.Notification.error(err.statusText || err.status.toString());
         });
     } else {
-      console.error('No id provided');
+      this.Notification.error('An unexpected error occurred.');
+      console.error('shows.addToWatchlist: missing media');
     }
   }
 }
