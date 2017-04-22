@@ -2,12 +2,13 @@
 
 import show from './show.component';
 import watchlistService from '../services/watchlistService/watchlistService.service';
-
+import 'angular-ui-notification';
 
 describe('Component: ShowComponent', function() {
   beforeEach(angular.mock.module(show));
   beforeEach(angular.mock.module(watchlistService));
   beforeEach(angular.mock.module('stateMock'));
+  beforeEach(angular.mock.module('ui-notification'));
 
   let scope;
   let showComponent;
@@ -15,7 +16,7 @@ describe('Component: ShowComponent', function() {
   let stateparams;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, watchlistService) {
+  beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, watchlistService, Notification) {
     $httpBackend = _$httpBackend_;
     stateparams = {id: 12345};
     $httpBackend.expectGET('/api/shows/12345')
@@ -25,7 +26,8 @@ describe('Component: ShowComponent', function() {
     showComponent = $componentController('show', {
       $http,
       $scope: scope,
-      $stateParams: stateparams
+      $stateParams: stateparams,
+      Notification
     });
   }));
 

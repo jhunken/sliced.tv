@@ -20,7 +20,7 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
                 Notification.primary(`${scope.media.title} added to watchlist`);
               }, err => {
                 console.error(err);
-                Notification.error(err.statusText || err.status.toString());
+                Notification.error(err.statusText || err.status);
               });
           } else {
             Notification.error('An unexpected error occurred.');

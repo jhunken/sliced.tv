@@ -8,6 +8,7 @@ describe('Component: MoviesComponent', () => {
   beforeEach(angular.mock.module(movieService));
   beforeEach(angular.mock.module('stateMock'));
   beforeEach(angular.mock.module('socketMock'));
+  beforeEach(angular.mock.module('ui-notification'));
 
   let scope;
   let moviesComponent;
@@ -105,7 +106,7 @@ describe('Component: MoviesComponent', () => {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, $state,
-                             socket, movieService) {
+                             socket, movieService, Notification) {
     $httpBackend = _$httpBackend_;
     scope = $rootScope.$new();
     state = $state;
@@ -130,10 +131,10 @@ describe('Component: MoviesComponent', () => {
   it('should attach a list of movies to the controller', () => {
     $httpBackend.expectGET('/api/movies/all/0/20/all/all')
       .respond(mockMoviesPg1);
-    state.expectTransitionTo('main');
+    state.expectTransitionTo('movies');
     moviesComponent.$onInit();
     $httpBackend.flush();
-    state.expectTransitionTo('main/1');
+    state.expectTransitionTo('movies/1');
     expect(moviesComponent.movies).to.have.lengthOf(3);
     expect(moviesComponent.pagination.current).to.equal(1);
   });
