@@ -22,17 +22,17 @@ function movieService($http, $q) {
   let _getPlatform = function(platform) {
     return platform ? platform : 'all';
   };
-
-  let movies = function(start, limit, sources, platform) {
-    let mediaType = 'movies';
+  let _getMedia = function(mediaType, start, limit, sources, platform) {
     return $http.get(`/api/${mediaType}/all/${_getStart(start)}/${_getLimit(limit)}/${_getSources(sources)}/${_getPlatform(platform)}`)
       .then(_handleResponse, _handleError);
   };
 
+  let movies = function(start, limit, sources, platform) {
+    return _getMedia('movies', start, limit, sources, platform);
+  };
+
   let shows = function(start, limit, sources, platform) {
-    let mediaType = 'shows';
-    return $http.get(`/api/${mediaType}/all/${_getStart(start)}/${_getLimit(limit)}/${_getSources(sources)}/${_getPlatform(platform)}`)
-      .then(_handleResponse, _handleError);
+    return _getMedia('shows', start, limit, sources, platform);
   };
 
   let search = function(query) {
