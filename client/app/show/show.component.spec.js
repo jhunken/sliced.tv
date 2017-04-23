@@ -3,6 +3,8 @@
 import show from './show.component';
 import watchlistService from '../services/watchlistService/watchlistService.service';
 import 'angular-ui-notification';
+import sinon from 'sinon';
+
 
 describe('Component: ShowComponent', function() {
   beforeEach(angular.mock.module(show));
@@ -31,10 +33,29 @@ describe('Component: ShowComponent', function() {
     });
   }));
 
+  // Clean up spies
+  after(function() {
+    showComponent.Notification.error.restore();
+  });
+
   it('should attach a show to the controller', function() {
     showComponent.$onInit();
     $httpBackend.flush();
     expect(showComponent.show.title)
       .to.equal('fake show');
+  });
+
+  it('should add an item to the watchlist', function() {
+    sinon.spy(showComponent.Notification, 'error');
+    showComponent.addToWatchlist(12345);
+    scope.$apply();
+    expect(showComponent.Notification.error).calledOnce;
+  });
+
+  it('should notify the user if media id is missing', function() {
+    sinon.spy(showComponent.Notification, 'error');
+    showComponent.addToWatchlist();
+    scope.$apply();
+    expect(showComponent.Notification.error).calledWith('An unexpected error occurred.');
   });
 });

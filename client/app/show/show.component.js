@@ -17,7 +17,7 @@ export class ShowComponent {
       .then(response => {
         this.show = response.data;
       }, err => {
-        this.Notification.error(err.statusText || err.status.toString());
+        this.Notification.error(err.statusText || err.status);
       });
   }
 
@@ -27,7 +27,7 @@ export class ShowComponent {
         .then(() => {
           this.Notification.primary(`${this.show.title} added to watchlist`);
         }, err => {
-          this.Notification.error(err.statusText || err.status.toString());
+          this.Notification.error(err.statusText || err.status);
         });
     } else {
       this.Notification.error('An unexpected error occurred.');
