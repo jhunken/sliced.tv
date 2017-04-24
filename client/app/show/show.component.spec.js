@@ -36,7 +36,6 @@ describe('Component: ShowComponent', function() {
   // Clean up spies
   after(function() {
     showComponent.Notification.error.restore();
-    showComponent.watchlistService.add.restore();
   });
 
   it('should attach a show to the controller', function() {

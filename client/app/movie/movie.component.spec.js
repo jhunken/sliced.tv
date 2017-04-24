@@ -36,7 +36,6 @@ describe('Component: MovieComponent', function() {
   // Clean up spies
   after(function() {
     movieComponent.Notification.error.restore();
-    movieComponent.watchlistService.add.restore();
   });
 
   it('should attach a movie to the controller', function() {
