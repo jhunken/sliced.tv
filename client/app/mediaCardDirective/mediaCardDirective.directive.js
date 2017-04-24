@@ -11,7 +11,7 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
         scope.thumbnail = scope.media.poster400X570 || scope.media.artwork608X342;
         scope.mediaType = attributes.mediaType;
         scope.goToMediaDetails = function(id) {
-          $state.go(scope.mediaType, {id});
+          $state.go('media', {mediaType: scope.mediaType, id});
         };
         scope.addToWatchlist = function(media) {
           if(media) {

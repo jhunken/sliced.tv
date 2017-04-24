@@ -7,8 +7,8 @@ export default function routes($stateProvider) {
     url: '/',
     template: '<movies></movies>'
   });
-  $stateProvider.state('movie', {
-    url: '/movie/:id',
-    template: '<movie></movie>'
+  $stateProvider.state('media', {
+    url: '/{mediaType:(?:movie|show)}/:id',
+    template: '<media></media>'
   });
 }

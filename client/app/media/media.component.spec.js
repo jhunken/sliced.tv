@@ -1,31 +1,31 @@
 'use strict';
 
-import movie from './movie.component';
+import media from './media.component';
 import watchlistService from '../services/watchlistService/watchlistService.service';
 import 'angular-ui-notification';
 import sinon from 'sinon';
 
 
-describe('Component: MovieComponent', function() {
-  beforeEach(angular.mock.module(movie));
+describe('Component: MediaComponent', function() {
+  beforeEach(angular.mock.module(media));
   beforeEach(angular.mock.module(watchlistService));
   beforeEach(angular.mock.module('stateMock'));
   beforeEach(angular.mock.module('ui-notification'));
 
   let scope;
-  let movieComponent;
+  let mediaComponent;
   let $httpBackend;
   let stateparams;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, watchlistService, Notification) {
     $httpBackend = _$httpBackend_;
-    stateparams = {id: 12345};
+    stateparams = {id: 12345, mediaType: 'movie'};
     $httpBackend.expectGET('/api/movies/12345')
       .respond({_id: 12345, guideboxID: 56789, title: 'fake movie'});
 
     scope = $rootScope.$new();
-    movieComponent = $componentController('movie', {
+    mediaComponent = $componentController('media', {
       $http,
       $scope: scope,
       $stateParams: stateparams,
@@ -35,34 +35,34 @@ describe('Component: MovieComponent', function() {
 
   // Clean up spies
   after(function() {
-    movieComponent.Notification.error.restore();
+    mediaComponent.Notification.error.restore();
   });
 
   it('should attach a movie to the controller', function() {
-    movieComponent.$onInit();
+    mediaComponent.$onInit();
     $httpBackend.flush();
-    expect(movieComponent.movie.title)
+    expect(mediaComponent.media.title)
       .to.equal('fake movie');
   });
 
   it('should add a media item to the watchlist', function() {
-    sinon.spy(movieComponent.watchlistService, 'add');
-    movieComponent.addToWatchlist({_id: 12345, guideboxID: 56789, title: 'fake movie'});
+    sinon.spy(mediaComponent.watchlistService, 'add');
+    mediaComponent.addToWatchlist({_id: 12345, guideboxID: 56789, title: 'fake movie'});
     scope.$apply();
-    expect(movieComponent.watchlistService.add).calledOnce;
+    expect(mediaComponent.watchlistService.add).calledOnce;
   });
 
   it('should movie an error Notification for an invalid media item', function() {
-    sinon.spy(movieComponent.Notification, 'error');
-    movieComponent.addToWatchlist('foo');
+    sinon.spy(mediaComponent.Notification, 'error');
+    mediaComponent.addToWatchlist('foo');
     scope.$apply();
-    expect(movieComponent.Notification.error).calledOnce;
+    expect(mediaComponent.Notification.error).calledOnce;
   });
 
   it('should notify the user if media id is missing', function() {
-    sinon.spy(movieComponent.Notification, 'error');
-    movieComponent.addToWatchlist();
+    sinon.spy(mediaComponent.Notification, 'error');
+    mediaComponent.addToWatchlist();
     scope.$apply();
-    expect(movieComponent.Notification.error).calledWith('An unexpected error occurred.');
+    expect(mediaComponent.Notification.error).calledWith('An unexpected error occurred.');
   });
 });

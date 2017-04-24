@@ -1,8 +1,8 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
-import routing from './movie.routes';
+import routing from './media.routes';
 
-export class MovieController {
+export class MediaController {
 
   /*@ngInject*/
   constructor($http, $stateParams, watchlistService, Notification) {
@@ -10,12 +10,13 @@ export class MovieController {
     this.$stateParams = $stateParams;
     this.watchlistService = watchlistService;
     this.Notification = Notification;
+    this.mediaType = $stateParams.mediaType;
   }
 
   $onInit() {
-    this.$http.get(`/api/movies/${this.$stateParams.id}`)
+    this.$http.get(`/api/${this.mediaType}s/${this.$stateParams.id}`)
       .then(response => {
-        this.movie = response.data;
+        this.media = response.data;
       }, err => {
         this.Notification.error(err.statusText || err.status);
       });
@@ -23,23 +24,23 @@ export class MovieController {
 
   addToWatchlist(media) {
     if(media) {
-      this.watchlistService.add(media, 'movies')
+      this.watchlistService.add(media, `${this.mediaType}s`)
         .then(() => {
-          this.Notification.primary(`${this.movie.title} added to watchlist`);
+          this.Notification.primary(`${this.media.title} added to watchlist`);
         }, err => {
           this.Notification.error(err.statusText || err.status);
         });
     } else {
       this.Notification.error('An unexpected error occurred.');
-      console.error('movie.addToWatchlist: missing media');
+      console.error(`${this.mediaType}.addToWatchlist: missing media`);
     }
   }
 }
 
-export default angular.module('slicedTvApp.movie', [uiRouter])
+export default angular.module('slicedTvApp.media', [uiRouter])
   .config(routing)
-  .component('movie', {
-    template: require('./movie.html'),
-    controller: MovieController
+  .component('media', {
+    template: require('./media.html'),
+    controller: MediaController
   })
   .name;
