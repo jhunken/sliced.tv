@@ -36,6 +36,7 @@ describe('Component: ShowComponent', function() {
   // Clean up spies
   after(function() {
     showComponent.Notification.error.restore();
+    showComponent.watchlistService.add.restore();
   });
 
   it('should attach a show to the controller', function() {
@@ -45,9 +46,16 @@ describe('Component: ShowComponent', function() {
       .to.equal('fake show');
   });
 
-  it('should add an item to the watchlist', function() {
+  it('should add a media item to the watchlist', function() {
+    sinon.spy(showComponent.watchlistService, 'add');
+    showComponent.addToWatchlist({_id: 12345, guideboxID: 56789, title: 'fake show'});
+    scope.$apply();
+    expect(showComponent.watchlistService.add).calledOnce;
+  });
+
+  it('should show an error Notification for an invalid media item', function() {
     sinon.spy(showComponent.Notification, 'error');
-    showComponent.addToWatchlist(12345);
+    showComponent.addToWatchlist('foo');
     scope.$apply();
     expect(showComponent.Notification.error).calledOnce;
   });
