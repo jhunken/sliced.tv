@@ -61,12 +61,12 @@ describe('Movie API:', function() {
 
     before(done => {
       // Create newMovie
-      media = new Movie({
+      movie = new Movie({
         title: 'Fake Movie',
         guideboxID: '123456789',
         overview: 'This is an overview'
       });
-      media.save().then(function(savedMovie) {
+      movie.save().then(function(savedMovie) {
         newMovie = savedMovie;
         done();
       });
@@ -86,9 +86,9 @@ describe('Movie API:', function() {
           if(err) {
             done(err);
           }
-          media = res.body;
-          expect(media.title).to.equal('Fake Movie');
-          expect(media.guideboxID).to.equal(newMovie.guideboxID);
+          movie = res.body;
+          expect(movie.title).to.equal('Fake Movie');
+          expect(movie.guideboxID).to.equal(newMovie.guideboxID);
           done();
         });
     });
