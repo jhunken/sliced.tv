@@ -2,6 +2,7 @@
 
 import angular from 'angular';
 import 'angular-utils-pagination';
+import 'angular-ui-notification';
 // import ngAnimate from 'angular-animate';
 import ngCookies from 'angular-cookies';
 import ngResource from 'angular-resource';
@@ -10,9 +11,6 @@ import 'angular-socket-io';
 
 import uiRouter from 'angular-ui-router';
 import uiBootstrap from 'angular-ui-bootstrap';
-// import ngMessages from 'angular-messages';
-// import ngValidationMatch from 'angular-validation-match';
-
 
 import {
   routeConfig
@@ -25,8 +23,7 @@ import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
 import MoviesComponent from './movies/movies.component';
 import ShowsComponent from './shows/shows.component';
-import ShowComponent from './show/show.component';
-import movie from './movie/movie.component';
+import MediaComponent from './media/media.component';
 import search from './search/search.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
@@ -41,9 +38,8 @@ import './app.scss';
 
 angular.module('slicedTvApp', [
   ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter, uiBootstrap, _Auth, account, admin, navbar,
-  footer, search, movieService, movie, constants, socket, util, 'angularUtils.directives.dirPagination',
-  WatchlistComponent, watchlistService, MediaCardDirective, AngularLoadingBar, MoviesComponent, ShowsComponent,
-  ShowComponent
+  footer, search, movieService, MediaComponent, constants, socket, util, 'angularUtils.directives.dirPagination',
+  WatchlistComponent, watchlistService, MediaCardDirective, AngularLoadingBar, MoviesComponent, ShowsComponent, 'ui-notification'
 ])
   .config(routeConfig)
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {

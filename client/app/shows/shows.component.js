@@ -7,7 +7,7 @@ import routes from './shows.routes';
 
 export class ShowsComponent {
   /*@ngInject*/
-  constructor($http, $scope, movieService, $stateParams, $state, $window, socket) {
+  constructor($http, $scope, movieService, $stateParams, $state, $window, socket, Notification) {
     this.$http = $http;
     this.socket = socket;
     this.$stateParams = $stateParams;
@@ -18,6 +18,7 @@ export class ShowsComponent {
     this.totalShows = 0;
     this.showsPerPage = 20;
     this.pagination = {};
+    this.Notification = Notification;
 
 
     $scope.$on('$destroy', function() {
@@ -49,9 +50,8 @@ export class ShowsComponent {
           // console.log(array);
           this.shows = array;  // item contains the updated array
         });
-      })
-      .catch(err => {
-        console.error(err);
+      }, err => {
+        this.Notification.error(err.statusText || err.status.toString());
       });
   }
 
