@@ -1,3 +1,20 @@
+<a name="0.0.35"></a>
+## [0.0.35](https://github.com/jhunken/sliced.tv/compare/0.0.34...0.0.35) (2017-04-25)
+
+
+### Bug Fixes
+
+* angular $http doesn't support catch ([12af34f](https://github.com/jhunken/sliced.tv/commit/12af34f))
+* **package:** update babel-loader to version 7.0.0 ([b58bc60](https://github.com/jhunken/sliced.tv/commit/b58bc60))
+
+
+### Features
+
+* add angular-ui-notification ([6fd0b0a](https://github.com/jhunken/sliced.tv/commit/6fd0b0a))
+* add Notifications for multiple services and directives ([4ee80a9](https://github.com/jhunken/sliced.tv/commit/4ee80a9))
+
+
+
 <a name="0.0.34"></a>
 ## [0.0.34](https://github.com/jhunken/sliced.tv/compare/0.0.33...0.0.34) (2017-04-17)
 
