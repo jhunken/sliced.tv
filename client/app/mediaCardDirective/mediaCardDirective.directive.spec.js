@@ -7,6 +7,7 @@ describe('Directive: mediaCardDirective', function() {
   beforeEach(angular.mock.module(mediaCardDirective));
   beforeEach(angular.mock.module(watchlistService));
   beforeEach(angular.mock.module('stateMock'));
+  beforeEach(angular.mock.module('ui-notification'));
 
   let element;
   let scope;
@@ -27,7 +28,7 @@ describe('Directive: mediaCardDirective', function() {
     movies: []
   }];
 
-  beforeEach(inject(function($rootScope, watchlistService, _$httpBackend_) {
+  beforeEach(inject(function($rootScope, watchlistService, _$httpBackend_, Notification) {
     $httpBackend = _$httpBackend_;
     scope = $rootScope.$new();
     scope.media = {

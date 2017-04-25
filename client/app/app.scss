@@ -4,6 +4,8 @@ $icon-font-path: '/assets/fonts/bootstrap/';
 $fa-font-path: '/assets/fonts/font-awesome/';
 @import '~font-awesome/scss/font-awesome';
 
+@import '~angular-ui-notification/dist/angular-ui-notification';
+
 // @import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,900|Roboto:300,500,700,900);
 
 /**
@@ -20,11 +22,10 @@ $fa-font-path: '/assets/fonts/font-awesome/';
 // Component styles are injected through gulp
 /* inject:scss */
 @import 'admin/admin';
+@import 'media/media';
 @import 'mediaCardDirective/mediaCardDirective';
-@import 'movie/movie';
 @import 'movies/movies';
 @import 'search/search';
-@import 'show/show';
 @import 'shows/shows';
 @import 'watchlist/watchlist';
 @import '../components/footer/footer';

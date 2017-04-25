@@ -7,7 +7,7 @@ import routes from './movies.routes';
 
 export class MoviesComponent {
   /*@ngInject*/
-  constructor($http, $scope, movieService, $stateParams, $state, $window, socket) {
+  constructor($http, $scope, movieService, $stateParams, $state, $window, socket, Notification) {
     this.$http = $http;
     this.socket = socket;
     this.$stateParams = $stateParams;
@@ -18,6 +18,7 @@ export class MoviesComponent {
     this.totalMovies = 0;
     this.moviesPerPage = 20;
     this.pagination = {};
+    this.Notification = Notification;
 
 
     $scope.$on('$destroy', function() {
@@ -44,15 +45,13 @@ export class MoviesComponent {
         // Scroll to top on page change
         this.$window.scrollTo(0, 0);
 
-        //
         this.socket.unsyncUpdates('movie');
         this.socket.syncUpdates('movie', this.movies, false, (event, movie, array) => {
           // console.log(array);
           this.movies = array;  // item contains the updated array
         });
-      })
-      .catch(err => {
-        console.error(err);
+      }, err => {
+        this.Notification.error(err.statusText || err.status.toString());
       });
   }
 
