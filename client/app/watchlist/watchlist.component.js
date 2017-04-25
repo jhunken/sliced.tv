@@ -10,7 +10,7 @@ export class WatchlistComponent {
     this.socket = socket;
     this.watchlists = [];
     this.watchlistService = watchlistService;
-    this.collaboratorToAddEmail = '';
+    // this.collaboratorToAddEmail = '';
     $scope.$on('$destroy', () => {
       socket.unsyncUpdates('watchlist');
     });
@@ -36,15 +36,15 @@ export class WatchlistComponent {
     this.watchlistService.removeMedia(watchlist._id, show._id, 'shows');
   }
 
-  addCollaborator(email) {
-    this.$http.put(`/api/watchlists/${this.watchlists[0]._id}/collaborators?email=${encodeURIComponent(email)}`)
-      .then(response => {
-        console.log(response);
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
+  // addCollaborator(email) {
+  //   this.$http.put(`/api/watchlists/${this.watchlists[0]._id}/collaborators?email=${encodeURIComponent(email)}`)
+  //     .then(response => {
+  //       console.log(response);
+  //     })
+  //     .catch(err => {
+  //       console.error(err);
+  //     });
+  // }
 }
 
 export default angular.module('slicedTvApp.watchlist', [uiRouter])
