@@ -1,23 +1,18 @@
 <div class="container">
-  <!--<form>-->
-    <!--<label>E-mail: <input type="email" ng-model="watchlistCtrl.collaboratorToAddEmail" /></label>-->
-    <!--<input type="submit" ng-click="watchlistCtrl.addCollaborator(watchlistCtrl.collaboratorToAddEmail)" value="Save" />-->
-  <!--</form>-->
   <div ng-repeat="watchlist in watchlistCtrl.watchlists">
-    <table class="table table-striped table-responsive" ng-show="watchlist.movies.length || watchlist.shows.length">
-      <tr ng-repeat="movie in watchlist.movies">
-        <td><a ui-sref="media({mediaType: 'movie', id: movie._id})" href>{{movie.title}}</a></td>
-        <td>
-          <button ng-click="watchlistCtrl.removeMovie(watchlist, movie)" class="btn btn-default">x</button>
-        </td>
-      </tr>
-      <tr ng-repeat="show in watchlist.shows">
-        <td><a ui-sref="media({mediaType: 'show', id: show._id})" href>{{show.title}}</a></td>
-        <td>
-          <button ng-click="watchlistCtrl.removeShow(watchlist, show)" class="btn btn-default">x</button>
-        </td>
-      </tr>
-    </table>
-    <p ng-show="!watchlist.movies.length && !watchlist.shows.length">You haven't added anything yet!</p>
+    <h2>Movies</h2>
+    <div class="row">
+      <div ng-repeat="media in watchlist.movies" class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+        <media-card-directive media-type="movie"></media-card-directive>
+      </div>
+      <p ng-if="!watchlist.movies.length">You haven't added anything yet!</p>
+    </div>
+    <h2>Shows</h2>
+    <div class="row">
+      <div ng-repeat="media in watchlist.shows" class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+        <media-card-directive media-type="show"></media-card-directive>
+      </div>
+      <p ng-if="!watchlist.shows.length">You haven't added anything yet!</p>
+    </div>
   </div>
 </div>

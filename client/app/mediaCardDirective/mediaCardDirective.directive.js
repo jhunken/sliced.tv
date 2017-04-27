@@ -27,6 +27,21 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
             console.error('mediaCardDirective.addToWatchlist: missing media');
           }
         };
+
+        scope.removeFromWatchlist = function(media) {
+          if(media) {
+            watchlistService.remove(scope.media, `${scope.mediaType}s`)
+              .then(() => {
+                Notification.primary(`${scope.media.title} removed from watchlist`);
+              }, err => {
+                console.error(err);
+                Notification.error(err.statusText || err.status);
+              });
+          } else {
+            Notification.error('An unexpected error occurred.');
+            console.error('mediaCardDirective.addToWatchlist: missing media');
+          }
+        };
       }
     };
   })

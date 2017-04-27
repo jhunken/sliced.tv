@@ -26,15 +26,20 @@ function watchlistService($http, $q) {
       }, _handleError);
   };
 
-  let removeMedia = function(watchlistID, mediaID, mediaType) {
-    return $http.delete(`/api/watchlists/${watchlistID}/${mediaType}/${mediaID}`)
-      .then(_handleResponse, _handleError);
+  let remove = function(media, mediaType) {
+    return get()
+      .then(watchlistResponse => {
+        let watchlists = watchlistResponse.data;
+        let watchlist = watchlists[0];
+        return $http.delete(`/api/watchlists/${watchlist._id}/${mediaType}/${media._id}`)
+          .then(_handleResponse, _handleError);
+      }, _handleError);
   };
 
   return {
     get,
     add,
-    removeMedia
+    remove
   };
 }
 
