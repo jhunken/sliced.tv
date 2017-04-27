@@ -322,7 +322,7 @@ describe('Utils: ', () => {
       Utils.getGuideboxMedia('movies', 90, 4, 'all', 'all', true, true)
         .then(result => {
           expect(result.results.length).to.equal(4);
-          expect(result.results[0].popularity).to.equal(10);
+          expect(result.results[0].popularity).to.equal(90);
           expect(result.results[0].poster120X171).to.equal('https://static-api.guidebox.com/091716/thumbnails_movies_small/150431-8385831802-198456990-2880453305-small-120x171-alt-.jpg');
           done();
         });
