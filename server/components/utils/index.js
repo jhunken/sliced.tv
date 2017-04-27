@@ -215,7 +215,6 @@ let utils = (() => {
               logger.log('error', err);
               return {results: media, totalResults: res.total_results};
             });
-          // return {results: media, totalResults: res.total_results};
         } else {
           return null;
         }
@@ -311,6 +310,7 @@ let utils = (() => {
             entity.tomatoUserReviews = mediaItemToSave.tomatoUserReviews;
             entity.tomatoUrl = mediaItemToSave.tomatoUrl;
             entity.omdbUpdated = mediaItemToSave.omdbUpdated;
+            entity.popularity = mediaItemToSave.popularity;
             return _saveEntity(entity, mediaType, null, resolve, reject);
           }
         })
