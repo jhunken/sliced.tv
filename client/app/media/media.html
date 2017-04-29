@@ -11,7 +11,8 @@
     </div>
     <div class="col-md-4">
       <h1>Synopsis
-        <button ng-click="$ctrl.addToWatchlist($ctrl.media)" class="btn btn-primary">+Watchlist</button>
+        <button ng-if="!$ctrl.media.inWatchlist" ng-click="$ctrl.addToWatchlist($ctrl.media)" class="btn btn-primary">+Watchlist</button>
+        <button ng-if="$ctrl.media.inWatchlist" ng-click="$ctrl.removeFromWatchlist($ctrl.media)" class="btn btn-danger">-Watchlist</button>
       </h1>
 
       <p>{{$ctrl.media.overview}}</p>
