@@ -16,37 +16,23 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
           $state.go('media', {mediaType: scope.mediaType, id});
         };
 
-        scope.addToWatchlist = function(media) {
-          if(media) {
-            watchlistService.add(scope.media, `${scope.mediaType}s`)
-              .then(() => {
-                Notification.primary(`${scope.media.title} added to watchlist`);
-                // flip the status
-                scope.media.inWatchlist = !scope.media.inWatchlist;
-              }, err => {
-                console.error(err);
-                Notification.error(err.statusText || err.status);
-              });
-          } else {
-            Notification.error('An unexpected error occurred.');
-            console.error('mediaCardDirective.addToWatchlist: missing media');
-          }
-        };
+        scope.modifyWatchlist = function(media, add) {
+          let action = add ? 'add' : 'remove';
+          let notificationText = add ? 'added to watchlist' : 'removed from watchlist';
 
-        scope.removeFromWatchlist = function(media) {
           if(media) {
-            watchlistService.remove(scope.media, `${scope.mediaType}s`)
+            watchlistService[action](scope.media, `${scope.mediaType}s`)
               .then(() => {
-                Notification.primary(`${scope.media.title} removed from watchlist`);
+                Notification.primary(`${scope.media.title} ${notificationText}`);
+                // flip the status
                 scope.media.inWatchlist = !scope.media.inWatchlist;
               }, err => {
                 console.error(err);
-                // flip the status
                 Notification.error(err.statusText || err.status);
               });
           } else {
             Notification.error('An unexpected error occurred.');
-            console.error('mediaCardDirective.addToWatchlist: missing media');
+            console.error('mediaCardDirective.modifyWatchlist: missing media');
           }
         };
 
