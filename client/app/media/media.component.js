@@ -24,27 +24,14 @@ export class MediaController {
       });
   }
 
-  addToWatchlist(media) {
-    if(media) {
-      this.watchlistService.add(media, `${this.mediaType}s`)
-        .then(() => {
-          this.Notification.primary(`${this.media.title} added to watchlist`);
-          // flip the status
-          this.media.inWatchlist = !this.media.inWatchlist;
-        }, err => {
-          this.Notification.error(err.statusText || err.status);
-        });
-    } else {
-      this.Notification.error('An unexpected error occurred.');
-      console.error(`${this.mediaType}.addToWatchlist: missing media`);
-    }
-  }
+  modifyWatchlist(media, add) {
+    let action = add ? 'add' : 'remove';
+    let notificationText = add ? 'added to watchlist' : 'removed from watchlist';
 
-  removeFromWatchlist(media) {
     if(media) {
-      this.watchlistService.remove(media, `${this.mediaType}s`)
+      this.watchlistService[action](media, `${this.mediaType}s`)
         .then(() => {
-          this.Notification.primary(`${this.media.title} removed from watchlist`);
+          this.Notification.primary(`${this.media.title} ${notificationText}`);
           // flip the status
           this.media.inWatchlist = !this.media.inWatchlist;
         }, err => {
@@ -53,9 +40,9 @@ export class MediaController {
         });
     } else {
       this.Notification.error('An unexpected error occurred.');
-      console.error('media.component.addToWatchlist: missing media');
+      console.error('media.component.modifyWatchlist: missing media');
     }
-  };
+  }
 
   checkIfMediaInWatchlist() {
     this.watchlistService.get()
