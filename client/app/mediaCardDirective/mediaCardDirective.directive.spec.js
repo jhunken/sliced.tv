@@ -87,10 +87,12 @@ describe('Directive: mediaCardDirective', function() {
     // Grab scope. Depends on type of scope.
     // See angular.element documentation.
     scope = element.isolateScope() || element.scope();
+    expect(scope.media.inWatchlist).to.be.undefined;
 
     scope.modifyWatchlist(mediaItem, true);
     $httpBackend.flush();
     scope.$digest();
+    expect(scope.media.inWatchlist).to.be.true;
   }));
 
   it('should add a media item to the watchlist as a show', inject(function($compile, $rootScope, watchlistService) {
@@ -115,9 +117,11 @@ describe('Directive: mediaCardDirective', function() {
     // Grab scope. Depends on type of scope.
     // See angular.element documentation.
     scope = element.isolateScope() || element.scope();
+    expect(scope.media.inWatchlist).to.be.undefined;
 
     scope.modifyWatchlist(mediaItem, false);
     $httpBackend.flush();
     scope.$digest();
+    expect(scope.media.inWatchlist).to.be.true;
   }));
 });

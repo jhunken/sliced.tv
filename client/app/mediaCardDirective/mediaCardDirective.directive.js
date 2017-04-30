@@ -20,7 +20,6 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
         };
 
         scope.modifyWatchlist = function(media, add) {
-          console.debug('modifyWatchlist', media, add);
           let action = add ? 'add' : 'remove';
           let notificationText = add ? 'added to watchlist' : 'removed from watchlist';
 
