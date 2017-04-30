@@ -8,8 +8,10 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
     return {
       template: require('./mediaCardDirective.html'),
       restrict: 'EA',
+      scope: {
+        media: '=',
+      },
       link(scope, element, attributes) {
-        scope.thumbnail = scope.media.poster400X570 || scope.media.artwork608X342;
         scope.mediaType = attributes.mediaType;
 
         scope.goToMediaDetails = function(id) {
@@ -47,7 +49,13 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
               scope.media.inWatchlist = inWatchlist >= 0;
             });
         };
-        checkIfMediaInWatchlist();
+
+        scope.$watch('media', newVal => {
+          if(newVal) {
+            checkIfMediaInWatchlist();
+            scope.thumbnail = scope.media ? scope.media.poster400X570 || scope.media.artwork608X342 : '';
+          }
+        });
       }
     };
   })

@@ -7,13 +7,10 @@
   </div>
   <div class="row">
     <div class="col-md-4">
-      <img ng-src="{{$ctrl.media.poster400X570}}" class="img-responsive">
+      <media-card-directive media-type="movie" media="$ctrl.media"></media-card-directive>
     </div>
     <div class="col-md-4">
-      <h1>Synopsis
-        <button ng-if="!$ctrl.media.inWatchlist" ng-click="$ctrl.modifyWatchlist($ctrl.media, true)" class="btn btn-primary">+Watchlist</button>
-        <button ng-if="$ctrl.media.inWatchlist" ng-click="$ctrl.modifyWatchlist($ctrl.media, false)" class="btn btn-danger">-Watchlist</button>
-      </h1>
+      <h1>Synopsis</h1>
 
       <p>{{$ctrl.media.overview}}</p>
     </div>
