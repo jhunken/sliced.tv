@@ -3,7 +3,7 @@ import angular from 'angular';
 import _ from 'lodash';
 
 export default angular.module('slicedTvApp.mediaCardDirective', [])
-  .directive('mediaCardDirective', function(watchlistService, $http, $state, Notification) {
+  .directive('mediaCardDirective', function(watchlistService, $http, $state, Notification, Auth) {
     'ngInject';
     return {
       template: require('./mediaCardDirective.html'),
@@ -13,12 +13,14 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
       },
       link(scope, element, attributes) {
         scope.mediaType = attributes.mediaType;
+        scope.isLoggedIn = Auth.isLoggedInSync();
 
         scope.goToMediaDetails = function(id) {
           $state.go('media', {mediaType: scope.mediaType, id});
         };
 
         scope.modifyWatchlist = function(media, add) {
+          console.debug('modifyWatchlist', media, add);
           let action = add ? 'add' : 'remove';
           let notificationText = add ? 'added to watchlist' : 'removed from watchlist';
 
@@ -52,7 +54,9 @@ export default angular.module('slicedTvApp.mediaCardDirective', [])
 
         scope.$watch('media', newVal => {
           if(newVal) {
-            checkIfMediaInWatchlist();
+            if(scope.isLoggedIn) {
+              checkIfMediaInWatchlist();
+            }
             scope.thumbnail = scope.media ? scope.media.poster400X570 || scope.media.artwork608X342 : '';
           }
         });

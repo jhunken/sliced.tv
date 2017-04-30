@@ -6,7 +6,7 @@
     <p>IMDB: {{media.imdbRating}}</p>
     <p ng-if="media.tomatoMeter !== 'N/A' && media.tomatoMeter !== 'NA'">Rotten Tomatoes {{media.tomatoMeter}}% fresh</p>
     <p><button ng-if="!media.inWatchlist" ng-click="modifyWatchlist(media, true)" class="btn btn-primary">+Watchlist</button>
-      <button ng-if="media.inWatchlist" ng-click="modifyWatchlist(media, false)" class="btn btn-danger">-Watchlist</button>
+      <button ng-if="media.inWatchlist && isLoggedIn" ng-click="modifyWatchlist(media, false)" class="btn btn-danger">-Watchlist</button>
     </p>
   </div>
 </div>
