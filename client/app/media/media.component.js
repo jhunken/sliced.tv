@@ -5,21 +5,39 @@ import routing from './media.routes';
 export class MediaController {
 
   /*@ngInject*/
-  constructor($http, $stateParams, watchlistService, Notification) {
+  constructor($http, $stateParams, watchlistService, Notification, Auth) {
     this.$http = $http;
     this.$stateParams = $stateParams;
     this.watchlistService = watchlistService;
     this.Notification = Notification;
     this.mediaType = $stateParams.mediaType;
+    this.Auth = Auth;
   }
 
   $onInit() {
+    this.loadWatchlist();
+    this.loadMedia();
+  }
+
+  loadMedia() {
     this.$http.get(`/api/${this.mediaType}s/${this.$stateParams.id}`)
       .then(response => {
         this.media = response.data;
       }, err => {
         this.Notification.error(err.statusText || err.status);
       });
+  }
+
+  loadWatchlist() {
+    this.Auth.isLoggedIn(role => {
+      this.isLoggedIn = !!role;
+      if(this.isLoggedIn) {
+        this.watchlistService.get()
+          .then(watchlistServiceResponse => {
+            this.watchlist = watchlistServiceResponse.data[0];
+          });
+      }
+    });
   }
 }
 
