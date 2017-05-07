@@ -1,11 +1,13 @@
 'use strict';
 import movieService from '../movieService/movieService.service';
+import watchlistService from '../services/watchlistService/watchlistService.service';
 import search from './search.component';
 
 describe('Component: SearchComponent', () => {
   // load the controller's module
   beforeEach(angular.mock.module(search));
   beforeEach(angular.mock.module(movieService));
+  beforeEach(angular.mock.module(watchlistService));
   beforeEach(angular.mock.module('stateMock'));
 
   let searchComponent;
@@ -16,7 +18,7 @@ describe('Component: SearchComponent', () => {
 
   describe('success query', () => {
     // Initialize the controller and a mock scope
-    beforeEach(inject(function(_$httpBackend_, $componentController, movieService, $rootScope, $state) {
+    beforeEach(inject(function(_$httpBackend_, $componentController, movieService, $rootScope, $state, watchlistService) {
       $httpBackend = _$httpBackend_;
       scope = $rootScope.$new();
       state = $state;
@@ -24,9 +26,9 @@ describe('Component: SearchComponent', () => {
       searchComponent = $componentController('search', {
         $scope: scope,
         movieService,
+        watchlistService,
         $stateParams: stateparams
       });
-
       $httpBackend.expectGET('/api/search/batman')
         .respond({
           movies: {
@@ -358,6 +360,7 @@ describe('Component: SearchComponent', () => {
             }], totalResults: 1, mediaType: 'shows'
           }
         });
+      $httpBackend.expectGET('/api/watchlists/').respond({data: [{movies: [], shows: []}]});
     }));
 
     it('should be able to search', () => {
@@ -369,17 +372,17 @@ describe('Component: SearchComponent', () => {
 
   describe('failed query', () => {
     // Initialize the controller and a mock scope
-    beforeEach(inject(function(_$httpBackend_, $componentController, movieService, $rootScope, $state) {
+    beforeEach(inject(function(_$httpBackend_, $componentController, movieService, $rootScope, $state, watchlistService) {
       $httpBackend = _$httpBackend_;
       scope = $rootScope.$new();
       state = $state;
       stateparams = {query: 'failquery'};
-
       $httpBackend.expectGET('/api/search/failquery')
         .respond(500);
-
+      $httpBackend.expectGET('/api/watchlists/').respond({data: [{movies: [], shows: []}]});
       searchComponent = $componentController('search', {
         movieService,
+        watchlistService,
         $scope: scope,
         $stateParams: stateparams,
       });
@@ -394,7 +397,7 @@ describe('Component: SearchComponent', () => {
   });
   describe('missing query params', () => {
     // Initialize the controller and a mock scope
-    beforeEach(inject(function(_$httpBackend_, $componentController, movieService, $rootScope, $state) {
+    beforeEach(inject(function(_$httpBackend_, $componentController, movieService, $rootScope, $state, watchlistService) {
       $httpBackend = _$httpBackend_;
       scope = $rootScope.$new();
       state = $state;
@@ -402,6 +405,7 @@ describe('Component: SearchComponent', () => {
 
       searchComponent = $componentController('search', {
         movieService,
+        watchlistService,
         $scope: scope,
         $stateParams: stateparams,
       });
