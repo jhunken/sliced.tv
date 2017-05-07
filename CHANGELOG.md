@@ -1,3 +1,28 @@
+<a name="0.0.36"></a>
+## [0.0.36](https://github.com/jhunken/sliced.tv/compare/0.0.35...0.0.36) (2017-05-07)
+
+
+### Bug Fixes
+
+* **package:** update autoprefixer to version 7.0.0 ([f72cedb](https://github.com/jhunken/sliced.tv/commit/f72cedb))
+* **package:** update awesome-typescript-loader to version 3.1.3 ([d827303](https://github.com/jhunken/sliced.tv/commit/d827303))
+* **package:** update karma to version 1.7.0 ([c24fa8c](https://github.com/jhunken/sliced.tv/commit/c24fa8c))
+* **package:** update ng-annotate-loader to version 0.5.0 ([eef6cad](https://github.com/jhunken/sliced.tv/commit/eef6cad))
+* **package:** update ng-annotate-loader to version 0.6.0 ([389c739](https://github.com/jhunken/sliced.tv/commit/389c739))
+* **package:** update style-loader to version 0.17.0 ([9bb6470](https://github.com/jhunken/sliced.tv/commit/9bb6470))
+* media details view now loads watchlist into mediaCardDirective properly ([e58cce1](https://github.com/jhunken/sliced.tv/commit/e58cce1))
+* only show -Watchlist button if logged in ([b4a282e](https://github.com/jhunken/sliced.tv/commit/b4a282e))
+* update popularity properly ([4971672](https://github.com/jhunken/sliced.tv/commit/4971672))
+
+
+### Features
+
+* Major refactor to reduce calls to watchlist service ([007a0d1](https://github.com/jhunken/sliced.tv/commit/007a0d1))
+* Show appropriate +/-Watchlist buttons based on state ([dfad124](https://github.com/jhunken/sliced.tv/commit/dfad124))
+* use mediaCardDirective in watchlist component ([ace20cc](https://github.com/jhunken/sliced.tv/commit/ace20cc))
+
+
+
 <a name="0.0.35"></a>
 ## [0.0.35](https://github.com/jhunken/sliced.tv/compare/0.0.34...0.0.35) (2017-04-25)
 
