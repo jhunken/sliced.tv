@@ -24,27 +24,12 @@ export class WatchlistComponent {
     this.watchlistService.get()
       .then(response => {
         this.watchlists = response.data;
+        this.watchlist = response.data[0];
         this.socket.syncUpdates('watchlist', this.watchlists, true);
+      }, err => {
+        console.error(err);
       });
   }
-
-  removeMovie(watchlist, movie) {
-    this.watchlistService.removeMedia(watchlist._id, movie._id, 'movies');
-  }
-
-  removeShow(watchlist, show) {
-    this.watchlistService.removeMedia(watchlist._id, show._id, 'shows');
-  }
-
-  // addCollaborator(email) {
-  //   this.$http.put(`/api/watchlists/${this.watchlists[0]._id}/collaborators?email=${encodeURIComponent(email)}`)
-  //     .then(response => {
-  //       console.log(response);
-  //     })
-  //     .catch(err => {
-  //       console.error(err);
-  //     });
-  // }
 }
 
 export default angular.module('slicedTvApp.watchlist', [uiRouter])

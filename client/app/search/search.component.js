@@ -7,7 +7,7 @@ import routes from './search.routes';
 
 export class SearchComponent {
   /*@ngInject*/
-  constructor(movieService, $stateParams) {
+  constructor(movieService, $stateParams, watchlistService) {
     this._movieService = movieService;
     this._$stateParams = $stateParams;
     this.movies = [];
@@ -15,6 +15,7 @@ export class SearchComponent {
     this.totalResults = 0;
     this.resultsPerPage = 50;
     this.loading = true;
+    this.watchlistService = watchlistService;
   }
 
   $onInit() {
@@ -28,6 +29,10 @@ export class SearchComponent {
         .catch(err => {
           console.info(err);
           this.loading = false;
+        });
+      this.watchlistService.get()
+        .then(watchlistServiceResponse => {
+          this.watchlist = watchlistServiceResponse.data[0];
         });
     } else {
       this.loading = false;

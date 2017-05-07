@@ -5,15 +5,21 @@ import routing from './media.routes';
 export class MediaController {
 
   /*@ngInject*/
-  constructor($http, $stateParams, watchlistService, Notification) {
+  constructor($http, $stateParams, watchlistService, Notification, Auth) {
     this.$http = $http;
     this.$stateParams = $stateParams;
     this.watchlistService = watchlistService;
     this.Notification = Notification;
     this.mediaType = $stateParams.mediaType;
+    this.Auth = Auth;
   }
 
   $onInit() {
+    this.loadWatchlist();
+    this.loadMedia();
+  }
+
+  loadMedia() {
     this.$http.get(`/api/${this.mediaType}s/${this.$stateParams.id}`)
       .then(response => {
         this.media = response.data;
@@ -22,18 +28,16 @@ export class MediaController {
       });
   }
 
-  addToWatchlist(media) {
-    if(media) {
-      this.watchlistService.add(media, `${this.mediaType}s`)
-        .then(() => {
-          this.Notification.primary(`${this.media.title} added to watchlist`);
-        }, err => {
-          this.Notification.error(err.statusText || err.status);
-        });
-    } else {
-      this.Notification.error('An unexpected error occurred.');
-      console.error(`${this.mediaType}.addToWatchlist: missing media`);
-    }
+  loadWatchlist() {
+    this.Auth.isLoggedIn(role => {
+      this.isLoggedIn = !!role;
+      if(this.isLoggedIn) {
+        this.watchlistService.get()
+          .then(watchlistServiceResponse => {
+            this.watchlist = watchlistServiceResponse.data[0];
+          });
+      }
+    });
   }
 }
 
