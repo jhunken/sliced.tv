@@ -49,7 +49,6 @@ export class MoviesComponent {
 
         this.socket.unsyncUpdates('movie');
         this.socket.syncUpdates('movie', this.movies, false, (event, movie, array) => {
-          // console.log(array);
           this.movies = array;  // item contains the updated array
         });
       }, err => {
