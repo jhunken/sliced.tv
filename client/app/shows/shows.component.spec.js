@@ -2,10 +2,14 @@
 
 import ShowsComponent from './shows.component';
 import movieService from '../movieService/movieService.service';
+import watchlistService from '../services/watchlistService/watchlistService.service';
+import Auth from '../../components/auth/auth.module';
 
 describe('Component: ShowsComponent', () => {
   beforeEach(angular.mock.module(ShowsComponent));
   beforeEach(angular.mock.module(movieService));
+  beforeEach(angular.mock.module(watchlistService));
+  beforeEach(angular.mock.module(Auth));
   beforeEach(angular.mock.module('stateMock'));
   beforeEach(angular.mock.module('socketMock'));
   beforeEach(angular.mock.module('ui-notification'));
@@ -3196,7 +3200,7 @@ describe('Component: ShowsComponent', () => {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, $state,
-                             socket, movieService, Notification) {
+                             socket, movieService, Notification, watchlistService, Auth) {
     $httpBackend = _$httpBackend_;
     scope = $rootScope.$new();
     state = $state;
@@ -3206,6 +3210,8 @@ describe('Component: ShowsComponent', () => {
       $scope: scope,
       socket,
       movieService,
+      watchlistService,
+      Auth,
       $stateParams: stateparams
     });
   }));

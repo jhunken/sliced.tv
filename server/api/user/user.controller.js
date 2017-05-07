@@ -42,7 +42,7 @@ export function create(req, res) {
         expiresIn: 60 * 60 * 5
       });
       // Create new watchlist for every new user
-      let watchlist = new Watchlist({name: 'Watchlist', user});
+      let watchlist = new Watchlist({name: 'Watchlist', owner: user});
       return watchlist.save()
         .then(function() {
           return res.json({token});

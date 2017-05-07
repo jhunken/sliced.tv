@@ -57,7 +57,8 @@ export function index(req, res) {
 
 // Gets a single Movie from the DB
 export function show(req, res) {
-  return Movie.findById(req.params.id).exec()
+  return Movie.findById(req.params.id)
+    .exec()
     .then(Utils.handleMediaRequest(res, mediaType))
     .catch(err => {
       logger.log('warn', err);
