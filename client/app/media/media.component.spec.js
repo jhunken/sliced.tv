@@ -2,12 +2,14 @@
 
 import media from './media.component';
 import watchlistService from '../services/watchlistService/watchlistService.service';
+import Auth from '../../components/auth/auth.module';
 import 'angular-ui-notification';
 
 
 describe('Component: MediaComponent', function() {
   beforeEach(angular.mock.module(media));
   beforeEach(angular.mock.module(watchlistService));
+  beforeEach(angular.mock.module(Auth));
   beforeEach(angular.mock.module('stateMock'));
   beforeEach(angular.mock.module('ui-notification'));
 
@@ -17,7 +19,7 @@ describe('Component: MediaComponent', function() {
   let stateparams;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, watchlistService, Notification) {
+  beforeEach(inject(function(_$httpBackend_, $http, $componentController, $rootScope, watchlistService, Notification, Auth) {
     $httpBackend = _$httpBackend_;
     stateparams = {id: 12345, mediaType: 'movie'};
     scope = $rootScope.$new();
@@ -25,7 +27,8 @@ describe('Component: MediaComponent', function() {
       $http,
       $scope: scope,
       $stateParams: stateparams,
-      Notification
+      Notification,
+      Auth
     });
   }));
 

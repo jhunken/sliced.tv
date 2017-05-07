@@ -80,7 +80,6 @@ describe('Directive: mediaCardDirective', function() {
     };
     element = angular.element('<media-card-directive media-type="movie" data-media="media" watchlist="watchlist"></media-card-directive>');
     element = $compile(element)(scope);
-    $rootScope.$digest();
 
     $httpBackend.expectPATCH('/api/watchlists/5904d74100e98c0f0a89bad1/movies/58aa0ff1bb5308ab3ef55555')
       .respond(200);
@@ -91,7 +90,6 @@ describe('Directive: mediaCardDirective', function() {
 
     scope.modifyWatchlist(mediaItem, true);
     $httpBackend.flush();
-    scope.$digest();
     expect(scope.media.inWatchlist).to.be.true;
   }));
 
@@ -111,7 +109,6 @@ describe('Directive: mediaCardDirective', function() {
     };
     element = angular.element('<media-card-directive media-type="show" data-media="media" watchlist="watchlist"></media-card-directive>');
     element = $compile(element)(scope);
-    $rootScope.$digest();
 
     $httpBackend.expectDELETE('/api/watchlists/5904d74100e98c0f0a89bad1/shows/58aa0ff1bb5308ab3ef55555')
       .respond(200);
@@ -122,7 +119,6 @@ describe('Directive: mediaCardDirective', function() {
 
     scope.modifyWatchlist(mediaItem, false);
     $httpBackend.flush();
-    scope.$digest();
     expect(scope.media.inWatchlist).to.be.true;
   }));
 
