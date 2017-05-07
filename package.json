@@ -1,6 +1,6 @@
 {
   "name": "sliced-tv",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "main": "server/index.js",
   "dependencies": {
     "angular": "~1.6.1",
