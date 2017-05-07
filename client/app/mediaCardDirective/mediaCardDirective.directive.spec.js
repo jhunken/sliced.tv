@@ -55,31 +55,30 @@ describe('Directive: mediaCardDirective', function() {
     expect(element.text()).to.contain('IMDB: 6.6');
   }));
 
-  it('should have a working +Watchlist button', inject(function($compile, Auth) {
-    $httpBackend.expectGET('/api/watchlists/')
-      .respond(watchlistsResponse);
+  it('should have a +Watchlist button that takes a user to login state if not logged in', inject(function($compile) {
     element = angular.element('<media-card-directive media-type="movie" data-media="media"></media-card-directive>');
     element = $compile(element)(scope);
     scope.$apply();
     let watchlistButton = element.find('button');
+    state.expectTransitionTo('login');
     watchlistButton.triggerHandler('click');
-    scope.$digest();
-    $httpBackend.flush();
   }));
 
-  it('should add a media item to the watchlist as a movie', inject(function($compile, $rootScope, watchlistService) {
-    $httpBackend.expectGET('/api/watchlists/')
-      .respond([{
-        _id: '5904d74100e98c0f0a89bad1',
-        name: 'Watchlist',
-        owner: '5904d74000e98c0f0a89bacf',
-        __v: 0,
-        shows: [],
-        movies: [],
-        collaborators: []
-      }]);
+  it('should add a media item to the watchlist as a movie', inject(function($compile, $rootScope, Auth) {
+    let authMock = sinon.stub(Auth, 'isLoggedIn');
+    authMock.yields(Promise.resolve('user'));
+
     let mediaItem = {_id: 12345, guideboxID: 56789, title: 'fake movie'};
-    element = angular.element('<media-card-directive media-type="movie" data-media="media"></media-card-directive>');
+    scope.watchlist = {
+      _id: '5904d74100e98c0f0a89bad1',
+      name: 'Watchlist',
+      owner: '5904d74000e98c0f0a89bacf',
+      __v: 0,
+      shows: [],
+      movies: [],
+      collaborators: []
+    };
+    element = angular.element('<media-card-directive media-type="movie" data-media="media" watchlist="watchlist"></media-card-directive>');
     element = $compile(element)(scope);
     $rootScope.$digest();
 
@@ -89,7 +88,6 @@ describe('Directive: mediaCardDirective', function() {
     // Grab scope. Depends on type of scope.
     // See angular.element documentation.
     scope = element.isolateScope() || element.scope();
-    expect(scope.media.inWatchlist).to.be.undefined;
 
     scope.modifyWatchlist(mediaItem, true);
     $httpBackend.flush();
@@ -97,19 +95,21 @@ describe('Directive: mediaCardDirective', function() {
     expect(scope.media.inWatchlist).to.be.true;
   }));
 
-  it('should add a media item to the watchlist as a show', inject(function($compile, $rootScope, watchlistService) {
-    $httpBackend.expectGET('/api/watchlists/')
-      .respond([{
-        _id: '5904d74100e98c0f0a89bad1',
-        name: 'Watchlist',
-        owner: '5904d74000e98c0f0a89bacf',
-        __v: 0,
-        shows: [],
-        movies: [],
-        collaborators: []
-      }]);
+  it('should add a media item to the watchlist as a show', inject(function($compile, $rootScope, watchlistService, Auth) {
+    let authMock = sinon.stub(Auth, 'isLoggedIn');
+    authMock.yields(Promise.resolve('user'));
+
     let mediaItem = {_id: 12345, guideboxID: 56789, title: 'fake show'};
-    element = angular.element('<media-card-directive media-type="show" data-media="media"></media-card-directive>');
+    scope.watchlist = {
+      _id: '5904d74100e98c0f0a89bad1',
+      name: 'Watchlist',
+      owner: '5904d74000e98c0f0a89bacf',
+      __v: 0,
+      shows: [],
+      movies: [],
+      collaborators: []
+    };
+    element = angular.element('<media-card-directive media-type="show" data-media="media" watchlist="watchlist"></media-card-directive>');
     element = $compile(element)(scope);
     $rootScope.$digest();
 
@@ -119,7 +119,6 @@ describe('Directive: mediaCardDirective', function() {
     // Grab scope. Depends on type of scope.
     // See angular.element documentation.
     scope = element.isolateScope() || element.scope();
-    expect(scope.media.inWatchlist).to.be.undefined;
 
     scope.modifyWatchlist(mediaItem, false);
     $httpBackend.flush();
@@ -137,41 +136,40 @@ describe('Directive: mediaCardDirective', function() {
     scope.goToMediaDetails('101010101010100110');
   }));
 
-  it('should watch media and check if in watchlist when it change', inject(function($compile, $rootScope) {
-    element = angular.element('<media-card-directive media-type="movie" data-media="media"></media-card-directive>');
+  it('should watch media and check if in watchlist when it changes', inject(function($compile, $rootScope, Auth) {
+    let authMock = sinon.stub(Auth, 'isLoggedIn');
+    authMock.yields(Promise.resolve('user'));
+
+    element = angular.element('<media-card-directive media-type="movie" data-media="media" watchlist="watchlist"></media-card-directive>');
     element = $compile(element)(scope);
     $rootScope.$digest();
 
     scope = element.isolateScope() || element.scope();
     scope.isLoggedIn = true;
-    $httpBackend.expectGET('/api/watchlists/')
-      .respond([{
-        _id: '5904d74100e98c0f0a89bad1',
-        name: 'Watchlist',
-        owner: '5904d74000e98c0f0a89bacf',
-        __v: 0,
-        shows: [],
-        movies: [],
-        collaborators: []
-      }]);
+    scope.watchlist = {
+      _id: '5904d74100e98c0f0a89bad1',
+      name: 'Watchlist',
+      owner: '5904d74000e98c0f0a89bacf',
+      __v: 0,
+      shows: [],
+      movies: [],
+      collaborators: []
+    };
     scope.media = {_id: 'fdfdfdfdfdfdfdf', guideboxID: 234346465, title: 'new media item not in watchlist'};
     scope.$digest();
-    $httpBackend.flush();
     expect(scope.media.inWatchlist).to.be.false;
 
-    $httpBackend.expectGET('/api/watchlists/')
-      .respond([{
-        _id: '5904d74100e98c0f0a89bad1',
-        name: 'Watchlist',
-        owner: '5904d74000e98c0f0a89bacf',
-        __v: 0,
-        shows: [],
-        movies: [{_id: '8848765566', guideboxID: 23645743453, title: 'new media item in watchlist'}],
-        collaborators: []
-      }]);
+    scope.watchlist = {
+      _id: '5904d74100e98c0f0a89bad1',
+      name: 'Watchlist',
+      owner: '5904d74000e98c0f0a89bacf',
+      __v: 0,
+      shows: [],
+      movies: [{_id: '8848765566', guideboxID: 23645743453, title: 'new media item in watchlist'}],
+      collaborators: []
+    };
     scope.media = {_id: '8848765566', guideboxID: 23645743453, title: 'new media item in watchlist'};
     scope.$digest();
-    $httpBackend.flush();
     expect(scope.media.inWatchlist).to.be.true;
   }));
 });

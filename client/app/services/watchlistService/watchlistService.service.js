@@ -10,15 +10,10 @@ function watchlistService($http, $q) {
     return $q.reject(err);
   };
 
-  let modifyWatchlist = function(media, mediaType, add) {
+  let modifyWatchlist = function(watchlistID, media, mediaType, add) {
     let httpVerb = add ? 'patch' : 'delete';
-    return get()
-      .then(watchlistResponse => {
-        let watchlists = watchlistResponse.data;
-        let watchlist = watchlists[0];
-        return $http[httpVerb](`/api/watchlists/${watchlist._id}/${mediaType}/${media._id}`)
-          .then(_handleResponse, _handleError);
-      }, _handleError);
+    return $http[httpVerb](`/api/watchlists/${watchlistID}/${mediaType}/${media._id}`)
+      .then(_handleResponse, _handleError);
   };
 
   let get = function() {
@@ -26,12 +21,12 @@ function watchlistService($http, $q) {
       .then(_handleResponse, _handleError);
   };
 
-  let add = function(media, mediaType) {
-    return modifyWatchlist(media, mediaType, true);
+  let add = function(watchlistID, media, mediaType) {
+    return modifyWatchlist(watchlistID, media, mediaType, true);
   };
 
-  let remove = function(media, mediaType) {
-    return modifyWatchlist(media, mediaType, false);
+  let remove = function(watchlistID, media, mediaType) {
+    return modifyWatchlist(watchlistID, media, mediaType, false);
   };
 
   return {

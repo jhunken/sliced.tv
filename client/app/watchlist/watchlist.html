@@ -3,14 +3,14 @@
     <h2>Movies</h2>
     <div class="row">
       <div ng-repeat="media in watchlist.movies" class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-        <media-card-directive media-type="movie" data-media="media"></media-card-directive>
+        <media-card-directive media-type="movie" data-media="media" watchlist="watchlist"></media-card-directive>
       </div>
       <p ng-if="!watchlist.movies.length">You haven't added anything yet!</p>
     </div>
     <h2>Shows</h2>
     <div class="row">
       <div ng-repeat="media in watchlist.shows" class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-        <media-card-directive media-type="show" data-media="media"></media-card-directive>
+        <media-card-directive media-type="show" data-media="media" watchlist="watchlist"></media-card-directive>
       </div>
       <p ng-if="!watchlist.shows.length">You haven't added anything yet!</p>
     </div>

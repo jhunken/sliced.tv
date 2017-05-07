@@ -24,6 +24,7 @@ export class WatchlistComponent {
     this.watchlistService.get()
       .then(response => {
         this.watchlists = response.data;
+        this.watchlist = response.data[0];
         this.socket.syncUpdates('watchlist', this.watchlists, true);
       }, err => {
         console.error(err);
