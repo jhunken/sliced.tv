@@ -21,20 +21,6 @@ export class MediaController {
         this.Notification.error(err.statusText || err.status);
       });
   }
-
-  addToWatchlist(media) {
-    if(media) {
-      this.watchlistService.add(media, `${this.mediaType}s`)
-        .then(() => {
-          this.Notification.primary(`${this.media.title} added to watchlist`);
-        }, err => {
-          this.Notification.error(err.statusText || err.status);
-        });
-    } else {
-      this.Notification.error('An unexpected error occurred.');
-      console.error(`${this.mediaType}.addToWatchlist: missing media`);
-    }
-  }
 }
 
 export default angular.module('slicedTvApp.media', [uiRouter])

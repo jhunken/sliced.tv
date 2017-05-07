@@ -137,7 +137,7 @@ let Queue = (function(logger) {
     mediaType,
     delay: 250
   }, function() {
-    logger.log('debug', 'done retrieving OMDB Ratings for %s', mediaItem);
+    logger.log('debug', 'done retrieving OMDB Ratings for %s', mediaItem.title);
   });
 
   // Check if nothing is queued up, and if not start up an initial job
