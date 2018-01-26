@@ -134,7 +134,7 @@
     "socketio-jwt": "^4.2.0",
     "sprint-js": "~0.1.0",
     "strip-ansi": "^3.0.1",
-    "style-loader": "^0.17.0",
+    "style-loader": "^0.20.1",
     "supertest": "^3.0.0",
     "through2": "^2.0.1",
     "webpack": "^2.3.3",
