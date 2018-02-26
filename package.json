@@ -137,7 +137,7 @@
     "style-loader": "^0.17.0",
     "supertest": "^3.0.0",
     "through2": "^2.0.1",
-    "webpack": "^2.3.3",
+    "webpack": "^4.0.1",
     "webpack-dev-middleware": "^1.5.1",
     "webpack-stream": "^3.2.0",
     "winston": "^2.3.1"
