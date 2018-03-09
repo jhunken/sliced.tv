@@ -78,7 +78,7 @@
     "gulp-stylint": "^4.0.0",
     "gulp-util": "^3.0.5",
     "gulp-watch": "^4.3.5",
-    "html-webpack-harddisk-plugin": "~0.1.0",
+    "html-webpack-harddisk-plugin": "~0.2.0",
     "html-webpack-plugin": "^2.24.0",
     "imports-loader": "^0.7.0",
     "isparta": "^4.0.0",
