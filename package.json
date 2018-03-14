@@ -59,7 +59,7 @@
     "font-awesome": ">=4.1.0",
     "guidebox": "^1.1.1",
     "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
+    "gulp-babel": "^8.0.0-beta.2",
     "gulp-env": "^0.4.0",
     "gulp-eslint": "^3.0.1",
     "gulp-imagemin": "^3.0.1",
