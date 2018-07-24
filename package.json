@@ -86,7 +86,7 @@
     "istanbul": "1.1.0-alpha.1",
     "istanbul-instrumenter-loader": "^2.0.0",
     "jsonwebtoken": "^7.0.0",
-    "karma": "~1.7.0",
+    "karma": "~2.0.5",
     "karma-chai-plugins": "~0.8.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.0.0",
