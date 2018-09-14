@@ -158,6 +158,6 @@
   "private": true,
   "devDependencies": {
     "mocha-junit-reporter": "^1.12.1",
-    "nock": "^9.0.2"
+    "nock": "^10.0.0"
   }
 }
